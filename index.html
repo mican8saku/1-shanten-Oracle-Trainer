@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0f172a">
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet"  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+<title>1-shanten Oracle — Push-Pull Trainer</title>
+</head>
+<body>
+<div id="app">
+
+  <div id="home" class="screen active">
+    <img src="long.png" alt="" class="cover-image">
+    <img src="long.png" alt="" class="cover-image-flipped">
+    <div class="home-topbar">
+      <button class="btn" id="langBtn">English</button>
+      <button class="btn" id="aboutBtn" data-i18n="home.about"><span><i class="fa-solid fa-circle-info"></i></span></button>
+      <button class="btn" id="linkBtn" data-i18n="home.link" onclick="document.location='lookup.html'">Lookup</button>
+    </div>
+    <div class="home-content">
+    <div class="home-inner">
+      <h1 data-i18n="home.heading">1-shanten Oracle</h1>
+      <p class="sub" data-i18n="home.sub">Push-pull trainer</p>
+      <div class="modes">
+        <button class="mode-card selected" data-mode="regular">
+          <div class="mode-title" data-i18n="home.mode.regular.title">Regular</div>
+          <div class="mode-desc" data-i18n="home.mode.regular.desc">10-question scored run. Score &amp; grade revealed at the end.</div>
+        </button>
+        <button class="mode-card" data-mode="zen">
+          <div class="mode-title" data-i18n="home.mode.zen.title">Zen Mode</div>
+          <div class="mode-desc" data-i18n="home.mode.zen.desc">Endless practice. No timer, no score — just reps.</div>
+        </button>
+        <button class="mode-card" data-mode="timeattack">
+          <div class="mode-title" data-i18n="home.mode.timeattack.title">Time Attack</div>
+          <div class="mode-desc" data-i18n="home.mode.timeattack.desc">45s countdown. Correct push/fold buys time. Runs until the clock hits zero.</div>
+        </button>
+        <button class="mode-card" data-mode="custom">
+          <div class="mode-title" data-i18n="home.mode.custom.title">Custom Practice</div>
+          <div class="mode-desc" data-i18n="home.mode.custom.desc">Endless practice with hand-picked categories, turns, shapes, seatings, roles and length.</div>
+        </button>
+      </div>
+      <div class="high-scores">
+        <div class="hs-item">
+          <span data-i18n="home.hs.regular">Regular Best</span>
+          <b id="hsRegularGrade" class="hs-rank">—</b>
+          <div class="hs-sub" id="hsRegular">0 pts</div>
+        </div>
+        <div class="hs-item">
+          <span data-i18n="home.hs.timeattack">Time Attack Best</span>
+          <b id="hsTimeAttack" class="hs-rank">0</b>
+          <div class="hs-sub" data-i18n="home.hs.points">points</div>
+        </div>
+      </div>
+      <div class="home-actions">
+        <button class="btn primary big" id="startBtn" data-i18n="home.start">Start</button>
+      </div>
+      <p class="hint" data-i18n="home.hint">↑ ↓ to choose &nbsp;·&nbsp; Enter to start</p>
+    </div>
+    </div>
+  </div>
+
+  <div id="settings" class="screen">
+    <div class="settings-card">
+      <h1 data-i18n="settings.title">Custom Practice Setup</h1>
+      <p class="desc" data-i18n="settings.desc">Choose exactly what appears in Custom Practice. At least one option per section must remain enabled.</p>
+
+      <div class="settings-columns">
+        <div class="settings-col">
+          <div class="settings-section">
+            <div class="settings-section-title" data-i18n="settings.cat.title">Tile Categories</div>
+            <div class="settings-grid" id="catSettings">
+              <label class="chk"><input type="checkbox" data-cat="Double musuji 4/5/6"><span data-i18n="settings.cat.doubleMusuji">Double Musuji 4/5/6</span></label>
+              <label class="chk"><input type="checkbox" data-cat="Musuji 3/7"><span data-i18n="settings.cat.musuji37">Musuji 3/7</span></label>
+              <label class="chk"><input type="checkbox" data-cat="Musuji 2/8"><span data-i18n="settings.cat.musuji28">Musuji 2/8</span></label>
+              <label class="chk"><input type="checkbox" data-cat="Katamusuji 4/5/6"><span data-i18n="settings.cat.katamusuji">Katamusuji 4/5/6</span></label>
+              <label class="chk"><input type="checkbox" data-cat="Musuji 1/9"><span data-i18n="settings.cat.musuji19">Musuji 1/9</span></label>
+            </div>
+            <p class="settings-note" id="settingsNote" data-i18n="settings.note.cat">Select categories to include.</p>
+          </div>
+
+          <div class="settings-section">
+            <div class="settings-section-title" data-i18n="settings.turn.title">Turns</div>
+            <div class="settings-grid settings-grid-3" id="turnSettings">
+              <label class="chk"><input type="checkbox" data-turn="5"><span data-i18n="settings.turn.5">Turn 5</span></label>
+              <label class="chk"><input type="checkbox" data-turn="9"><span data-i18n="settings.turn.9">Turn 9</span></label>
+              <label class="chk"><input type="checkbox" data-turn="14"><span data-i18n="settings.turn.14">Turn 14</span></label>
+            </div>
+            <p class="settings-note" id="turnsNote" data-i18n="settings.note.turn">Select turns to include.</p>
+          </div>
+
+          <div class="settings-grid settings-grid-3" id="shapeSettings">
+            <label class="chk"><input type="checkbox" data-shape="Perfect"><span data-i18n="settings.shape.perfect">[A] Perfect</span></label>
+            <label class="chk"><input type="checkbox" data-shape="Good*2"><span data-i18n="settings.shape.good2">[B] Ryanmen ×2</span></label>
+            <label class="chk"><input type="checkbox" data-shape="Good+Ryankan"><span data-i18n="settings.shape.goodRyankan">[C] Ryanmen + Ryankan</span></label>
+            <label class="chk"><input type="checkbox" data-shape="Good+Kanchan"><span data-i18n="settings.shape.goodKanchan">[D] Ryanmen + Kanchan</span></label>
+            <label class="chk"><input type="checkbox" data-shape="Bad+Ryankan"><span data-i18n="settings.shape.badRyankan">[E] Kanchan + Ryankan</span></label>
+            <label class="chk"><input type="checkbox" data-shape="Chiitoi"><span data-i18n="settings.shape.pairs">[F] Chiitoi</span></label>
+            <label class="chk"><input type="checkbox" data-shape="BadHeadless"><span data-i18n="settings.shape.badHeadless">[C−] Bad Headless</span></label>
+            <label class="chk"><input type="checkbox" data-shape="MediocreHeadless"><span data-i18n="settings.shape.mediocreHeadless">[C+] Mediocre Headless</span></label>
+            <label class="chk"><input type="checkbox" data-shape="BadKuttsuki"><span data-i18n="settings.shape.badKuttsuki">[C] Bad Kuttsuki</span></label>
+            <label class="chk"><input type="checkbox" data-shape="StandardHeadless"><span data-i18n="settings.shape.standardHeadless">[A−] Std Headless</span></label>
+            <label class="chk"><input type="checkbox" data-shape="StandardKuttsuki"><span data-i18n="settings.shape.standardKuttsuki">[A] Std Kuttsuki</span></label>
+            <label class="chk"><input type="checkbox" data-shape="GoodHeadless1"><span data-i18n="settings.shape.goodHeadless1">[S] Good Conjoined Headless</span></label>
+            <label class="chk"><input type="checkbox" data-shape="GoodHeadless2"><span data-i18n="settings.shape.goodHeadless2">[S] Ankou Headless</span></label>
+            <label class="chk"><input type="checkbox" data-shape="GoodKuttsuki"><span data-i18n="settings.shape.goodKuttsuki">[S+] Good Kuttsuki</span></label>
+          </div>
+
+          <div class="settings-section">
+            <div class="settings-section-title" data-i18n="settings.hand.title">Hand State</div>
+            <div class="settings-grid" id="handSettings">
+              <label class="chk"><input type="checkbox" data-hand="menzen"><span data-i18n="settings.hand.menzen">Menzen (Closed)</span></label>
+              <label class="chk"><input type="checkbox" data-hand="fuuro"><span data-i18n="settings.hand.fuuro">Fuuro (Open)</span></label>
+            </div>
+            <p class="settings-note" id="handsNote" data-i18n="settings.note.hand">Select hand states to include.</p>
+          </div>
+        </div>
+
+        <div class="settings-col">
+          <div class="settings-section">
+            <div class="settings-section-title" data-i18n="settings.declarer.title">Riichi Caller Seat</div>
+            <div class="settings-grid settings-grid-3" id="declarerSettings">
+              <label class="chk"><input type="checkbox" data-declarer="kamicha"><span data-i18n="settings.declarer.kamicha">Kamicha</span></label>
+              <label class="chk"><input type="checkbox" data-declarer="toimen"><span data-i18n="settings.declarer.toimen">Toimen</span></label>
+              <label class="chk"><input type="checkbox" data-declarer="shimocha"><span data-i18n="settings.declarer.shimocha">Shimocha</span></label>
+            </div>
+            <p class="settings-note" id="declarersNote" data-i18n="settings.note.declarer">Select declarer seats to include.</p>
+          </div>
+
+          <div class="settings-section">
+            <div class="settings-section-title" data-i18n="settings.playerrole.title">Your Role</div>
+            <div class="settings-grid" id="playerRoleSettings">
+              <label class="chk"><input type="checkbox" data-playerrole="Dealer"><span data-i18n="settings.role.dealer">Dealer</span></label>
+              <label class="chk"><input type="checkbox" data-playerrole="Non-Dealer"><span data-i18n="settings.role.nondealer">Non-Dealer</span></label>
+            </div>
+            <p class="settings-note" id="playerRolesNote" data-i18n="settings.note.playerrole">Select your role to include.</p>
+          </div>
+
+          <div class="settings-section">
+            <div class="settings-section-title" data-i18n="settings.opprole.title">Riichi Caller Role</div>
+            <div class="settings-grid" id="oppRoleSettings">
+              <label class="chk"><input type="checkbox" data-opprole="Dealer"><span data-i18n="settings.role.dealer">Dealer</span></label>
+              <label class="chk"><input type="checkbox" data-opprole="Non-Dealer"><span data-i18n="settings.role.nondealer">Non-Dealer</span></label>
+            </div>
+            <p class="settings-note" id="oppRolesNote" data-i18n="settings.note.opprole">Select the declarer's role to include.</p>
+          </div>
+
+          <div class="settings-section">
+            <div class="settings-section-title" data-i18n="settings.qcount.title">Question Count</div>
+            <div class="settings-grid settings-grid-4" id="questionCountSettings">
+              <label class="chk"><input type="checkbox" data-qcount="5"><span>5</span></label>
+              <label class="chk"><input type="checkbox" data-qcount="10"><span>10</span></label>
+              <label class="chk"><input type="checkbox" data-qcount="15"><span>15</span></label>
+              <label class="chk"><input type="checkbox" data-qcount="20"><span>20</span></label>
+            </div>
+            <p class="settings-note" id="qcountNote" data-i18n="settings.note.qcount">Choose the length of the practice run.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-actions">
+        <button class="btn" id="customBack" data-i18n="settings.back">Back</button>
+        <button class="btn primary" id="customStart" data-i18n="settings.start">Start Practice</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="game" class="screen">
+    <header id="gameHeader">
+      <div class="hdr-left">
+        <span class="logo" data-i18n="game.logo">1-shanten Oracle</span>
+        <span class="pill" id="modePill">Regular</span>
+      </div>
+      <div class="hdr-right">
+        <span class="timer-wrapper">
+          <span class="pill time" id="timerPill">0s</span>
+          <span class="sec-delta" id="secDelta"></span>
+        </span>
+        <span class="pill combo" id="comboPill">Combo 0</span>
+        <span class="pill" id="qCounter">Q 1 / 10</span>
+        <span class="pill score" id="scorePill">Score 0</span>
+        <button class="btn" id="helpBtn" style="padding:6px 12px;font-size:14px;font-weight:800;">?</button>
+        <button class="btn" id="dealInBtn" style="padding:6px 14px;font-size:12px;" data-i18n="game.dealin">Deal-in Rate Reference</button>
+        <button class="btn" id="shapesBtn" style="padding:6px 14px;font-size:12px;" data-i18n="game.shapes">Shapes</button>
+        <button class="btn" id="exitBtn" style="padding:6px 14px;font-size:12px;" data-i18n="game.exit">Exit</button>
+      </div>
+    </header>
+
+    <div class="card" id="shapeTierCard">
+      <h3 data-i18n="game.panel.shapeTiers">Shape Tiers</h3>
+      <div class="panel-title" id="shapeTierTitle">Hidden</div>
+      <div class="panel-table-wrap" id="shapeTierTableWrap"></div>
+      <div class="direct-nav" id="shapeTierDirectNav"></div>
+      <div class="panel-controls">
+        <button class="btn" id="shapeTierPrev">◀</button>
+        <button class="panel-indicator-btn" id="shapeTierIndicator" title="Auto-select matching table" type="button">Auto</button>
+        <button class="btn" id="shapeTierNext">▶</button>
+      </div>
+    </div>
+
+    <div id="tableWrap"><div id="board"></div></div>
+
+
+    <div class="card" id="thresholdCard">
+      <h3 data-i18n="game.panel.thresholds">Thresholds</h3>
+      <div class="panel-title" id="thresholdTitle">Hidden</div>
+      <div class="panel-table-wrap" id="thresholdTableWrap"></div>
+      <div class="direct-nav" id="thresholdDirectNav"></div>
+      <div class="panel-controls">
+        <button class="btn" id="threshPrev">◀</button>
+        <button class="panel-indicator-btn" id="threshIndicator" title="Auto-select matching table" type="button">Auto</button>
+        <button class="btn" id="threshNext">▶</button>
+      </div>
+    </div>
+
+    <aside id="sidebar">
+      <div class="card">
+        <h3 data-i18n="game.quiz.title">Quiz</h3>
+        <div id="quizCard"></div>
+      </div>
+    </aside>
+
+    <div id="bottomArea">
+      <div id="scenario">
+        <div class="scard"><div class="slabel" data-i18n="game.sc.shape">Shape &amp; Status</div><div class="svalue" id="scShape">—</div></div>
+        <div class="scard"><div class="slabel" data-i18n="game.sc.yaku">Yaku &amp; Dora</div><div class="svalue hl" id="scYaku">—</div></div>
+        <div class="scard"><div class="slabel" data-i18n="game.sc.role">Role</div><div class="svalue" id="scRole">—</div></div>
+        <div class="scard"><div class="slabel" data-i18n="game.sc.declarer">Riichi Declarer</div><div class="svalue" id="scDecl">—</div></div>
+      </div>
+      <div class="card" id="discardCard">
+        <h3 data-i18n="game.discard.title">Your Discard — Tile Category</h3>
+        <div class="discard-cat" id="discardCat">Double Musuji</div>
+        <div class="discard-desc" id="discardDesc">4, 5 or 6 — Double non-suji tile</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="results" class="screen">
+    <div class="results-card">
+      <h1 id="resultsTitle">Run Complete</h1>
+      <div class="grade" id="gradeLetter">A</div>
+      <div class="results-grid" id="resultsGrid"></div>
+      <div class="res-actions">
+        <button class="btn primary big" id="playAgain" data-i18n="results.playAgain">Play Again</button>
+        <button class="btn big" id="backToMenu" data-i18n="results.menu">Back to Menu</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="dealInModal" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 data-i18n="dealin.title">Deal-in Rate Reference</h2>
+        <button class="modal-close" id="closeDealIn" aria-label="Close">×</button>
+      </div>
+      <p class="modal-desc" data-i18n="dealin.desc">Minimum passed sujis needed to reach each estimated deal-in rate range, by tile category.</p>
+      <div id="dealInChartWrap"></div>
+      <div class="deal-in-note">
+        <strong data-i18n="dealin.modTitle">Common modifiers (not in table):</strong><br>
+        <span data-i18n="dealin.modBody">Dora: +2% · Sotogawa: −5% · 1-chance: −3% · Anko/Anko-suji: +2%</span>
+        <span class="warn" data-i18n="dealin.modWarn">These modifiers are not accounted for when determining the estimated deal-in rates.</span>
+      </div>
+    </div>
+  </div>
+
+  <div id="shapesModal" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 data-i18n="shapes.title">Shape Reference</h2>
+        <button class="modal-close" id="closeShapes" aria-label="Close">×</button>
+      </div>
+      <p class="modal-desc" data-i18n="shapes.desc">Overview of the hand shape categories with example 13-tile hands.</p>
+      <div id="shapesContentWrap" class="shape-list"></div>
+    </div>
+  </div>
+
+  <div id="helpModal" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 data-i18n="help.title">How to Play</h2>
+        <button class="modal-close" id="closeHelp" aria-label="Close">×</button>
+      </div>
+      <div class="help-content" id="helpBody"></div>
+    </div>
+  </div>
+
+  <div id="aboutModal" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 data-i18n="about.title">About</h2>
+        <button class="modal-close" id="closeAbout" aria-label="Close">×</button>
+      </div>
+      <div class="modal-body">
+        <h3 data-i18n="about.overview">Overview</h3>
+        <p data-i18n="about.p1">…</p>
+        <h3 data-i18n="about.howToUse">How to Use</h3>
+        <div class="modal-prose" data-i18n="about.p2">…</div>
+        <h3 data-i18n="about.sources">Sources and Methodology</h3>
+        <p data-i18n="about.p4">…</p>
+        <h3 data-i18n="about.credits">Credits</h3>
+        <p data-i18n="about.p3">…</p>
+      </div>
+      <img src="birb.png" alt="birb" style="max-width: 75px; margin-top: 12px;">
+    </div>
+  </div>
+
+</div>
+<script src="script.js"></script>
+</body>
+</html>
