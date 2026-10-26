@@ -1,1350 +1,2161 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="theme-color" content="#0f172a">
-<link rel="icon" type="image/x-icon" href="favicon.ico">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-<title>1-shanten Oracle</title>
-<style>
-:root{
-  --bg:#0f172a; --panel:#1e293b; --panel2:#243038; --border:#334155;
-  --text:#f8fafc; --muted:#94a3b8;
-  --green:#22c55e; --red:#ef4444; --blue:#3b82f6; --amber:#f59e0b;
-}
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-html,body{margin:0;padding:0;background:var(--bg);color:var(--text);
-  font-family:system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
-  -webkit-font-smoothing:antialiased;font-size:14px;}
-body{overflow-x:hidden;}
-button{font-family:inherit;color:inherit;}
-
-.topbar{
-  position:fixed;top:0;left:0;right:0;background:var(--bg);z-index:100;
-  border-bottom:1px solid var(--border);transition:transform .25s ease;
-}
-.topbar.hidden{transform:translateY(-100%);}
-.topbar-inner{
-  max-width:640px;margin:0 auto;padding:8px 12px;
-  display:flex;align-items:center;justify-content:space-between;gap:8px;
-}
-.app-title{font-size:14px;font-weight:800;letter-spacing:-.3px;flex:1;min-width:0;
-  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.app-sub-title{font-weight:600;color:var(--muted);font-size:11px;margin-left:6px;letter-spacing:0;}
-
-.topbar-actions{display:flex;gap:6px;flex-shrink:0;}
-.lang-btn{
-  padding:8px 14px;font-size:12px;font-weight:800;
-  background:var(--panel);border:2px solid var(--border);border-radius:10px;cursor:pointer;
-  transition:all .14s;letter-spacing:.3px;
-}
-.lang-btn:hover{border-color:#64748b;background:var(--panel2);transform:translateY(-1px);}
-
-.app{max-width:640px;margin:0 auto;padding:70px 10px 40px;}
-
-.section{background:var(--panel);border:1px solid var(--border);border-radius:12px;
-  padding:12px 14px;margin-bottom:10px;}
-.section-title{font-size:10.5px;font-weight:800;text-transform:uppercase;
-  letter-spacing:1.4px;color:#7dd3fc;margin-bottom:10px;}
-
-.btn-row{display:flex;flex-wrap:wrap;gap:6px;}
-.btn{flex:1 1 0;min-width:0;padding:11px 8px;min-height:44px;
-  background:var(--panel2);border:2px solid var(--border);border-radius:10px;
-  font-size:12.5px;font-weight:800;letter-spacing:.2px;cursor:pointer;transition:.12s;
-  display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.2;
-  white-space:nowrap;overflow:hidden;}
-.btn:hover{border-color:#64748b;background:#2f3f52;}
-.btn.selected{border-color:var(--blue);background:rgba(59,130,246,.15);color:#93c5fd;
-  box-shadow:0 0 12px rgba(59,130,246,.25);}
-.btn:disabled{opacity:.35;cursor:not-allowed;}
-.btn.selected:disabled{opacity:.75;cursor:default;}
-
-#catRow{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
-#catRow .btn{font-size:11.5px;padding:10px 6px;}
-
-#shapeRow{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
-#shapeRow .btn{font-size:11.5px;padding:10px 6px;min-height:48px;}
-
-#otherShapesRow{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px;}
-#otherShapesRow .btn{font-size:11px;padding:9px 6px;min-height:44px;}
-#otherShapesRow.hidden{display:none;}
-
-#otherToggle{
-  margin-top:8px;width:100%;padding:9px 12px;background:transparent;
-  border:1px dashed var(--border);border-radius:8px;color:var(--muted);
-  font-size:11.5px;font-weight:800;letter-spacing:.5px;cursor:pointer;text-transform:uppercase;
-  transition:.12s;
-}
-#otherToggle:hover{color:#93c5fd;border-color:var(--blue);}
-
-.subtle{font-size:11.5px;color:var(--muted);margin-top:8px;line-height:1.4;min-height:16px;}
-
-.suji-control{display:flex;gap:8px;align-items:center;justify-content:center;margin-bottom:10px;}
-.suji-big-btn{width:76px;height:76px;font-size:34px;font-weight:900;line-height:1;
-  background:var(--panel2);border:2px solid var(--border);border-radius:14px;
-  cursor:pointer;transition:.1s;display:flex;align-items:center;justify-content:center;
-  user-select:none;-webkit-user-select:none;}
-.suji-big-btn:hover{border-color:#64748b;background:#2f3f52;}
-.suji-big-btn:active{background:rgba(59,130,246,.25);border-color:var(--blue);transform:scale(.96);}
-.suji-big-btn:disabled{opacity:.3;cursor:not-allowed;transform:none;}
-.suji-display{flex:1;text-align:center;font-size:60px;font-weight:900;line-height:1;
-  font-variant-numeric:tabular-nums;user-select:none;-webkit-user-select:none;}
-.suji-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;}
-.suji-btn{padding:9px 0;min-height:38px;
-  background:var(--panel2);border:2px solid var(--border);border-radius:7px;
-  color:var(--text);font-size:13.5px;font-weight:800;
-  font-variant-numeric:tabular-nums;cursor:pointer;transition:.1s;}
-.suji-btn:hover{border-color:#64748b;}
-.suji-btn.selected{border-color:var(--blue);background:rgba(59,130,246,.2);color:#93c5fd;}
-
-.cond-row{margin-bottom:10px;}
-.cond-row:last-child{margin-bottom:0;}
-.cond-label{font-size:10.5px;font-weight:800;text-transform:uppercase;
-  letter-spacing:1.2px;color:#64748b;margin-bottom:6px;line-height:1.3;}
-
-#yakuRow {
-  width: 50%;
-  transition: opacity .15s;
-}
-#yakuRow.disabled {
-  opacity: .4;
-}
-#yakuRow .btn {
-  font-size: 10.5px;
-  padding: 9px 3px;
-  min-height: 40px;
-  white-space: normal;
-  line-height: 1.15;
-}
-
-#scoreRow {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 6px;
-}
-#scoreRow .btn {
-  font-size: 12px;
-  padding: 10px 3px;
-  min-height: 44px;
-  font-variant-numeric: tabular-nums;
-}
-#scoreRow .btn.pinfu-disabled {
-  opacity: .3;
-}
-
-.result-section{border:2px solid var(--blue);
-  background:linear-gradient(180deg,#1a2438 0%,#1e293b 100%);padding:16px;}
-
-.verdict{text-align:center;padding:16px 12px;margin-bottom:14px;
-  border-radius:12px;font-size:28px;font-weight:900;letter-spacing:.5px;line-height:1.2;}
-.verdict.push{background:rgba(34,197,94,.15);color:#86efac;border:2px solid #16a34a;
-  text-shadow:0 0 20px rgba(34,197,94,.4);}
-.verdict.pull{background:rgba(239,68,68,.15);color:#fca5a5;border:2px solid #dc2626;
-  text-shadow:0 0 20px rgba(239,68,68,.4);}
-.verdict.iron-push{
-  background:rgba(34,197,94,.22);
-  color:#4ade80;
-  border:2px solid #22c55e;
-  text-shadow:0 0 30px rgba(34,197,94,.65),0 0 60px rgba(34,197,94,.3);
-  box-shadow:0 0 24px rgba(34,197,94,.25);
-}
-.verdict.iron-pull{
-  background:rgba(239,68,68,.22);
-  color:#f87171;
-  border:2px solid #ef4444;
-  text-shadow:0 0 30px rgba(239,68,68,.65),0 0 60px rgba(239,68,68,.3);
-  box-shadow:0 0 24px rgba(239,68,68,.25);
-}
-.verdict.borderline{background:rgba(245,158,11,.15);color:#fcd34d;border:2px solid #d97706;
-  text-shadow:0 0 20px rgba(245,158,11,.4);}
-.verdict.empty{background:var(--panel2);border:2px dashed var(--border);
-  color:var(--muted);font-size:13px;font-weight:700;padding:24px 12px;}
-.verdict-sub{display:block;font-size:12px;font-weight:700;opacity:.8;
-  letter-spacing:.5px;margin-top:4px;}
-.verdict-mawashi{
-  display:block;
-  font-size:10.5px;
-  color:#94a3b8;
-  margin-top:6px;
-  letter-spacing:.3px;
-  font-weight:600;
-}
-
-.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
-.stat{background:var(--panel2);border:1px solid var(--border);
-  border-radius:9px;padding:10px 8px;text-align:center;}
-.stat-label{font-size:9.5px;letter-spacing:1.2px;text-transform:uppercase;
-  color:var(--muted);font-weight:800;margin-bottom:4px;line-height:1.2;}
-.stat-value{font-size:19px;font-weight:900;line-height:1.1;font-variant-numeric:tabular-nums;}
-.stat-value.empty{opacity:.3;}
-.stat-sub{font-size:10px;color:var(--muted);font-weight:700;margin-top:3px;}
-
-.modifier-indicator{font-size:11px;color:#fbbf24;font-weight:700;
-  padding:6px 10px;margin-bottom:10px;background:rgba(251,191,36,.1);border-radius:6px;
-  border:1px solid rgba(251,191,36,.3);display:flex;align-items:center;gap:6px;}
-
-.tier-table{width:100%;border-collapse:collapse;font-size:11px;margin-top:6px;}
-.tier-table th{background:var(--panel2);color:var(--muted);font-weight:800;
-  padding:7px 3px;border:1px solid var(--border);cursor:pointer;
-  font-size:9.5px;letter-spacing:.3px;text-transform:uppercase;line-height:1.2;
-  transition:background .12s,color .12s;}
-.tier-table th:hover{background:#2f3f52;color:var(--text);}
-.tier-table th.current{background:var(--blue);color:#fff;}
-.tier-table th.tier-col{cursor:default;background:var(--panel2);color:var(--muted);}
-.tier-table th.tier-col:hover{background:var(--panel2);color:var(--muted);}
-.tier-table td{padding:5px 3px;border:1px solid var(--border);font-weight:800;
-  text-align:center;font-variant-numeric:tabular-nums;font-size:11px;
-  cursor:pointer;transition:background .1s;}
-.tier-table td.tier-col{cursor:default;background:var(--panel2);color:var(--muted);
-  font-size:10.5px;letter-spacing:.3px;}
-.tier-table td:hover:not(.tier-col):not(.highlight-cell){background:rgba(59,130,246,.08);}
-.tier-table tr.current td.tier-col{background:var(--blue);color:#fff;}
-.tier-table tr.current td{background:rgba(59,130,246,.10);}
-.tier-table td.highlight-cell{
-  color:#fff !important;font-weight:900;font-size:12.5px;
-  box-shadow:inset 0 0 0 2px #60a5fa,0 0 12px rgba(59,130,246,.4);
-}
-
-.result-explainer{font-size:12px;line-height:1.6;color:#cbd5e1;
-  padding:10px 12px;border-radius:9px;
-  background:rgba(15,23,42,.6);border:1px solid var(--border);margin-top:12px;}
-.result-explainer b{color:#f8fafc;}
-
-.btn-reset{display:block;width:100%;
-  padding:14px 16px;margin:0 0 10px;
-  background:var(--panel2);border:2px solid var(--border);border-radius:10px;
-  color:var(--text);font-size:14px;font-weight:800;cursor:pointer;
-  transition:.12s;letter-spacing:.5px;text-transform:uppercase;}
-.btn-reset:hover{border-color:#64748b;background:#2f3f52;}
-.btn-reset:active{transform:scale(.98);background:rgba(59,130,246,.15);border-color:var(--blue);}
-
-.btn-next-tile{
-  display:block;width:100%;padding:12px 16px;margin-bottom:10px;
-  background:rgba(34,197,94,.12);border:2px solid #16a34a;border-radius:10px;
-  color:#86efac;font-size:13px;font-weight:800;cursor:pointer;
-  transition:.12s;letter-spacing:.5px;text-transform:uppercase;
-}
-.btn-next-tile:hover{background:rgba(34,197,94,.2);}
-.btn-next-tile.hidden{display:none;}
-
-details{background:var(--panel);border:1px solid var(--border);
-  border-radius:12px;margin-bottom:10px;overflow:hidden;}
-details[open]{padding-bottom:12px;}
-details.deal-in-details[open]{border-color:var(--blue);}
-summary{padding:13px 14px;cursor:pointer;list-style:none;
-  font-size:12px;font-weight:800;letter-spacing:.5px;
-  text-transform:uppercase;color:#7dd3fc;
-  display:flex;align-items:center;justify-content:space-between;}
-summary::after{content:'▸';font-size:14px;color:var(--muted);transition:transform .2s;}
-details[open] summary::after{transform:rotate(90deg);}
-summary::-webkit-details-marker{display:none;}
-.ref-body{padding:0 14px;}
-
-.shape-ref-item{padding:10px 0;border-bottom:1px solid var(--border);}
-.shape-ref-item:last-child{border-bottom:none;padding-bottom:0;}
-.shape-ref-title{font-size:13px;font-weight:800;margin-bottom:3px;color:#f8fafc;}
-.shape-ref-title .shape-id{display:inline-block;background:var(--blue);color:#fff;
-  padding:1px 7px;border-radius:5px;font-size:11px;margin-right:7px;letter-spacing:.3px;}
-.shape-ref-meta{font-size:11.5px;color:var(--muted);line-height:1.5;}
-.shape-ref-example{margin-top:5px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-  font-size:12px;color:#7dd3fc;background:rgba(59,130,246,.08);
-  padding:5px 8px;border-radius:6px;letter-spacing:.2px;word-break:break-all;}
-
-.deal-in-table{width:100%;border-collapse:collapse;font-size:11px;margin:8px 0;}
-.deal-in-table th{background:var(--panel2);color:var(--muted);font-weight:800;
-  padding:5px 3px;border:1px solid var(--border);
-  font-size:10px;letter-spacing:.4px;}
-.deal-in-table td{padding:5px 3px;border:1px solid var(--border);
-  text-align:center;font-weight:800;font-variant-numeric:tabular-nums;}
-.deal-in-table td:first-child{background:var(--panel2);color:#7dd3fc;
-  font-size:10.5px;white-space:nowrap;}
-
-.thresh-ref-table{width:100%;border-collapse:collapse;font-size:10px;margin-bottom:10px;}
-.thresh-ref-table th{background:var(--panel2);color:var(--muted);font-weight:800;
-  padding:3px 2px;border:1px solid var(--border);font-size:9px;line-height:1.2;}
-.thresh-ref-table td{padding:3px 2px;border:1px solid var(--border);
-  text-align:center;font-weight:800;font-variant-numeric:tabular-nums;}
-.thresh-ref-table td:first-child{background:var(--panel2);color:var(--muted);}
-.thresh-ref-table td.empty-cell{color:#475569;font-weight:400;opacity:.5;}
-.thresh-ref-table.flipped td{padding:4px 2px;font-size:10px;min-width:55px;}
-
-.ref-subtitle{font-size:11px;font-weight:800;color:#7dd3fc;
-  margin:10px 0 6px;letter-spacing:.5px;text-transform:uppercase;}
-
-.shape-legend{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:10px;
-  color:var(--muted);margin-bottom:6px;line-height:1.4;}
-.shape-legend span b{color:#f8fafc;margin-right:3px;}
-
-.ref-note{font-size:10.5px;color:var(--muted);margin:0 0 8px;line-height:1.4;font-style:italic;}
-
-@media (min-width:720px){
-  .topbar-inner{max-width:800px;padding:10px 16px;}
-  .app-title{font-size:16px;}
-  .app{max-width:800px;padding:80px 16px 40px;}
-  .btn{font-size:13px;padding:12px 10px;}
-  .suji-grid{grid-template-columns:repeat(10,1fr);}
-  .stat-grid{grid-template-columns:1fr 1fr 1fr 1fr;}
-  #catRow{grid-template-columns:repeat(3,1fr);}
-  #shapeRow{grid-template-columns:repeat(3,1fr);}
-  #otherShapesRow{grid-template-columns:repeat(3,1fr);}
-  #yakuRow .btn{font-size:12px;padding:10px 6px;}
-  #scoreRow{grid-template-columns:repeat(7,1fr);}
-  #scoreRow .btn{font-size:13px;}
-}
-
-.modal-body{font-size:13px;line-height:1.65;color:#cbd5e1;}
-.modal-body h3{color:#7dd3fc;font-size:12px;margin:14px 0 6px;
-  font-weight:800;text-transform:uppercase;letter-spacing:1px;}
-.modal-body h3:first-child{margin-top:0;}
-.modal-body p{margin:0 0 8px;}
-.modal-body b{color:#f8fafc;}
-.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.62);z-index:9999;
-  align-items:center;justify-content:center;padding:24px;backdrop-filter:blur(2px);}
-.modal-overlay.active{display:flex;}
-.modal-content{background:var(--panel);border:1px solid var(--border);border-radius:16px;
-  padding:22px 26px;max-width:760px;width:100%;max-height:85vh;overflow-y:auto;
-  box-shadow:0 24px 60px rgba(0,0,0,.55);}
-.modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;}
-.modal-header h2{margin:0;font-size:20px;letter-spacing:-.3px;}
-.modal-close{background:transparent;border:none;color:var(--muted);font-size:26px;cursor:pointer;line-height:1;
-  padding:0;width:30px;height:30px;border-radius:6px;transition:.12s;}
-.modal-close:hover{background:var(--panel2);color:var(--text);}
-.modal-desc{color:var(--muted);font-size:12.5px;margin:0 0 16px;line-height:1.5;}
-.modal-prose{margin:0 0 8px;line-height:1.65;}
-.modal-prose h4{color:#cbd5e1;font-size:12px;margin:12px 0 6px;
-  font-weight:800;letter-spacing:.5px;text-transform:none;}
-.modal-prose ul{margin:4px 0 8px;padding-left:20px;}
-.modal-prose li{margin-bottom:6px;line-height:1.55;}
-.modal-prose i{color:#e2e8f0;}
-.modal-prose a{color:#738ad0;text-decoration:none;}
-.modal-prose a:hover{text-decoration:underline;}
-
-</style>
-</head>
-<body>
-
-<header class="topbar" id="topbar">
-  <div class="topbar-inner">
-    <div class="app-title" id="appTitle">
-      <span data-i18n="app.title-icon">1-shanten Oracle</span>
-      <span class="app-sub-title" data-i18n="app.titleSub">Push-pull Lookup Table</span>
-    </div>
-    
-    <div class="topbar-actions">
-      <button class="lang-btn" id="langBtn">日本語</button>
-      <button class="lang-btn" id="aboutBtn" data-i18n="home.about">About</button>
-      <button class="lang-btn" id="linkBtn" data-i18n="home.link" onclick="document.location='index.html'">Home</button>
-    </div>
-  </div>
-</header>
-
-<div class="app">
-  <main>
-
-    <section class="section">
-      <div class="section-title" data-i18n="label.conditions">Your Conditions</div>
-      <div class="cond-row">
-        <div class="cond-label" data-i18n="label.you">You</div>
-        <div class="btn-row" id="playerRow">
-          <button class="btn" data-player="nondealer" data-i18n="role.nondealer">Non-Dealer</button>
-          <button class="btn" data-player="dealer" data-i18n="role.dealer">Dealer</button>
-        </div>
-      </div>
-      <div class="cond-row">
-        <div class="cond-label" data-i18n="label.riichiRole">Riichi Caller</div>
-        <div class="btn-row" id="riichiRoleRow">
-          <button class="btn" data-riichi-role="nondealer" data-i18n="role.nondealer">Non-Dealer</button>
-          <button class="btn" data-riichi-role="dealer" data-i18n="role.dealer">Dealer</button>
-        </div>
-      </div>
-      <div class="cond-row">
-        <div class="cond-label" data-i18n="label.riichiSeat">Riichi Caller Seat</div>
-        <div class="btn-row" id="riichiSeatRow">
-          <button class="btn" data-riichi-seat="kamicha" data-i18n="seat.kamicha">Kamicha</button>
-          <button class="btn" data-riichi-seat="toimen" data-i18n="seat.toimen">Toimen</button>
-          <button class="btn" data-riichi-seat="shimocha" data-i18n="seat.shimocha">Shimocha</button>
-        </div>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="section-title" data-i18n="label.hand">Your Hand</div>
-      <div class="cond-row">
-        <div class="cond-label" data-i18n="label.handState">Hand State</div>
-        <div class="btn-row" id="handRow">
-          <button class="btn" data-hand="menzen" data-i18n="hand.menzen">Closed</button>
-          <button class="btn" data-hand="fuuro" data-i18n="hand.fuuro">Open</button>
-        </div>
-      </div>
-      <div class="cond-row" id="yakuRow">
-        <div class="cond-label" data-i18n="label.yakuState">Yaku when open</div>
-        <div class="btn-row" id="yakuRowBtns">
-          <button class="btn" data-yaku="noyaku" data-i18n="yaku.noyaku">No yaku</button>
-          <button class="btn" data-yaku="callable" data-i18n="yaku.callable">Has yaku</button>
-        </div>
-      </div>
-      <div class="cond-row">
-        <div class="cond-label" data-i18n="label.shape">Shape</div>
-        <div id="shapeRow">
-          <button class="btn" data-shape="Perfect" data-i18n="shapeA">[A] Perfect</button>
-          <button class="btn" data-shape="Good*2" data-i18n="shapeB">[B] Ryanmen×2</button>
-          <button class="btn" data-shape="Good+Ryankan" data-i18n="shapeC">[C] Ryanmen+Ryankan</button>
-          <button class="btn" data-shape="Good+Kanchan" data-i18n="shapeD">[D] Ryanmen+Kanchan</button>
-          <button class="btn" data-shape="Bad+Ryankan" data-i18n="shapeE">[E] Kanchan+Ryankan</button>
-          <button class="btn" data-shape="Chiitoi" data-i18n="shapeF">[F] Chiitoi</button>
-        </div>
-        <button id="otherToggle">▾ <span data-i18n="shape.other">Other Shapes</span></button>
-        <div id="otherShapesRow" class="hidden">
-          <button class="btn" data-shape="BadHeadless" data-i18n="shape.o1">[C−] Bad Headless</button>
-          <button class="btn" data-shape="MediocreHeadless" data-i18n="shape.o2">[C+] Mediocre Headless</button>
-          <button class="btn" data-shape="BadKuttsuki" data-i18n="shape.o3">[C] Bad Kuttsuki</button>
-          <button class="btn" data-shape="StandardHeadless" data-i18n="shape.o4">[A−] Std Headless</button>
-          <button class="btn" data-shape="StandardKuttsuki" data-i18n="shape.o5">[A] Std Kuttsuki</button>
-          <button class="btn" data-shape="GoodHeadless1" data-i18n="shape.o6">[S] Good Conjoined Headless</button>
-          <button class="btn" data-shape="GoodHeadless2" data-i18n="shape.o7">[S] Ankou Headless</button>
-          <button class="btn" data-shape="GoodKuttsuki" data-i18n="shape.o8">[S+] Good Kuttsuki</button>
-        </div>
-      </div>
-      <div class="cond-row">
-        <div class="cond-label" data-i18n="label.score">Ron value</div>
-        <div id="scoreRow"></div>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="section-title" data-i18n="label.turn">Turn</div>
-      <div class="btn-row" id="turnRow">
-        <button class="btn" data-turn="5" data-i18n="turn.early">Early · 5</button>
-        <button class="btn" data-turn="9" data-i18n="turn.mid">Mid · 9</button>
-        <button class="btn" data-turn="14" data-i18n="turn.late">Late · 14</button>
-      </div>
-    </section>
-
-    <details id="dealinSection" class="deal-in-details">
-      <summary data-i18n="label.dealin">Estimate Deal-in Rate</summary>
-      <div class="ref-body">
-        <div class="cond-row">
-          <div class="cond-label" data-i18n="label.category">Tile Category</div>
-          <div id="catRow">
-            <button class="btn" data-cat="Double musuji 4/5/6" data-i18n="cat.double">Double Musuji 4/5/6</button>
-            <button class="btn" data-cat="Musuji 3/7" data-i18n="cat.m37">Musuji 3/7</button>
-            <button class="btn" data-cat="Musuji 2/8" data-i18n="cat.m28">Musuji 2/8</button>
-            <button class="btn" data-cat="Katamusuji 4/5/6" data-i18n="cat.km">Katamusuji 4/5/6</button>
-            <button class="btn" data-cat="Musuji 1/9" data-i18n="cat.m19">Musuji 1/9</button>
-            <button class="btn" data-cat="Suji 3/7" data-i18n="cat.s37">Suji 3/7</button>
-            <button class="btn" data-cat="Suji 2/8" data-i18n="cat.s28">Suji 2/8</button>
-            <button class="btn" data-cat="Suji 1/9" data-i18n="cat.s19">Suji 1/9</button>
-            <button class="btn" data-cat="Naka-suji 4/5/6" data-i18n="cat.naka">Naka-suji 4/5/6</button>
-          </div>
-          <div class="subtle" id="catDesc" data-i18n="label.pickCat">Pick a category to compute the deal-in verdict.</div>
-        </div>
-        <div class="cond-row">
-          <div class="cond-label" data-i18n="label.modifiers">Deal-in Modifiers</div>
-          <div class="btn-row" id="modRow">
-            <button class="btn" data-mod="dora" data-i18n="mod.dora">Dora</button>
-            <button class="btn" data-mod="sotogawa" data-i18n="mod.sotogawa">Sotogawa</button>
-            <button class="btn" data-mod="oneChance" data-i18n="mod.oneChance">1-chance</button>
-            <button class="btn" data-mod="ankou" data-i18n="mod.ankou">Ankou</button>
-          </div>
-        </div>
-        <div class="cond-row">
-          <div class="cond-label" data-i18n="label.suji">Passed Suji</div>
-          <div class="suji-control">
-            <button class="suji-big-btn" id="sujiMinus" aria-label="Decrease">−</button>
-            <div class="suji-display" id="sujiDisplay">0</div>
-            <button class="suji-big-btn" id="sujiPlus" aria-label="Increase">+</button>
-          </div>
-          <div class="suji-grid" id="sujiGrid"></div>
-        </div>
-      </div>
-    </details>
-
-    <section class="section result-section" id="resultSection"></section>
-
-    <button class="btn-next-tile hidden" id="nextTileBtn">↻ <span data-i18n="action.newTile">New Tile</span></button>
-
-    <button class="btn-reset" id="resetBtn" data-i18n="action.reset">Reset</button>
-
-    <details>
-      <summary data-i18n="ref.dealin">Deal-in Rate Reference</summary>
-      <div class="ref-body" id="dealinRef"></div>
-    </details>
-    <details>
-      <summary data-i18n="ref.shapes">Shape Reference</summary>
-      <div class="ref-body" id="shapeRef"></div>
-    </details>
-    <details>
-      <summary data-i18n="ref.shapeTier">Shape Tier Tables</summary>
-      <div class="ref-body" id="shapeTierRef"></div>
-    </details>
-    <details>
-      <summary data-i18n="ref.threshold">Threshold Tables</summary>
-      <div class="ref-body" id="threshRef"></div>
-    </details>
-
-  </main>
-
-  <div id="aboutModal" class="modal-overlay">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2 data-i18n="about.title">About</h2>
-        <button class="modal-close" id="closeAbout" aria-label="Close">×</button>
-      </div>
-      <div class="modal-body">
-        <h3 data-i18n="about.overview">Overview</h3>
-        <p data-i18n="about.p1">…</p>
-        <h3 data-i18n="about.howToUse">How to Use</h3>
-        <div class="modal-prose" data-i18n="about.p2">…</div>
-        <h3 data-i18n="about.sources">Sources and Methodology</h3>
-        <p data-i18n="about.p4">…</p>
-        <h3 data-i18n="about.credits">Credits</h3>
-        <p data-i18n="about.p3">…</p>
-      </div>
-      <img src="birb.png" alt="birb" style="max-width: 75px;">
-    </div>
-  </div>
-</div>
-
-<script>
-/* =========================================================
-   TIER MAPS
-   ========================================================= */
-const CLOSED_TIER_MAP = {
-  'Perfect|4': 1,
-  'Perfect|3': 2, 'Good*2|4': 2,
-  'Perfect|2': 3, 'Good*2|3': 3, 'Good+Ryankan|4': 3,
-  'Perfect|1': 4, 'Good*2|2': 4, 'Good+Ryankan|3': 4, 'Good+Kanchan|4': 4,
-  'Good*2|1': 5, 'Good+Ryankan|2': 5, 'Bad+Ryankan|4': 5, 'Good+Kanchan|3': 5, 'Chiitoi|5': 5,
-  'Bad+Ryankan|3': 6, 'Chiitoi|4': 6,
-  'Good+Ryankan|1': 7, 'Good+Kanchan|2': 7, 'Bad+Ryankan|2': 7, 'Chiitoi|3': 7,
-  'Good+Kanchan|1': 8, 'Bad+Ryankan|1': 8
-};
-
-const OPEN_TIER_MAP_ND_C = {
-  'Perfect|4': 1, 'Good*2|4': 2,
-  'Perfect|3': 3, 'Good+Ryankan|4': 3, 'Good+Kanchan|4': 4, 'Good*2|3': 4,
-  'Perfect|2': 5, 'Good+Ryankan|3': 5, 'Good+Kanchan|3': 6, 'Bad+Ryankan|4': 5,
-  'Perfect|1': 6, 'Good*2|2': 6,
-  'Good*2|1': 7, 'Good+Ryankan|2': 7, 'Good+Kanchan|2': 8, 'Bad+Ryankan|3': 7,
-  'Good+Ryankan|1': 8, 'Good+Kanchan|1': 9, 'Bad+Ryankan|2': 9, 'Bad+Ryankan|1': 10
-};
-
-const OPEN_TIER_MAP_ND_NC = {
-  'Perfect|4': 2, 'Good*2|4': 3,
-  'Perfect|3': 4, 'Good+Ryankan|4': 4, 'Good*2|3': 5, 'Good+Kanchan|4': 5,
-  'Perfect|2': 6, 'Good+Ryankan|3': 6, 'Bad+Ryankan|4': 6,
-  'Perfect|1': 7, 'Good*2|2': 7, 'Good+Kanchan|3': 7,
-  'Good*2|1': 8, 'Good+Ryankan|2': 8, 'Bad+Ryankan|3': 8,
-  'Good+Ryankan|1': 9, 'Good+Kanchan|2': 9, 'Good+Kanchan|1': 10, 'Bad+Ryankan|2': 10, 'Bad+Ryankan|1': 10
-};
-
-const OPEN_TIER_MAP_D_C = {
-  'Perfect|4': 1, 'Good*2|4': 2,
-  'Perfect|3': 3, 'Good+Ryankan|4': 3, 'Good*2|3': 4, 'Good+Kanchan|4': 4,
-  'Perfect|2': 5, 'Good+Ryankan|3': 5, 'Bad+Ryankan|4': 5,
-  'Perfect|1': 6, 'Good*2|2': 6, 'Good+Kanchan|3': 6,
-  'Good*2|1': 8, 'Good+Ryankan|2': 8, 'Good+Kanchan|2': 9, 'Bad+Ryankan|3': 8,
-  'Good+Ryankan|1': 9, 'Good+Kanchan|1': 10, 'Bad+Ryankan|2': 10, 'Bad+Ryankan|1': 11
-};
-
-const OPEN_TIER_MAP_D_NC = {
-  'Perfect|4': 2, 'Good*2|4': 3,
-  'Perfect|3': 4, 'Good+Ryankan|4': 4, 'Good*2|3': 5, 'Good+Kanchan|4': 5,
-  'Perfect|2': 6,
-  'Good+Ryankan|3': 7, 'Bad+Ryankan|4': 7,
-  'Perfect|1': 8, 'Good*2|2': 8, 'Good+Kanchan|3': 8,
-  'Good*2|1': 9, 'Good+Ryankan|2': 9, 'Bad+Ryankan|3': 9,
-  'Good+Ryankan|1': 10, 'Good+Kanchan|2': 10, 'Good+Kanchan|1': 11, 'Bad+Ryankan|2': 11
-};
-
-/* =========================================================
-   THRESHOLDS
-   ========================================================= */
-const CLOSED_THRESHOLDS = {
-  "VS Non-Dealer": {
-    "Turn 5":  { 1: 1.0, 2: 1.0, 3: 0.15, 4: 0.10, 5: 0.07, 6: 0.06, 7: 0.03, 8: 0.01 },
-    "Turn 9":  { 1: 0.23, 2: 0.18, 3: 0.13, 4: 0.08, 5: 0.06, 6: 0.06, 7: 0.03, 8: 0.01 },
-    "Turn 14": { 1: 0.12, 2: 0.10, 3: 0.08, 4: 0.06, 5: 0.04, 6: 0.02, 7: 0.02, 8: 0.01 }
-  },
-  "VS Dealer": {
-    "Turn 5":  { 1: 1.0, 2: 0.15, 3: 0.10, 4: 0.07, 5: 0.05, 6: 0.04, 7: 0.02, 8: 0.01 },
-    "Turn 9":  { 1: 0.15, 2: 0.13, 3: 0.08, 4: 0.05, 5: 0.04, 6: 0.04, 7: 0.02, 8: 0.01 },
-    "Turn 14": { 1: 0.05, 2: 0.05, 3: 0.04, 4: 0.03, 5: 0.02, 6: 0.02, 7: 0.01, 8: 0.00 }
-  },
-  "As Dealer": {
-    "Turn 5":  { 1: 1.0, 2: 1.0, 3: 1.0, 4: 1.0, 5: 0.22, 6: 0.13, 7: 0.09, 8: 0.05 },
-    "Turn 9":  { 1: 1.0, 2: 1.0, 3: 1.0, 4: 0.25, 5: 0.20, 6: 0.12, 7: 0.08, 8: 0.05 },
-    "Turn 14": { 1: 0.24, 2: 0.20, 3: 0.17, 4: 0.13, 5: 0.10, 6: 0.09, 7: 0.07, 8: 0.04 }
-  }
-};
-
-const OPEN_THRESHOLDS = {
-  "VS Non-Dealer": {
-    "Turn 5":  { 1: 1.0, 2: 1.0, 3: 1.0, 4: 0.24, 5: 0.17, 6: 0.13, 7: 0.09, 8: 0.06, 9: 0.04, 10: 0.03, 11: 0.00 },
-    "Turn 9":  { 1: 1.0, 2: 1.0, 3: 0.24, 4: 0.21, 5: 0.14, 6: 0.12, 7: 0.08, 8: 0.06, 9: 0.04, 10: 0.03, 11: 0.00 },
-    "Turn 14": { 1: 0.24, 2: 0.18, 3: 0.16, 4: 0.14, 5: 0.11, 6: 0.09, 7: 0.07, 8: 0.06, 9: 0.04, 10: 0.03, 11: 0.00 }
-  },
-  "VS Dealer": {
-    "Turn 5":  { 1: 1.0, 2: 1.0, 3: 1.0, 4: 0.18, 5: 0.11, 6: 0.09, 7: 0.07, 8: 0.04, 9: 0.03, 10: 0.02, 11: 0.00 },
-    "Turn 9":  { 1: 0.24, 2: 0.21, 3: 0.18, 4: 0.12, 5: 0.10, 6: 0.06, 7: 0.05, 8: 0.04, 9: 0.02, 10: 0.01, 11: 0.00 },
-    "Turn 14": { 1: 0.16, 2: 0.10, 3: 0.09, 4: 0.07, 5: 0.06, 6: 0.05, 7: 0.04, 8: 0.03, 9: 0.02, 10: 0.01, 11: 0.00 }
-  },
-  "As Dealer": {
-    "Turn 5":  { 1: 1.0, 2: 1.0, 3: 1.0, 4: 1.0, 5: 1.0, 6: 1.0, 7: 1.0, 8: 1.0, 9: 0.14, 10: 0.10, 11: 0.07 },
-    "Turn 9":  { 1: 1.0, 2: 1.0, 3: 1.0, 4: 1.0, 5: 1.0, 6: 0.24, 7: 0.24, 8: 0.18, 9: 0.12, 10: 0.10, 11: 0.07 },
-    "Turn 14": { 1: 1.0, 2: 1.0, 3: 0.30, 4: 0.26, 5: 0.20, 6: 0.18, 7: 0.14, 8: 0.13, 9: 0.10, 10: 0.10, 11: 0.07 }
-  }
-};
-
-/* =========================================================
-   DEAL-IN RATES
-   ========================================================= */
-const DEAL_IN_RATES = {
-  "Double musuji 4/5/6":    { 0: 0.06, 1: 0.06, 2: 0.07, 3: 0.08, 4: 0.09, 5: 0.10, 6: 0.12, 7: 0.13, 8:  0.14, 9: 0.16, 10: 0.18, 11: 0.20, 12: 0.22, 13: 0.26},
-  "Musuji 3/7":       { 0: 0.06, 1: 0.06, 2: 0.06, 3: 0.070, 4: 0.08, 5: 0.08, 6: 0.09, 7: 0.09, 8: 0.10, 9: 0.11, 10: 0.13, 11: 0.14, 12: 0.16, 13: 0.19, 14: 0.23 },
-  "Musuji 2/8":       { 0: 0.05, 1: 0.05, 2: 0.05, 3: 0.06, 4: 0.07, 5: 0.07, 6: 0.08, 7: 0.09, 8: 0.09, 9: 0.10, 10: 0.12, 11: 0.13, 12: 0.15, 13: 0.18, 14: 0.22 },
-  "Katamusuji 4/5/6": { 0: 0.03, 1: 0.03, 2: 0.04, 3: 0.05, 4: 0.05, 5: 0.06, 6: 0.07, 7: 0.07, 8: 0.08, 9: 0.09, 10: 0.10, 11: 0.12, 12: 0.14, 13: 0.15 },
-  "Musuji 1/9":       { 0: 0.03, 1: 0.03, 2: 0.04, 3:  0.05, 4: 0.06, 5: 0.06, 6: 0.07, 7: 0.07, 8: 0.08, 9: 0.09, 10: 0.10, 11: 0.12, 12: 0.14, 13: 0.15 },
-  "Suji 3/7":         { 0: 0.06, 1: 0.06, 2: 0.05, 3: 0.05, 4: 0.05, 5: 0.05, 6: 0.05, 7: 0.05, 8: 0.06, 9: 0.06, 10: 0.06, 11: 0.07, 12: 0.08, 13: 0.09 },
-  "Suji 2/8":         { 0: 0.04, 1: 0.04, 2: 0.04, 3: 0.04, 4: 0.04, 5: 0.04, 6: 0.04, 7: 0.04, 8: 0.04, 9: 0.04, 10: 0.05, 11: 0.05, 12: 0.06, 13: 0.07 },
-  "Suji 1/9":         { 0: 0.02, 1: 0.02, 2: 0.02, 3: 0.02, 4: 0.02, 5: 0.02, 6: 0.02, 7: 0.02, 8: 0.02, 9: 0.02, 10: 0.03, 11: 0.03, 12: 0.04, 13: 0.05 },
-  "Naka-suji 4/5/6":  { 0: 0.02, 1: 0.02, 2: 0.02, 3: 0.02, 4: 0.02, 5: 0.02, 6: 0.02, 7: 0.02, 8: 0.02, 9: 0.02, 10: 0.03, 11: 0.03, 12: 0.04, 13: 0.05 }
-};
-
-const RATE_BUCKETS = [
-  { label: '< 5%',      min: 0.00, max: 0.05, test: r => r < 0.05 },
-  { label: '5 – 10%',   min: 0.05, max: 0.10, test: r => r >= 0.05 && r < 0.10 },
-  { label: '10 – 15%',  min: 0.10, max: 0.15, test: r => r >= 0.10 && r < 0.15 },
-  { label: '15 – 20%',  min: 0.15, max: 0.20, test: r => r >= 0.15 && r < 0.20 },
-  { label: '20 – 25%',  min: 0.20, max: 0.25, test: r => r >= 0.20 && r < 0.25 },
-  { label: '> 25%',     min: 0.25, max: 1.00, test: r => r >= 0.25 }
-];
-
-const MODIFIER_VALUES = {
-  dora: +0.02,
-  sotogawa: -0.05,
-  oneChance: -0.03,
-  ankou: +0.02
-};
-
-/* =========================================================
-   SCORE MAPS: label -> { han, fu, pinfu }
-   ========================================================= */
-const SCORE_MAP = {
-  closedND: [
-    { label: '1300',       han: 1, fu: 40, pinfu: false },
-    { label: '1300~2000',  han: 2, fu: 30, pinfu: true },
-    { label: '2600',       han: 2, fu: 40, pinfu: false },
-    { label: '2600~3900',  han: 3, fu: 30, pinfu: true },
-    { label: '5200',       han: 3, fu: 40, pinfu: false },
-    { label: '5200~7700',  han: 4, fu: 30, pinfu: true },
-    { label: '8000',       han: 4, fu: 40, pinfu: false }
-  ],
-  closedD: [
-    { label: '2000',          han: 1, fu: 40, pinfu: false },
-    { label: '2000~2900',     han: 2, fu: 30, pinfu: true },
-    { label: '3900',          han: 2, fu: 40, pinfu: false },
-    { label: '3900~5800',     han: 3, fu: 30, pinfu: true },
-    { label: '7700',          han: 3, fu: 40, pinfu: false },
-    { label: '7700~11600',    han: 4, fu: 30, pinfu: true },
-    { label: '12000',         han: 4, fu: 40, pinfu: false }
-  ],
-  openND: [
-    { label: '1000',  han: 1, fu: 30, pinfu: false },
-    { label: '1300',  han: 1, fu: 40, pinfu: false },
-    { label: '2000',  han: 2, fu: 30, pinfu: false },
-    { label: '2600',  han: 2, fu: 40, pinfu: false },
-    { label: '3900',  han: 3, fu: 30, pinfu: false },
-    { label: '5200',  han: 3, fu: 40, pinfu: false },
-    { label: '7700',  han: 4, fu: 30, pinfu: false }
-  ],
-  openD: [
-    { label: '1500',   han: 1, fu: 30, pinfu: false },
-    { label: '2000',   han: 1, fu: 40, pinfu: false },
-    { label: '2900',   han: 2, fu: 30, pinfu: false },
-    { label: '3900',   han: 2, fu: 40, pinfu: false },
-    { label: '5800',   han: 3, fu: 30, pinfu: false },
-    { label: '7700',   han: 3, fu: 40, pinfu: false },
-    { label: '11600',  han: 4, fu: 30, pinfu: false }
-  ],
-  chiitoiND: [
-    { label: '3200',  han: 3, fu: 25, pinfu: false },
-    { label: '6400',  han: 4, fu: 25, pinfu: false },
-    { label: '8000',  han: 5, fu: 25, pinfu: false }
-  ],
-  chiitoiD: [
-    { label: '4800',   han: 3, fu: 25, pinfu: false },
-    { label: '9600',   han: 4, fu: 25, pinfu: false },
-    { label: '12000',  han: 5, fu: 25, pinfu: false }
-  ]
-};
-
-const POINT_TABLE_BY_FU = {
-  menzenND: {
-    30: {1: 1000, 2: 2000, 3: 3900, 4: 7700},
-    40: {1: 1300, 2: 2600, 3: 5200, 4: 8000},
-    50: {1: 1600, 2: 3200, 3: 6400, 4: 8000}
-  },
-  menzenD: {
-    30: {1: 1500, 2: 2900, 3: 5800, 4: 11600},
-    40: {1: 2000, 2: 3900, 3: 7700, 4: 12000},
-    50: {1: 2400, 2: 4800, 3: 9600, 4: 12000}
-  },
-  openND: {
-    30: {1: 1000, 2: 2000, 3: 3900, 4: 7700},
-    40: {1: 1300, 2: 2600, 3: 5200, 4: 8000}
-  },
-  openD: {
-    30: {1: 1500, 2: 2900, 3: 5800, 4: 11600},
-    40: {1: 2000, 2: 3900, 3: 7700, 4: 12000}
-  }
-};
-const CHIITOI_POINTS = {
-  nonDealer: {3: 3200, 4: 6400, 5: 8000},
-  dealer:    {3: 4800, 4: 9600, 5: 12000}
-};
-
-/* =========================================================
-   SHAPE METADATA
-   ========================================================= */
-const SHAPES = ['Perfect', 'Good*2', 'Good+Ryankan', 'Good+Kanchan', 'Bad+Ryankan', 'Chiitoi'];
-const SHAPE_IDS = { 'Perfect': 'A', 'Good*2': 'B', 'Good+Ryankan': 'C', 'Good+Kanchan': 'D', 'Bad+Ryankan': 'E', 'Chiitoi': 'F' };
-const SHAPE_INFO = {
-  'Perfect':       { en: 'Perfect',            ja: '完全形',          accept: 20, good: '100%', example: '123m234p788p2245s' },
-  'Good*2':        { en: 'Ryanmen ×2',         ja: '両面×2',         accept: 16, good: '100%', example: '123m456m22p45s78s3z' },
-  'Good+Ryankan':  { en: 'Ryanmen + Ryankan',  ja: '両面＋リャンカン', accept: 16, good: '50%',  example: '123m456m22z45s246p' },
-  'Good+Kanchan':  { en: 'Ryanmen + Kanchan',  ja: '両面＋カンチャン', accept: 12, good: '33%',  example: '123m456m11s45s68p5z' },
-  'Bad+Ryankan':   { en: 'Kanchan + Ryankan',  ja: 'カンチャン＋リャンカン', accept: 12, good: '0%', example: '123m456m22z46s246p' },
-  'Chiitoi':       { en: 'Chiitoi',            ja: '七対子',          accept: 9,  good: '0%',   example: '22m55m33p88p22s1z5z' }
-};
-
-const OTHER_SHAPES = {
-  'BadHeadless':       { id: 'C-', baseShape: 'Good+Ryankan', tierOffset:  0, en: 'Bad Headless',             ja: '悪いヘッドレス',       accept: 16, good: '0%',   example: '12368m3789p3678s' },
-  'MediocreHeadless':  { id: 'C+', baseShape: 'Good+Ryankan', tierOffset:  0, en: 'Mediocre Headless',        ja: 'やや悪いヘッドレス',  accept: 24, good: '25%',  example: '12368m34789p678s' },
-  'BadKuttsuki':       { id: 'C',  baseShape: 'Good+Ryankan', tierOffset:  0, en: 'Bad Kuttsuki',             ja: '悪いくっつき',          accept: 32, good: '25%',  example: '12399m2p789p2678s' },
-  'StandardHeadless':  { id: 'A-', baseShape: 'Perfect',      tierOffset:  0, en: 'Standard Headless',        ja: '標準ヘッドレス',          accept: 28, good: '43%',  example: '12367m34p789p678s' },
-  'StandardKuttsuki':  { id: 'A',  baseShape: 'Perfect',      tierOffset:  0, en: 'Standard Kuttsuki',        ja: '標準くっつき',            accept: 40, good: '40%',  example: '12399m3789p3678s' },
-  'GoodHeadless1':     { id: 'S',  baseShape: 'Perfect',      tierOffset: -1, en: 'Good Conjoined Headless',  ja: '連続形ヘッドレス',        accept: 33, good: '79%',  example: '12345m34789p678s' },
-  'GoodHeadless2':     { id: 'S',  baseShape: 'Perfect',      tierOffset: -1, en: 'Ankou Headless',           ja: '暗刻ヘッドレス',          accept: 28, good: '100%', example: '12367m34999p678s' },
-  'GoodKuttsuki':      { id: 'S+', baseShape: 'Perfect',      tierOffset: -1, en: 'Good Kuttsuki',            ja: '良いくっつき',          accept: 45, good: '53%',  example: '12399m3789p5678s' }
-};
-
-/* =========================================================
-   I18N
-   ========================================================= */
-const I18N = {
-  en: {
-    'home.link': 'Return <i class="fa-solid fa-door-open"></i>',
-    'home.about': 'About <i class="fa-solid fa-circle-info"></i>',
-    'app.title': '1-shanten Oracle',
-    'app.title-icon': '<i class="fa-solid fa-hamsa"></i> 1-shanten Oracle',
-    'app.titleSub': 'Push-pull Lookup Table',
-    'app.fullTitle': '1-shanten Oracle',
-    'label.turn': 'Turn',
-    'turn.early': 'Early · 5', 'turn.mid': 'Mid · 9', 'turn.late': 'Late · 14',
-    'label.category': 'Tile Category',
-    'label.pickCat': 'Pick a category to compute the deal-in verdict.',
-    'cat.double': 'Double Musuji 4/5/6', 'cat.m37': 'Musuji 3/7', 'cat.m28': 'Musuji 2/8',
-    'cat.km': 'Katamusuji 4/5/6', 'cat.m19': 'Musuji 1/9',
-    'cat.s37': 'Suji 3/7', 'cat.s28': 'Suji 2/8', 'cat.s19': 'Suji 1/9',
-    'cat.naka': 'Naka-suji 4/5/6',
-    'catdesc.double': '4, 5, or 6 — double non-suji',
-    'catdesc.m37': '3 or 7 — non-suji',
-    'catdesc.m28': '2 or 8 — non-suji',
-    'catdesc.km': 'Middle tile — half suji',
-    'catdesc.m19': 'Terminal — non-suji',
-    'catdesc.s37': '3 or 7 — suji',
-    'catdesc.s28': '2 or 8 — suji',
-    'catdesc.s19': '1 or 9 — suji',
-    'catdesc.naka': '4, 5, or 6 — naka-suji',
-    'label.suji': 'Passed Suji',
-    'label.modifiers': 'Deal-in Modifiers',
-    'label.dealin': 'Estimate Deal-in Rate',
-    'mod.dora': 'Dora', 'mod.sotogawa': 'Sotogawa',
-    'mod.oneChance': '1-chance', 'mod.ankou': 'Ankou / Ankou-suji',
-    'label.conditions': 'Your Conditions',
-    'label.handState': 'Hand State',
-    'label.yakuState': 'Yaku when open',
-    'yaku.noyaku': 'No yaku',
-    'yaku.callable': 'Has yaku',
-    'hand.menzen': 'Closed', 'hand.fuuro': 'Open',
-    'label.you': 'You',
-    'role.dealer': 'Dealer', 'role.nondealer': 'Non-Dealer',
-    'label.riichiRole': 'Riichi Caller',
-    'label.riichiSeat': 'Riichi Caller Seat',
-    'seat.kamicha': 'Kamicha', 'seat.toimen': 'Toimen', 'seat.shimocha': 'Shimocha',
-    'label.hand': 'Your Hand', 'label.shape': 'Shape',
-    'label.score': 'Ron value',
-    'shapeA': '[A] Perfect', 'shapeB': '[B] Ryanmen×2', 'shapeC': '[C] Ryanmen+Ryankan',
-    'shapeD': '[D] Ryanmen+Kanchan', 'shapeE': '[E] Kanchan+Ryankan', 'shapeF': '[F] Chiitoi',
-    'shape.other': 'Other Shapes',
-    'shape.o1': '[C−] Bad Headless', 'shape.o2': '[C+] Mediocre Headless',
-    'shape.o3': '[C] Bad Kuttsuki',
-    'shape.o4': '[A−] Std Headless', 'shape.o5': '[A] Std Kuttsuki',
-    'shape.o6': '[S] Good Conjoined Headless', 'shape.o7': '[S] Ankou Headless',
-    'shape.o8': '[S+] Good Kuttsuki',
-    'action.reset': 'Reset',
-    'action.newTile': 'New Tile',
-    'verdict.selectCat': 'Select a tile category to compute',
-    'verdict.empty': '—',
-    'verdict.ironPush': 'IRON PUSH',
-    'verdict.push': 'PUSH',
-    'verdict.pull': 'PULL',
-    'verdict.ironPull': 'IRON PULL',
-    'verdict.borderline': 'BORDERLINE',
-    'verdict.leanPush': 'slightly favors PUSH',
-    'verdict.leanPull': 'slightly favors PULL',
-    'verdict.leanBoth': 'either way',
-    'verdict.mawashi': 'Consider mawashi',
-    'stat.tier': 'Tier', 'stat.threshold': 'Threshold Deal-in Rate',
-    'stat.dealin': 'Deal-in', 'stat.points': 'Points',
-    'table.tier': 'Tier', 'table.turn5': 'Turn 5', 'table.turn9': 'Turn 9', 'table.turn14': 'Turn 14',
-    'explain.ironPush': 'Deal-in well below Threshold → <b>IRON PUSH</b>',
-    'explain.push': 'Deal-in ≤ Threshold Deal-in Rate → <b>PUSH</b>',
-    'explain.pull': 'Deal-in above Threshold → <b>PULL</b>',
-    'explain.ironPull': 'Deal-in well above Threshold → <b>IRON PULL</b>',
-    'explain.borderline': 'Deal-in is very close to Threshold — both answers are acceptable.',
-    'explain.always': 'Threshold is 100% — always push.',
-    'result.modifiersApplied': 'Modifiers applied:',
-    'ref.shapes': 'Shape Reference',
-    'ref.dealin': 'Deal-in Rate Reference',
-    'ref.shapeTier': 'Shape Tier Tables',
-    'ref.threshold': 'Threshold Tables',
-    'ref.accept': 'Tile acceptance', 'ref.good': 'Good wait rate',
-    'ref.example': 'Example',
-    'ref.tiles': '{n} tiles',
-    'ref.minSuji': 'Minimum passed sujis',
-    'ref.modifiers': 'Modifiers',
-    'ref.modifierName': 'Modifier',
-    'ref.modifierValue': 'Effect on Rate',
-    'ref.menzen': 'Closed (Dealer / Non-Dealer)',
-    'ref.fuuro': 'Open (Dealer / Non-Dealer)',
-    'ref.vsND': 'VS Non-Dealer', 'ref.vsD': 'VS Dealer', 'ref.asD': 'As Dealer',
-    'ref.menzenND': 'Closed · Non-Dealer',
-    'ref.menzenD': 'Closed · Dealer',
-    'ref.ndC': 'Open · Non-Dealer · Kamicha Riichi',
-    'ref.ndNC': 'Open · Non-Dealer · Not Kamicha Riichi',
-    'ref.dC': 'Open · Dealer · Kamicha Riichi',
-    'ref.dNC': 'Open · Dealer · Not Kamicha Riichi',
-    'ref.tier': 'Tier',
-    'ref.pointsNote': 'Values shown are the hand\'s ron value at each (shape, tier) combination.',
-    'ref.otherShapes': 'Other Shapes',
-    'ref.baseTier': 'Base tier',
-    'lang': '日本語',
-    'about.title': 'About',
-    'about.overview': 'Overview',
-    'about.p1': 'A portable reference tool for push-pull decisions in 1-shanten situations. Set your conditions, hand shape, ron value, and turn to look up the <b>threshold deal-in rate</b> for your hand. This threshold represents the maximum estimated deal-in rate at which pushing is considered worthwhile. Optionally, expand <b>Estimate Deal-in Rate</b> to select a tile category, apply deal-in modifiers, and enter the number of passed suji to obtain a PUSH/PULL verdict. <b>The tool is primarily intended for push-pull decisions in flat point standing.<b>',
-    'about.howToUse': 'How to Use',    
-    'about.p2': 'Work from top to bottom: set your conditions, hand shape, ron value, and turn to view the corresponding threshold table. To get a more specific PUSH/PULL verdict, expand <i>Estimate Deal-in Rate</i> and enter the tile category, applicable modifiers, and number of passed suji. Tap a turn column header to switch between turns.<h4>How the Tables Work</h4>The app first uses the <b>Shape Tier Table</b> to determine the tier corresponding to your hand shape and ron value. The assigned tier depends on whether you are the dealer or non-dealer, whether your hand is closed or open, and, for open hands, whether Kamicha has declared riichi. Each shape is assigned tiers according to its relative value: [A] Perfect generally receives the most favorable tiers, followed by shapes [B] through [F]. The tier also depends on the hand\'s ron value; for example, a 4-han [A] menzen hand is assigned Tier 1, while a 4-han menzen [B] Ryanmen*2 hand is assigned Tier 2, equivalent to a 3-han [A] Perfect hand.<h4>Additional Details</h4>The following rules explain some of the adjustments applied in less straightforward cases, and may also be useful if you want to consult the tables manually:<ul><li><b>Open hands against a Kamicha riichi:</b> A separate table is used when Kamicha has declared riichi, accounting for the increased opportunity to call chii from their discards.</li><li><b>Closed hands with an available yaku when opened:</b> If a closed hand has a valid yaku when opened, it is evaluated using the open-hand table. Its value is classified according to its open-hand ron value, then moved up one tier to reflect the more favorable push conditions.</li><li><b>Non-standard 1-shanten shapes:</b> The Kuttsuki and Headless shapes classified as [S] tier use [A] Perfect as their base tier, adjusted upward by one tier.</li><li><b>Intermediate hand values:</b> Hands capable of scoring pinfu are assigned an interpolated value between two adjacent tiers. For open hands, <i>tenpane</i> (テンパネ)—score increases resulting from additional fu, such as value triplets or quads—is also accounted for by interpolating between adjacent tiers, with slightly less than 50% weight toward the higher tier.</li></ul>',
-    'about.sources': 'Sources and Methodology',
-    'about.p4': 'The shape-tier and threshold tables are adapted primarily from Unimaru\'s book <i>Unimaru-shiki Winning Mahjong with Theory</i> (『うに丸式 セオリーで勝つ麻雀』), which draws on material from <i>Statistical Mahjong Strategy</i> (『統計学のマージャン戦術』) and <i>New: Scientific Mahjong</i> (『新・科学する麻雀』). <br> <br> The [D] Ryanmen + Kanchan shape was not included in the original data and has been interpolated by me. The original [D] and [E] shape classifications have been renamed [E] and [F], respectively. Other shapes are mapped to their base tiers according to their prefixes. Fu-adjusted thresholds are calculated by averaging the values of adjacent tiers. Deal-in rate estimates are adapted from <i>Statistical Mahjong Strategy</i> by Miinin. I have also made numerous estimates of my own when deciding how to handle certain edge cases. As a result, not every situation may be perfectly calibrated to an optimal push-pull decision. <b>Please treat the results as a reference rather than definitive advice.</b>',
-    'about.credits': 'Credits',
-    'about.p3': 'Designed and developed by kakino_tea. X: <a style="color:#738ad0" href="https://x.com/mican8saku" target="_blank" rel="noopener noreferrer">@mican8saku</a>',  },
-  ja: {
-    'home.link': '戻る <i class="fa-solid fa-door-open"></i>',
-    'home.about': 'このアプリについて <i class="fa-solid fa-circle-info"></i>',
-    'app.title': 'イーシャンテン オラクル',
-    'app.title-icon': '<i class="fa-solid fa-hamsa"></i> イーシャンテン オラクル',
-    'app.titleSub': '押し引き早見表',
-    'label.turn': '巡目',
-    'turn.early': '序盤・5巡目', 'turn.mid': '中盤・9巡目', 'turn.late': '終盤・14巡目',
-    'label.category': '牌カテゴリ',
-    'label.pickCat': 'カテゴリを選択すると判定を計算します。',
-    'cat.double': 'ダブル無スジ', 'cat.m37': '無スジ 3/7', 'cat.m28': '無スジ 2/8',
-    'cat.km': '片無スジ 4/5/6', 'cat.m19': '無スジ 1/9',
-    'cat.s37': 'スジ 3/7', 'cat.s28': 'スジ 2/8', 'cat.s19': 'スジ 1/9',
-    'cat.naka': '中スジ 4/5/6',
-    'catdesc.double': '4・5・6 — ダブルの無スジ',
-    'catdesc.m37': '3 または 7 — 無スジ',
-    'catdesc.m28': '2 または 8 — 無スジ',
-    'catdesc.km': '中張牌 — 片スジ',
-    'catdesc.m19': '老頭牌 — 無スジ',
-    'catdesc.s37': '3 または 7 — スジ',
-    'catdesc.s28': '2 または 8 — スジ',
-    'catdesc.s19': '1 または 9 — スジ',
-    'catdesc.naka': '4・5・6 — 中スジ',
-    'label.suji': '通ったスジ',
-    'label.modifiers': '放銃率補正',
-    'label.dealin': '放銃率を推定',
-    'mod.dora': 'ドラ', 'mod.sotogawa': '外側',
-    'mod.oneChance': 'ワンチャンス', 'mod.ankou': '暗刻 / 暗刻スジ',
-    'label.conditions': '状況',
-    'label.handState': '手牌の状態',
-    'label.yakuState': '手役（鳴き時）',
-    'yaku.noyaku': '役なし',
-    'yaku.callable': '役あり',
-    'hand.menzen': '門前', 'hand.fuuro': '副露',
-    'label.you': '自分',
-    'role.dealer': '親', 'role.nondealer': '子',
-    'label.riichiRole': 'リーチ者',
-    'label.riichiSeat': 'リーチ者の座席',
-    'seat.kamicha': '上家', 'seat.toimen': '対面', 'seat.shimocha': '下家',
-    'label.hand': '手牌', 'label.shape': '形',
-    'label.score': '打点（出上がり）',
-    'shapeA': '[A] 完全形', 'shapeB': '[B] 両面×2', 'shapeC': '[C] 両面＋リャンカン',
-    'shapeD': '[D] 両面＋カンチャン', 'shapeE': '[E] カンチャン＋リャンカン', 'shapeF': '[F] 七対子',
-    'shape.other': 'その他の形',
-    'shape.o1': '[C−] 悪いヘッドレス', 'shape.o2': '[C+] やや悪いヘッドレス',
-    'shape.o3': '[C] 悪いくっつき',
-    'shape.o4': '[A−] 標準ヘッドレス', 'shape.o5': '[A] 標準くっつき',
-    'shape.o6': '[S] 連続形ヘッドレス', 'shape.o7': '[S] 暗刻ヘッドレス',
-    'shape.o8': '[S+] 良いくっつき',
-    'action.reset': 'リセット',
-    'action.newTile': '新しい牌',
-    'verdict.selectCat': '牌カテゴリを選択してください',
-    'verdict.empty': '—',
-    'verdict.ironPush': '鉄押し',
-    'verdict.push': '押し',
-    'verdict.pull': '引き',
-    'verdict.ironPull': '鉄引き',
-    'verdict.borderline': '微差',
-    'verdict.leanPush': '押し寄り',
-    'verdict.leanPull': '引き寄り',
-    'verdict.leanBoth': 'どちらでも可',
-    'verdict.mawashi': '回し打ちも検討',
-    'stat.tier': 'ティア', 'stat.threshold': '押し引きボーダー放銃率',
-    'stat.dealin': '放銃率', 'stat.points': '点数',
-    'table.tier': 'ティア', 'table.turn5': '5巡目', 'table.turn9': '9巡目', 'table.turn14': '14巡目',
-    'explain.ironPush': '放銃率がボーダーより大幅に低い → <b>鉄押し</b>',
-    'explain.push': '放銃率 ≤ ボーダー放銃率 → <b>押し</b>',
-    'explain.pull': '放銃率 > ボーダー放銃率 → <b>引き</b>',
-    'explain.ironPull': '放銃率がボーダーより大幅に高い → <b>鉄引き</b>',
-    'explain.borderline': '放銃率とボーダーがほぼ同じ — どちらも許容。',
-    'explain.always': 'ボーダー 100% — 常に押し。',
-    'result.modifiersApplied': '適用中の補正:',
-    'ref.shapes': '形リファレンス',
-    'ref.dealin': '放銃率リファレンス',
-    'ref.shapeTier': '形ティア表',
-    'ref.threshold': '押し引きボーダー放銃率',
-    'ref.accept': '受け入れ', 'ref.good': '良形率',
-    'ref.example': '例',
-    'ref.tiles': '{n}枚',
-    'ref.minSuji': '必要な通しスジ数の最小値',
-    'ref.modifiers': '補正',
-    'ref.modifierName': '補正',
-    'ref.modifierValue': '放銃率への影響',
-    'ref.menzen': '門前（親・子共通）',
-    'ref.fuuro': '副露（親・子共通）',
-    'ref.vsND': '子相手', 'ref.vsD': '親相手', 'ref.asD': '親として',
-    'ref.menzenND': '門前・子',
-    'ref.menzenD': '門前・親',
-    'ref.ndC': '副露・子・上家リーチ',
-    'ref.ndNC': '副露・子・非上家リーチ',
-    'ref.dC': '副露・親・上家リーチ',
-    'ref.dNC': '副露・親・非上家リーチ',
-    'ref.tier': 'ティア',
-    'ref.pointsNote': '表示は各（形・ティア）でのロン時の点数。',
-    'ref.otherShapes': 'その他の形',
-    'ref.baseTier': '基本ティア',
-    'lang': 'English',
-    'about.title': 'このアプリについて',
-    'about.overview': '概要',
-    'about.overview': '概要',
-    'about.p1': '1シャンテン時の押し引き判断に使う早見表です。自分の状況・手牌の形・ロン打点・巡目を設定すると、手牌に対応する<b>ボーダー放銃率</b>を確認できます。これは、押す価値があると判断される放銃率の目安となる上限値です。さらに「放銃率を推定」を開き、牌のカテゴリ・放銃率の補正要素・通ったスジの数を入力すると、PUSH/PULLの判定を確認できます。<b>主に平場での押し引き判断を想定しています。</b>',
-    'about.howToUse': '使い方',
-    'about.p2': '上から順に、自分の状況・手牌の形・ロン打点・巡目を設定してください。条件に応じてボーダー放銃率の表が更新されます。具体的な押し引き判定を確認したい場合は、「放銃率を推定」を開き、牌のカテゴリ・補正要素・通ったスジの数を入力してください。巡目の列ヘッダーをタップすると、表示する巡目を切り替えられます。<h4>表の見方</h4>まず、<b>形のティア表</b>から、手牌の形とロン打点に対応するティアを決定します。使用する表は、親・子の別、門前・副露の別によって異なり、副露手については上家がリーチしているかどうかでも表が分かれます。各形には、形の相対的な価値に応じてティアが設定されています。基本的には[A] Perfectが最も有利なティアに割り当てられ、[B]から[F]にかけて形に応じたティアが設定されています。また、同じ形でもロン打点によってティアは変わります。例えば、[A]の4翻はTier 1、[B]の4翻はTier 2となり、[A]の3翻と同じティアになります。ティアが決まったら、次に<b>ボーダー放銃率表</b>を参照します。この表は縦軸がティア、横軸が巡目（5巡目・9巡目・14巡目）になっています。該当するティアと巡目が交差する値が、その状況でのボーダー放銃率です。<h4>補足事項</h4>以下は、通常の表の選択・参照に加えて、少し特殊なケースで適用される補正ルールです。手作業で表を参照する場合にも参考になります。<ul><li><b>上家がリーチしている場合の副露手：</b>上家がリーチしている場合は、専用の副露手用の表を使用します。上家の捨て牌からチーできる機会が増えることを考慮しています。</li><li><b>鳴けば役がつく門前手：</b>鳴いた状態で役が成立する門前手は、副露手用の表を使用します。副露時のロン打点で分類したうえで、押しやすさを考慮してティアを1段階上げて評価します。</li><li><b>特殊な1シャンテン形：</b>[S]ティアに分類されるくっつき形・ヘッドレス形は、[A] Perfectを基準となるティアとし、そこからティアを1段階上げて評価します。</li><li><b>中間的な打点の扱い：</b>ピンフが成立する手牌は、隣接する2つのティアの中間値として扱います。また、副露手のテンパネ（暗刻・明刻や槓子などによる符の増加に伴う打点上昇）についても、隣接するティア間の補間値を使用します。ただし、上位ティア側の比重は50%よりやや低く設定しています。</li></ul>',
-    'about.sources': '参考文献・算出方法',
-    'about.p4': '形のティア表およびボーダー放銃率表は、主にうに丸氏の著書『うに丸式 セオリーで勝つ麻雀』を参考にしています。同書で参考にされている『統計学のマージャン戦術』および『新・科学する麻雀』のデータも基になっています。<br> <br> [D] 両面＋カンチャンの形は元データに含まれていなかったため、独自に補間しています。また、元データの[D]・[E]は、それぞれ[E]・[F]に名称を変更しています。その他の形は、形の名称の接頭辞に応じて基本ティアに割り当てています。符による補正値は、隣接するティアの値を平均して算出しています。放銃率の推定値は、みーにん氏の『統計学のマージャン戦術』を参考にしています。なお、特殊なケースの扱いについては、独自の推定や調整も多く含まれています。そのため、すべての状況で最適な押し引き判断と完全に一致するとは限りません。<b>あくまで判断の参考としてご利用ください。</b>',
-    'about.credits': 'クレジット',
-    'about.p3': '制作：kakino_tea<br>X：<a style="color:#738ad0" href="https://x.com/mican8saku" target="_blank" rel="noopener noreferrer">@mican8saku</a>',
-  }
-};
-
-function t(key, fb) {
-  const d = I18N[State.lang] || I18N.en;
-  if (d[key] !== undefined) return d[key];
-  if (I18N.en[key] !== undefined) return I18N.en[key];
-  return fb !== undefined ? fb : key;
-}
-function tf(key, vars) {
-  let s = t(key);
-  if (vars) for (const k in vars) s = s.replace(new RegExp('\\{' + k + '\\}', 'g'), vars[k]);
-  return s;
-}
-function catLabel(cat) { return t('cat.' + cat, cat); }
-function catDesc(cat) { return t('catdesc.' + cat, ''); }
-
-/* =========================================================
-   STATE
-   ========================================================= */
-function defaultState() {
-  return {
-    hand: 'menzen',
-    yakuState: 'noyaku',
-    playerDealer: false,
-    riichiCallerDealer: false,
-    riichiCallerSeat: 'kamicha',
-    shape: 'Perfect',
-    score: '2600',
-    turn: 5,
-    category: null,
-    modifiers: { dora: false, sotogawa: false, oneChance: false, ankou: false },
-    passedSuji: 0
-  };
-}
-const State = Object.assign({ lang: 'en' }, defaultState());
-
-/* =========================================================
-   HELPERS
-   ========================================================= */
-const $ = id => document.getElementById(id);
-
-function isOtherShape(s) { return !!OTHER_SHAPES[s]; }
-
-function maxTierForMap(map) {
-  let max = 0;
-  for (const key in map) if (map[key] > max) max = map[key];
-  return max;
-}
-
-function getEffectiveConfig() {
-  const isFuuroHand = State.hand === 'fuuro';
-  const is7Pairs = State.shape === 'Chiitoi';
-  const callable = !isFuuroHand && !is7Pairs && State.yakuState === 'callable';
-  const effectiveOpen = isFuuroHand || callable;
-
-  const isKamicha = State.riichiCallerSeat === 'kamicha';
-  let tierMap;
-  if (!effectiveOpen) tierMap = CLOSED_TIER_MAP;
-  else if (State.playerDealer) tierMap = isKamicha ? OPEN_TIER_MAP_D_C : OPEN_TIER_MAP_D_NC;
-  else tierMap = isKamicha ? OPEN_TIER_MAP_ND_C : OPEN_TIER_MAP_ND_NC;
-
-  const roleKey = State.playerDealer ? 'As Dealer' : (State.riichiCallerDealer ? 'VS Dealer' : 'VS Non-Dealer');
-  const threshTable = effectiveOpen ? OPEN_THRESHOLDS : CLOSED_THRESHOLDS;
-
-  const otherInfo = OTHER_SHAPES[State.shape];
-  const baseShape = otherInfo ? otherInfo.baseShape : State.shape;
-  const shapeOffset = otherInfo ? otherInfo.tierOffset : 0;
-
-  return {
-    isFuuroHand, is7Pairs, callable, effectiveOpen,
-    tierMap, threshTable, roleKey, isKamicha,
-    baseShape, shapeOffset,
-    maxTier: maxTierForMap(tierMap)
-  };
-}
-
-function getShapeTier(tierMap, baseShape, han, offset = 0) {
-  const base = tierMap[`${baseShape}|${han}`];
-  if (base === undefined) return null;
-  return Math.max(1, base + offset);
-}
-
-function getScoreList(cfg) {
-  if (cfg.is7Pairs) return State.playerDealer ? SCORE_MAP.chiitoiD : SCORE_MAP.chiitoiND;
-  if (cfg.isFuuroHand) return State.playerDealer ? SCORE_MAP.openD : SCORE_MAP.openND;
-  return State.playerDealer ? SCORE_MAP.closedD : SCORE_MAP.closedND;
-}
-
-function getDefaultScoreLabel(cfg) {
-  const list = getScoreList(cfg);
-  return list[Math.floor(list.length / 2)].label;
-}
-
-function findScoreEntry(cfg, label) {
-  const list = getScoreList(cfg);
-  return list.find(s => s.label === label) || null;
-}
-
-function canPinfu(cfg) {
-  if (cfg.isFuuroHand || cfg.is7Pairs) return false;
-  if (cfg.baseShape !== 'Perfect' && cfg.baseShape !== 'Good*2') return false;
-  return true;
-}
-
-function ensureValidScore(cfg) {
-  const list = getScoreList(cfg);
-  const found = list.find(s => s.label === State.score);
-  if (!found) {
-    State.score = getDefaultScoreLabel(cfg);
-    return;
-  }
-  if (found.pinfu && !canPinfu(cfg)) {
-    State.score = getDefaultScoreLabel(cfg);
-  }
-}
-
-/* =========================================================
-   COMPUTE
-   ========================================================= */
-function computeCells(cfg, entry) {
-  const han = entry.han;
-  const fu = entry.fu;
-  const maxTier = cfg.maxTier;
-
-  // Chiitoi: direct tier lookup
-  if (cfg.is7Pairs) {
-    const tier = getShapeTier(cfg.tierMap, cfg.baseShape, han, cfg.shapeOffset) || maxTier;
-    return [{ tier, visualOpacity: 1, calcWeight: 1 }];
-  }
-
-  // Callable: open chart at han-1, one tier better
-  if (cfg.callable) {
-    const calledHan = Math.max(1, han - 1);
-    const baseTier = getShapeTier(cfg.tierMap, cfg.baseShape, calledHan, cfg.shapeOffset);
-    if (baseTier === null) return [{ tier: maxTier, visualOpacity: 1, calcWeight: 1 }];
-    const betterTier = Math.max(1, baseTier - 1);
-    return [{ tier: betterTier, visualOpacity: 1, calcWeight: 1 }];
-  }
-
-  // Open (fuuro)
-  if (cfg.isFuuroHand) {
-    const baseTier = getShapeTier(cfg.tierMap, cfg.baseShape, han, cfg.shapeOffset);
-    if (baseTier === null) return [{ tier: maxTier, visualOpacity: 1, calcWeight: 1 }];
-    if (fu === 30) {
-      return [{ tier: baseTier, visualOpacity: 1, calcWeight: 1 }];
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#0f172a">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  <title>1-shanten Oracle</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --panel: #1e293b;
+      --panel2: #243038;
+      --border: #334155;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --green: #22c55e;
+      --red: #ef4444;
+      --blue: #3b82f6;
+      --amber: #f59e0b;
     }
-    // 40 fu = one tier better (baseTier-1) with 70/30 weighting
-    const betterTier = Math.max(1, baseTier - 1);
-    if (betterTier === baseTier) {
-      return [{ tier: baseTier, visualOpacity: 1, calcWeight: 1 }];
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
     }
-    return [
-      { tier: baseTier,   visualOpacity: 0.85, calcWeight: 0.7 },
-      { tier: betterTier, visualOpacity: 0.35, calcWeight: 0.3 }
-    ];
-  }
 
-  // Closed
-  const baseTier = getShapeTier(cfg.tierMap, cfg.baseShape, han, cfg.shapeOffset);
-  if (baseTier === null) return [{ tier: maxTier, visualOpacity: 1, calcWeight: 1 }];
-  if (fu === 40) {
-    return [{ tier: baseTier, visualOpacity: 1, calcWeight: 1 }];
-  }
-  // 30 fu pinfu: avg of tier(han) and tier(han-1)
-  const adjTier = getShapeTier(cfg.tierMap, cfg.baseShape, han - 1, cfg.shapeOffset);
-  if (adjTier === null || adjTier === baseTier) {
-    return [{ tier: baseTier, visualOpacity: 1, calcWeight: 1 }];
-  }
-  return [
-    { tier: baseTier, visualOpacity: 0.7, calcWeight: 0.5 },
-    { tier: adjTier,  visualOpacity: 0.7, calcWeight: 0.5 }
-  ];
-}
-
-function computeResult() {
-  const cfg = getEffectiveConfig();
-  ensureValidScore(cfg);
-  const entry = findScoreEntry(cfg, State.score);
-  const cells = computeCells(cfg, entry);
-
-  const turnKey = `Turn ${State.turn}`;
-  let threshSum = 0, weightSum = 0;
-  for (const cell of cells) {
-    const v = cfg.threshTable[cfg.roleKey][turnKey][cell.tier] ?? 0;
-    threshSum += v * cell.calcWeight;
-    weightSum += cell.calcWeight;
-  }
-  const threshold = weightSum > 0 ? threshSum / weightSum : 0;
-
-  return { ...cfg, cells, threshold, points: entry.label, turnKey,
-           baseTier: cells[0].tier };
-}
-
-/* =========================================================
-   DEAL-IN HELPERS
-   ========================================================= */
-function rateToBucket(rate) {
-  for (const b of RATE_BUCKETS) if (b.test(rate)) return b.label;
-  return RATE_BUCKETS[RATE_BUCKETS.length - 1].label;
-}
-function lookupRate(cat, suji) {
-  const tbl = DEAL_IN_RATES[cat];
-  const keys = Object.keys(tbl).map(Number).sort((a, b) => a - b);
-  let chosen = keys[0];
-  for (const k of keys) if (suji >= k) chosen = k;
-  return tbl[chosen];
-}
-function getModifierSum() {
-  let sum = 0;
-  for (const key in MODIFIER_VALUES) if (State.modifiers[key]) sum += MODIFIER_VALUES[key];
-  return sum;
-}
-function activeModifierNames() {
-  const names = [];
-  for (const key in State.modifiers) {
-    if (State.modifiers[key]) names.push(t('mod.' + key));
-  }
-  return names;
-}
-
-// Verdict zones based on direct |rate - threshold| gap (not the 5% bucket):
-//   threshold ≥ 100%              → ironPush  (chart says always push)
-//   threshold ≈ 0%                → ironPull  (chart says never push)
-//   |gap| < 0.005                 → borderlineEither
-//   0.005 ≤ |gap| < 0.025         → borderlineFavorsPush / borderlineFavorsPull
-//   0.025 ≤ |gap| < 0.10          → push / pull
-//   |gap| ≥ 0.10                  → ironPush / ironPull
-function getVerdictLevel(rate, threshold) {
-  if (threshold >= 1.0) return 'ironPush';
-  if (threshold <= 0.001) return 'ironPull';
-
-  // Strict pull whenever rate exceeds threshold
-  if (rate > threshold) {
-    const gap = rate - threshold;
-    return gap >= 0.10 ? 'ironPull' : 'pull';
-  }
-
-  // Exactly at threshold
-  if (rate === threshold) return 'borderlineFavorsPull';
-
-  // Below threshold
-  const gap = threshold - rate;
-
-  if (gap < 0.005) return 'borderlineFavorsPull';
-  if (gap < 0.015) return 'borderlineEither';
-  if (gap < 0.04) return 'borderlineFavorsPush';
-  if (gap < 0.10) return 'push';
-
-  return 'ironPush';
-}
-
-function thresholdColor(val) {
-  if (val >= 0.25) return '#86bffa';
-  if (val >= 0.20) return '#a4c2f4';
-  if (val >= 0.15) return '#86efac';
-  if (val >= 0.10) return '#fcd34d';
-  if (val >= 0.05) return '#fca5a5';
-  return '#94a3b8';
-}
-function formatRate(rate) {
-  const pct = rate * 100;
-  if (pct < 1 && pct > 0) return pct.toFixed(1) + '%';
-  return Math.round(pct) + '%';
-}
-
-/* =========================================================
-   RENDER: BUTTONS
-   ========================================================= */
-function renderButtonSelections() {
-  $('handRow').querySelectorAll('.btn').forEach(b => {
-    b.classList.toggle('selected', b.dataset.hand === State.hand);
-  });
-
-  const yakuDisabled = State.hand === 'fuuro' || State.shape === 'Chiitoi';
-  $('yakuRow').classList.toggle('disabled', yakuDisabled);
-  $('yakuRowBtns').querySelectorAll('.btn').forEach(b => {
-    b.disabled = yakuDisabled;
-    b.classList.toggle('selected', !yakuDisabled && b.dataset.yaku === State.yakuState);
-  });
-
-  $('playerRow').querySelectorAll('.btn').forEach(b => {
-  const v = b.dataset.player;
-
-  b.classList.toggle(
-    'selected',
-    v === (State.playerDealer ? 'dealer' : 'nondealer')
-  );
-  });
-  $('riichiRoleRow').querySelectorAll('.btn').forEach(b => {
-  const v = b.dataset.riichiRole;
-
-  b.classList.toggle(
-    'selected',
-    v === (State.riichiCallerDealer ? 'dealer' : 'nondealer')
-  );
-  });
-  $('riichiSeatRow').querySelectorAll('.btn').forEach(b => {
-    b.classList.toggle('selected', b.dataset.riichiSeat === State.riichiCallerSeat);
-  });
-  document.querySelectorAll('#shapeRow .btn, #otherShapesRow .btn').forEach(b => {
-    b.classList.toggle('selected', b.dataset.shape === State.shape);
-  });
-  $('shapeRow').querySelectorAll('.btn').forEach(b => {
-    b.disabled = (b.dataset.shape === 'Chiitoi' && State.hand === 'fuuro');
-  });
-  if (isOtherShape(State.shape)) $('otherShapesRow').classList.remove('hidden');
-  $('turnRow').querySelectorAll('.btn').forEach(b => {
-    b.classList.toggle('selected', parseInt(b.dataset.turn, 10) === State.turn);
-  });
-  $('catRow').querySelectorAll('.btn').forEach(b => {
-    b.classList.toggle('selected', b.dataset.cat === State.category);
-  });
-  $('modRow').querySelectorAll('.btn').forEach(b => {
-    b.classList.toggle('selected', !!State.modifiers[b.dataset.mod]);
-  });
-  $('catDesc').textContent = State.category ? catDesc(State.category) : t('label.pickCat');
-}
-
-/* =========================================================
-   RENDER: SCORES
-   ========================================================= */
-function renderScoreButtons() {
-  const cfg = getEffectiveConfig();
-  ensureValidScore(cfg);
-  const list = getScoreList(cfg);
-  const pinfuOk = canPinfu(cfg);
-
-  const row = $('scoreRow');
-  row.innerHTML = '';
-  list.forEach(entry => {
-    const enabled = !entry.pinfu || pinfuOk;
-    const b = document.createElement('button');
-    b.className = 'btn' + (State.score === entry.label ? ' selected' : '') + (enabled ? '' : ' pinfu-disabled');
-    b.textContent = entry.label;
-    if (enabled) {
-      b.onclick = () => { State.score = entry.label; renderAll(); };
-    } else {
-      b.disabled = true;
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      font-size: 14px;
     }
-    row.appendChild(b);
-  });
-}
 
-/* =========================================================
-   RENDER: RESULT
-   ========================================================= */
-function getTableTitle() {
-  const cfg = getEffectiveConfig();
-  if (!cfg.effectiveOpen) {
-    return State.playerDealer ? t('ref.menzenD') : t('ref.menzenND');
-  }
-  if (State.playerDealer) {
-    return State.riichiCallerSeat === 'kamicha' ? t('ref.dC') : t('ref.dNC');
-  }
-  return State.riichiCallerSeat === 'kamicha' ? t('ref.ndC') : t('ref.ndNC');
-}
+    body {
+      overflow-x: hidden;
+    }
 
-function renderThresholdTable(r) {
-  const turns = [5, 9, 14];
-  const highlightTiers = new Set(r.cells.map(c => c.tier));
-  const cellLookup = {};
-  for (const c of r.cells) cellLookup[c.tier] = c;
+    button {
+      font-family: inherit;
+      color: inherit;
+    }
 
-  let html = '<table class="tier-table"><thead><tr>';
-  html += `<th class="tier-col">${t('table.tier')}</th>`;
-  for (const turn of turns) {
-    const isCur = turn === State.turn;
-    const thKey = 'table.turn' + turn;
-    html += `<th data-turn="${turn}" class="${isCur ? 'current' : ''}">${t(thKey)}</th>`;
-  }
-  html += '</tr></thead><tbody>';
+    .topbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: var(--bg);
+      z-index: 100;
+      border-bottom: 1px solid var(--border);
+      transition: transform .25s ease;
+    }
 
-  for (let tt = 1; tt <= r.maxTier; tt++) {
-    const isHL = highlightTiers.has(tt);
-    html += `<tr class="${isHL ? 'current' : ''}">`;
-    html += `<td class="tier-col">${tt}</td>`;
-    for (const turn of turns) {
-      const val = r.threshTable[r.roleKey]['Turn ' + turn][tt];
-      const isCurrentTurn = turn === State.turn;
-      if (val === undefined) {
-        html += `<td data-turn="${turn}">-</td>`;
-      } else if (isHL && isCurrentTurn) {
-        const bg = `rgba(59,130,246,${cellLookup[tt].visualOpacity})`;
-        html += `<td class="highlight-cell" data-turn="${turn}" style="background:${bg}">${Math.round(val*100)}%</td>`;
-      } else {
-        html += `<td data-turn="${turn}" style="color:${thresholdColor(val)}">${Math.round(val * 100)}%</td>`;
+    .topbar.hidden {
+      transform: translateY(-100%);
+    }
+
+    .topbar-inner {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .app-title {
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: -.3px;
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .app-sub-title {
+      font-weight: 600;
+      color: var(--muted);
+      font-size: 11px;
+      margin-left: 6px;
+      letter-spacing: 0;
+    }
+
+    .topbar-actions {
+      display: flex;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .lang-btn {
+      padding: 8px 14px;
+      font-size: 12px;
+      font-weight: 800;
+      background: var(--panel);
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all .14s;
+      letter-spacing: .3px;
+    }
+
+    .lang-btn:hover {
+      border-color: #64748b;
+      background: var(--panel2);
+      transform: translateY(-1px);
+    }
+
+    .app {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 70px 10px 40px;
+    }
+
+    .section {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin-bottom: 10px;
+    }
+
+    .section-title {
+      font-size: 10.5px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1.4px;
+      color: #7dd3fc;
+      margin-bottom: 10px;
+    }
+
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .btn {
+      flex: 1 1 0;
+      min-width: 0;
+      padding: 11px 8px;
+      min-height: 44px;
+      background: var(--panel2);
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      font-size: 12.5px;
+      font-weight: 800;
+      letter-spacing: .2px;
+      cursor: pointer;
+      transition: .12s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      line-height: 1.2;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+
+    .btn:hover {
+      border-color: #64748b;
+      background: #2f3f52;
+    }
+
+    .btn.selected {
+      border-color: var(--blue);
+      background: rgba(59, 130, 246, .15);
+      color: #93c5fd;
+      box-shadow: 0 0 12px rgba(59, 130, 246, .25);
+    }
+
+    .btn:disabled {
+      opacity: .35;
+      cursor: not-allowed;
+    }
+
+    .btn.selected:disabled {
+      opacity: .75;
+      cursor: default;
+    }
+
+    #catRow {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+
+    #catRow .btn {
+      font-size: 11.5px;
+      padding: 10px 6px;
+    }
+
+    #shapeRow {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+
+    #shapeRow .btn {
+      font-size: 11.5px;
+      padding: 10px 6px;
+      min-height: 48px;
+    }
+
+    #otherShapesRow {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      margin-top: 6px;
+    }
+
+    #otherShapesRow .btn {
+      font-size: 11px;
+      padding: 9px 6px;
+      min-height: 44px;
+    }
+
+    #otherShapesRow.hidden {
+      display: none;
+    }
+
+    #otherToggle {
+      margin-top: 8px;
+      width: 100%;
+      padding: 9px 12px;
+      background: transparent;
+      border: 1px dashed var(--border);
+      border-radius: 8px;
+      color: var(--muted);
+      font-size: 11.5px;
+      font-weight: 800;
+      letter-spacing: .5px;
+      cursor: pointer;
+      text-transform: uppercase;
+      transition: .12s;
+    }
+
+    #otherToggle:hover {
+      color: #93c5fd;
+      border-color: var(--blue);
+    }
+
+    .subtle {
+      font-size: 11.5px;
+      color: var(--muted);
+      margin-top: 8px;
+      line-height: 1.4;
+      min-height: 16px;
+    }
+
+    .suji-control {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 10px;
+    }
+
+    .suji-big-btn {
+      width: 76px;
+      height: 76px;
+      font-size: 34px;
+      font-weight: 900;
+      line-height: 1;
+      background: var(--panel2);
+      border: 2px solid var(--border);
+      border-radius: 14px;
+      cursor: pointer;
+      transition: .1s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .suji-big-btn:hover {
+      border-color: #64748b;
+      background: #2f3f52;
+    }
+
+    .suji-big-btn:active {
+      background: rgba(59, 130, 246, .25);
+      border-color: var(--blue);
+      transform: scale(.96);
+    }
+
+    .suji-big-btn:disabled {
+      opacity: .3;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .suji-display {
+      flex: 1;
+      text-align: center;
+      font-size: 60px;
+      font-weight: 900;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .suji-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+    }
+
+    .suji-btn {
+      padding: 9px 0;
+      min-height: 38px;
+      background: var(--panel2);
+      border: 2px solid var(--border);
+      border-radius: 7px;
+      color: var(--text);
+      font-size: 13.5px;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+      cursor: pointer;
+      transition: .1s;
+    }
+
+    .suji-btn:hover {
+      border-color: #64748b;
+    }
+
+    .suji-btn.selected {
+      border-color: var(--blue);
+      background: rgba(59, 130, 246, .2);
+      color: #93c5fd;
+    }
+
+    .cond-row {
+      margin-bottom: 10px;
+    }
+
+    .cond-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .cond-label {
+      font-size: 10.5px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: #64748b;
+      margin-bottom: 6px;
+      line-height: 1.3;
+    }
+
+    #yakuRow {
+      width: 50%;
+      transition: opacity .15s;
+    }
+
+    #yakuRow.disabled {
+      opacity: .4;
+    }
+
+    #yakuRow .btn {
+      font-size: 10.5px;
+      padding: 9px 3px;
+      min-height: 40px;
+      white-space: normal;
+      line-height: 1.15;
+    }
+
+    #scoreRow {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+    }
+
+    #scoreRow .btn {
+      font-size: 12px;
+      padding: 10px 3px;
+      min-height: 44px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    #scoreRow .btn.pinfu-disabled {
+      opacity: .3;
+    }
+
+    .result-section {
+      border: 2px solid var(--blue);
+      background: linear-gradient(180deg, #1a2438 0%, #1e293b 100%);
+      padding: 16px;
+    }
+
+    .verdict {
+      text-align: center;
+      padding: 16px 12px;
+      margin-bottom: 14px;
+      border-radius: 12px;
+      font-size: 28px;
+      font-weight: 900;
+      letter-spacing: .5px;
+      line-height: 1.2;
+    }
+
+    .verdict.push {
+      background: rgba(34, 197, 94, .15);
+      color: #86efac;
+      border: 2px solid #16a34a;
+      text-shadow: 0 0 20px rgba(34, 197, 94, .4);
+    }
+
+    .verdict.pull {
+      background: rgba(239, 68, 68, .15);
+      color: #fca5a5;
+      border: 2px solid #dc2626;
+      text-shadow: 0 0 20px rgba(239, 68, 68, .4);
+    }
+
+    .verdict.iron-push {
+      background: rgba(34, 197, 94, .22);
+      color: #4ade80;
+      border: 2px solid #22c55e;
+      text-shadow: 0 0 30px rgba(34, 197, 94, .65), 0 0 60px rgba(34, 197, 94, .3);
+      box-shadow: 0 0 24px rgba(34, 197, 94, .25);
+    }
+
+    .verdict.iron-pull {
+      background: rgba(239, 68, 68, .22);
+      color: #f87171;
+      border: 2px solid #ef4444;
+      text-shadow: 0 0 30px rgba(239, 68, 68, .65), 0 0 60px rgba(239, 68, 68, .3);
+      box-shadow: 0 0 24px rgba(239, 68, 68, .25);
+    }
+
+    .verdict.borderline {
+      background: rgba(245, 158, 11, .15);
+      color: #fcd34d;
+      border: 2px solid #d97706;
+      text-shadow: 0 0 20px rgba(245, 158, 11, .4);
+    }
+
+    .verdict.empty {
+      background: var(--panel2);
+      border: 2px dashed var(--border);
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+      padding: 24px 12px;
+    }
+
+    .verdict-sub {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      opacity: .8;
+      letter-spacing: .5px;
+      margin-top: 4px;
+    }
+
+    .verdict-mawashi {
+      display: block;
+      font-size: 10.5px;
+      color: #94a3b8;
+      margin-top: 6px;
+      letter-spacing: .3px;
+      font-weight: 600;
+    }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .stat {
+      background: var(--panel2);
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      padding: 10px 8px;
+      text-align: center;
+    }
+
+    .stat-label {
+      font-size: 9.5px;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 800;
+      margin-bottom: 4px;
+      line-height: 1.2;
+    }
+
+    .stat-value {
+      font-size: 19px;
+      font-weight: 900;
+      line-height: 1.1;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .stat-value.empty {
+      opacity: .3;
+    }
+
+    .stat-sub {
+      font-size: 10px;
+      color: var(--muted);
+      font-weight: 700;
+      margin-top: 3px;
+    }
+
+    .modifier-indicator {
+      font-size: 11px;
+      color: #fbbf24;
+      font-weight: 700;
+      padding: 6px 10px;
+      margin-bottom: 10px;
+      background: rgba(251, 191, 36, .1);
+      border-radius: 6px;
+      border: 1px solid rgba(251, 191, 36, .3);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .tier-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11px;
+      margin-top: 6px;
+    }
+
+    .tier-table th {
+      background: var(--panel2);
+      color: var(--muted);
+      font-weight: 800;
+      padding: 7px 3px;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      font-size: 9.5px;
+      letter-spacing: .3px;
+      text-transform: uppercase;
+      line-height: 1.2;
+      transition: background .12s, color .12s;
+    }
+
+    .tier-table th:hover {
+      background: #2f3f52;
+      color: var(--text);
+    }
+
+    .tier-table th.current {
+      background: var(--blue);
+      color: #fff;
+    }
+
+    .tier-table th.tier-col {
+      cursor: default;
+      background: var(--panel2);
+      color: var(--muted);
+    }
+
+    .tier-table th.tier-col:hover {
+      background: var(--panel2);
+      color: var(--muted);
+    }
+
+    .tier-table td {
+      padding: 5px 3px;
+      border: 1px solid var(--border);
+      font-weight: 800;
+      text-align: center;
+      font-variant-numeric: tabular-nums;
+      font-size: 11px;
+      cursor: pointer;
+      transition: background .1s;
+    }
+
+    .tier-table td.tier-col {
+      cursor: default;
+      background: var(--panel2);
+      color: var(--muted);
+      font-size: 10.5px;
+      letter-spacing: .3px;
+    }
+
+    .tier-table td:hover:not(.tier-col):not(.highlight-cell) {
+      background: rgba(59, 130, 246, .08);
+    }
+
+    .tier-table tr.current td.tier-col {
+      background: var(--blue);
+      color: #fff;
+    }
+
+    .tier-table tr.current td {
+      background: rgba(59, 130, 246, .10);
+    }
+
+    .tier-table td.highlight-cell {
+      color: #fff !important;
+      font-weight: 900;
+      font-size: 12.5px;
+      box-shadow: inset 0 0 0 2px #60a5fa, 0 0 12px rgba(59, 130, 246, .4);
+    }
+
+    .result-explainer {
+      font-size: 12px;
+      line-height: 1.6;
+      color: #cbd5e1;
+      padding: 10px 12px;
+      border-radius: 9px;
+      background: rgba(15, 23, 42, .6);
+      border: 1px solid var(--border);
+      margin-top: 12px;
+    }
+
+    .result-explainer b {
+      color: #f8fafc;
+    }
+
+    .btn-reset {
+      display: block;
+      width: 100%;
+      padding: 14px 16px;
+      margin: 0 0 10px;
+      background: var(--panel2);
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: .12s;
+      letter-spacing: .5px;
+      text-transform: uppercase;
+    }
+
+    .btn-reset:hover {
+      border-color: #64748b;
+      background: #2f3f52;
+    }
+
+    .btn-reset:active {
+      transform: scale(.98);
+      background: rgba(59, 130, 246, .15);
+      border-color: var(--blue);
+    }
+
+    .btn-next-tile {
+      display: block;
+      width: 100%;
+      padding: 12px 16px;
+      margin-bottom: 10px;
+      background: rgba(34, 197, 94, .12);
+      border: 2px solid #16a34a;
+      border-radius: 10px;
+      color: #86efac;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: .12s;
+      letter-spacing: .5px;
+      text-transform: uppercase;
+    }
+
+    .btn-next-tile:hover {
+      background: rgba(34, 197, 94, .2);
+    }
+
+    .btn-next-tile.hidden {
+      display: none;
+    }
+
+    details {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin-bottom: 10px;
+      overflow: hidden;
+    }
+
+    details[open] {
+      padding-bottom: 12px;
+    }
+
+    details.deal-in-details[open] {
+      border-color: var(--blue);
+    }
+
+    summary {
+      padding: 13px 14px;
+      cursor: pointer;
+      list-style: none;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .5px;
+      text-transform: uppercase;
+      color: #7dd3fc;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    summary::after {
+      content: '▸';
+      font-size: 14px;
+      color: var(--muted);
+      transition: transform .2s;
+    }
+
+    details[open] summary::after {
+      transform: rotate(90deg);
+    }
+
+    summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .ref-body {
+      padding: 0 14px;
+    }
+
+    .shape-ref-item {
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .shape-ref-item:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .shape-ref-title {
+      font-size: 13px;
+      font-weight: 800;
+      margin-bottom: 3px;
+      color: #f8fafc;
+    }
+
+    .shape-ref-title .shape-id {
+      display: inline-block;
+      background: var(--blue);
+      color: #fff;
+      padding: 1px 7px;
+      border-radius: 5px;
+      font-size: 11px;
+      margin-right: 7px;
+      letter-spacing: .3px;
+    }
+
+    .shape-ref-meta {
+      font-size: 11.5px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .shape-ref-example {
+      margin-top: 5px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 12px;
+      color: #7dd3fc;
+      background: rgba(59, 130, 246, .08);
+      padding: 5px 8px;
+      border-radius: 6px;
+      letter-spacing: .2px;
+      word-break: break-all;
+    }
+
+    .deal-in-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11px;
+      margin: 8px 0;
+    }
+
+    .deal-in-table th {
+      background: var(--panel2);
+      color: var(--muted);
+      font-weight: 800;
+      padding: 5px 3px;
+      border: 1px solid var(--border);
+      font-size: 10px;
+      letter-spacing: .4px;
+    }
+
+    .deal-in-table td {
+      padding: 5px 3px;
+      border: 1px solid var(--border);
+      text-align: center;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .deal-in-table td:first-child {
+      background: var(--panel2);
+      color: #7dd3fc;
+      font-size: 10.5px;
+      white-space: nowrap;
+    }
+
+    .thresh-ref-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 10px;
+      margin-bottom: 10px;
+    }
+
+    .thresh-ref-table th {
+      background: var(--panel2);
+      color: var(--muted);
+      font-weight: 800;
+      padding: 3px 2px;
+      border: 1px solid var(--border);
+      font-size: 9px;
+      line-height: 1.2;
+    }
+
+    .thresh-ref-table td {
+      padding: 3px 2px;
+      border: 1px solid var(--border);
+      text-align: center;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .thresh-ref-table td:first-child {
+      background: var(--panel2);
+      color: var(--muted);
+    }
+
+    .thresh-ref-table td.empty-cell {
+      color: #475569;
+      font-weight: 400;
+      opacity: .5;
+    }
+
+    .thresh-ref-table.flipped td {
+      padding: 4px 2px;
+      font-size: 10px;
+      min-width: 55px;
+    }
+
+    .ref-subtitle {
+      font-size: 11px;
+      font-weight: 800;
+      color: #7dd3fc;
+      margin: 10px 0 6px;
+      letter-spacing: .5px;
+      text-transform: uppercase;
+    }
+
+    .shape-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px 12px;
+      font-size: 10px;
+      color: var(--muted);
+      margin-bottom: 6px;
+      line-height: 1.4;
+    }
+
+    .shape-legend span b {
+      color: #f8fafc;
+      margin-right: 3px;
+    }
+
+    .ref-note {
+      font-size: 10.5px;
+      color: var(--muted);
+      margin: 0 0 8px;
+      line-height: 1.4;
+      font-style: italic;
+    }
+
+    @media (min-width:720px) {
+      .topbar-inner {
+        max-width: 800px;
+        padding: 10px 16px;
+      }
+
+      .app-title {
+        font-size: 16px;
+      }
+
+      .app {
+        max-width: 800px;
+        padding: 80px 16px 40px;
+      }
+
+      .btn {
+        font-size: 13px;
+        padding: 12px 10px;
+      }
+
+      .suji-grid {
+        grid-template-columns: repeat(10, 1fr);
+      }
+
+      .stat-grid {
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+      }
+
+      #catRow {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      #shapeRow {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      #otherShapesRow {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      #yakuRow .btn {
+        font-size: 12px;
+        padding: 10px 6px;
+      }
+
+      #scoreRow {
+        grid-template-columns: repeat(7, 1fr);
+      }
+
+      #scoreRow .btn {
+        font-size: 13px;
       }
     }
-    html += '</tr>';
+
+    .modal-body {
+      font-size: 13px;
+      line-height: 1.65;
+      color: #cbd5e1;
+    }
+
+    .modal-body h3 {
+      color: #7dd3fc;
+      font-size: 12px;
+      margin: 14px 0 6px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .modal-body h3:first-child {
+      margin-top: 0;
+    }
+
+    .modal-body p {
+      margin: 0 0 8px;
+    }
+
+    .modal-body b {
+      color: #f8fafc;
+    }
+
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .62);
+      z-index: 9999;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      backdrop-filter: blur(2px);
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 22px 26px;
+      max-width: 760px;
+      width: 100%;
+      max-height: 85vh;
+      overflow-y: auto;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, .55);
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 4px;
+    }
+
+    .modal-header h2 {
+      margin: 0;
+      font-size: 20px;
+      letter-spacing: -.3px;
+    }
+
+    .modal-close {
+      background: transparent;
+      border: none;
+      color: var(--muted);
+      font-size: 26px;
+      cursor: pointer;
+      line-height: 1;
+      padding: 0;
+      width: 30px;
+      height: 30px;
+      border-radius: 6px;
+      transition: .12s;
+    }
+
+    .modal-close:hover {
+      background: var(--panel2);
+      color: var(--text);
+    }
+
+    .modal-desc {
+      color: var(--muted);
+      font-size: 12.5px;
+      margin: 0 0 16px;
+      line-height: 1.5;
+    }
+
+    .modal-prose {
+      margin: 0 0 8px;
+      line-height: 1.65;
+    }
+
+    .modal-prose h4 {
+      color: #cbd5e1;
+      font-size: 12px;
+      margin: 12px 0 6px;
+      font-weight: 800;
+      letter-spacing: .5px;
+      text-transform: none;
+    }
+
+    .modal-prose ul {
+      margin: 4px 0 8px;
+      padding-left: 20px;
+    }
+
+    .modal-prose li {
+      margin-bottom: 6px;
+      line-height: 1.55;
+    }
+
+    .modal-prose i {
+      color: #e2e8f0;
+    }
+
+    .modal-prose a {
+      color: #738ad0;
+      text-decoration: none;
+    }
+
+    .modal-prose a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="topbar" id="topbar">
+    <div class="topbar-inner">
+      <div class="app-title" id="appTitle">
+        <span data-i18n="app.title-icon">1-shanten Oracle</span>
+        <span class="app-sub-title" data-i18n="app.titleSub">Push-pull Lookup Table</span>
+      </div>
+
+      <div class="topbar-actions">
+        <button class="lang-btn" id="langBtn">日本語</button>
+        <button class="lang-btn" id="aboutBtn" data-i18n="home.about">About</button>
+        <button class="lang-btn" id="linkBtn" data-i18n="home.link"
+          onclick="document.location='index.html'">Home</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="app">
+    <main>
+
+      <section class="section">
+        <div class="section-title" data-i18n="label.conditions">Your Conditions</div>
+        <div class="cond-row">
+          <div class="cond-label" data-i18n="label.you">You</div>
+          <div class="btn-row" id="playerRow">
+            <button class="btn" data-player="nondealer" data-i18n="role.nondealer">Non-Dealer</button>
+            <button class="btn" data-player="dealer" data-i18n="role.dealer">Dealer</button>
+          </div>
+        </div>
+        <div class="cond-row">
+          <div class="cond-label" data-i18n="label.riichiRole">Riichi Caller</div>
+          <div class="btn-row" id="riichiRoleRow">
+            <button class="btn" data-riichi-role="nondealer" data-i18n="role.nondealer">Non-Dealer</button>
+            <button class="btn" data-riichi-role="dealer" data-i18n="role.dealer">Dealer</button>
+          </div>
+        </div>
+        <div class="cond-row">
+          <div class="cond-label" data-i18n="label.riichiSeat">Riichi Caller Seat</div>
+          <div class="btn-row" id="riichiSeatRow">
+            <button class="btn" data-riichi-seat="kamicha" data-i18n="seat.kamicha">Kamicha</button>
+            <button class="btn" data-riichi-seat="toimen" data-i18n="seat.toimen">Toimen</button>
+            <button class="btn" data-riichi-seat="shimocha" data-i18n="seat.shimocha">Shimocha</button>
+          </div>
+        </div>
+
+        <div class="cond-row">
+          <div class="cond-label" data-i18n="label.ippatsu">Ippatsu Turn</div>
+          <div class="btn-row" id="ippatsuRow">
+            <button class="btn" data-ippatsu="no" data-i18n="ippatsu.no">No Ippatsu</button>
+            <button class="btn" data-ippatsu="yes" data-i18n="ippatsu.yes">Ippatsu</button>
+          </div>
+      </section>
+
+      <section class="section">
+        <div class="section-title" data-i18n="label.hand">Your Hand</div>
+        <div class="cond-row">
+          <div class="cond-label" data-i18n="label.handState">Hand State</div>
+          <div class="btn-row" id="handRow">
+            <button class="btn" data-hand="menzen" data-i18n="hand.menzen">Closed</button>
+            <button class="btn" data-hand="fuuro" data-i18n="hand.fuuro">Open</button>
+          </div>
+        </div>
+        <div class="cond-row" id="yakuRow">
+          <div class="cond-label" data-i18n="label.yakuState">Yaku when open</div>
+          <div class="btn-row" id="yakuRowBtns">
+            <button class="btn" data-yaku="noyaku" data-i18n="yaku.noyaku">No yaku</button>
+            <button class="btn" data-yaku="callable" data-i18n="yaku.callable">Has yaku</button>
+          </div>
+        </div>
+        <div class="cond-row">
+          <div class="cond-label" data-i18n="label.shape">Shape</div>
+          <div id="shapeRow">
+            <button class="btn" data-shape="Perfect" data-i18n="shapeA">[A] Perfect</button>
+            <button class="btn" data-shape="Good*2" data-i18n="shapeB">[B] Ryanmen×2</button>
+            <button class="btn" data-shape="Good+Ryankan" data-i18n="shapeC">[C] Ryanmen+Ryankan</button>
+            <button class="btn" data-shape="Good+Kanchan" data-i18n="shapeD">[D] Ryanmen+Kanchan</button>
+            <button class="btn" data-shape="Bad+Ryankan" data-i18n="shapeE">[E] Kanchan+Ryankan</button>
+            <button class="btn" data-shape="Chiitoi" data-i18n="shapeF">[F] Chiitoi</button>
+          </div>
+          <button id="otherToggle">▾ <span data-i18n="shape.other">Other Shapes</span></button>
+          <div id="otherShapesRow" class="hidden">
+            <button class="btn" data-shape="BadHeadless" data-i18n="shape.o1">[C−] Bad Headless</button>
+            <button class="btn" data-shape="MediocreHeadless" data-i18n="shape.o2">[C+] Mediocre Headless</button>
+            <button class="btn" data-shape="BadKuttsuki" data-i18n="shape.o3">[C] Bad Kuttsuki</button>
+            <button class="btn" data-shape="StandardHeadless" data-i18n="shape.o4">[A−] Std Headless</button>
+            <button class="btn" data-shape="StandardKuttsuki" data-i18n="shape.o5">[A] Std Kuttsuki</button>
+            <button class="btn" data-shape="GoodHeadless1" data-i18n="shape.o6">[S] Good Conjoined Headless</button>
+            <button class="btn" data-shape="GoodHeadless2" data-i18n="shape.o7">[S] Ankou Headless</button>
+            <button class="btn" data-shape="GoodKuttsuki" data-i18n="shape.o8">[S+] Good Kuttsuki</button>
+          </div>
+        </div>
+        <div class="cond-row">
+          <div class="cond-label" data-i18n="label.score">Ron value</div>
+          <div id="scoreRow"></div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-title" data-i18n="label.turn">Turn</div>
+        <div class="btn-row" id="turnRow">
+          <button class="btn" data-turn="5" data-i18n="turn.early">Early · 5</button>
+          <button class="btn" data-turn="9" data-i18n="turn.mid">Mid · 9</button>
+          <button class="btn" data-turn="14" data-i18n="turn.late">Late · 14</button>
+        </div>
+      </section>
+
+      <details id="dealinSection" class="deal-in-details">
+        <summary data-i18n="label.dealin">Estimate Deal-in Rate</summary>
+        <div class="ref-body">
+          <div class="cond-row">
+            <div class="cond-label" data-i18n="label.category">Tile Category</div>
+            <div id="catRow">
+              <button class="btn" data-cat="Double musuji 4/5/6" data-i18n="cat.double">Double Musuji 4/5/6</button>
+              <button class="btn" data-cat="Musuji 3/7" data-i18n="cat.m37">Musuji 3/7</button>
+              <button class="btn" data-cat="Musuji 2/8" data-i18n="cat.m28">Musuji 2/8</button>
+              <button class="btn" data-cat="Katamusuji 4/5/6" data-i18n="cat.km">Katamusuji 4/5/6</button>
+              <button class="btn" data-cat="Musuji 1/9" data-i18n="cat.m19">Musuji 1/9</button>
+              <button class="btn" data-cat="Suji 3/7" data-i18n="cat.s37">Suji 3/7</button>
+              <button class="btn" data-cat="Suji 2/8" data-i18n="cat.s28">Suji 2/8</button>
+              <button class="btn" data-cat="Suji 1/9" data-i18n="cat.s19">Suji 1/9</button>
+              <button class="btn" data-cat="Naka-suji 4/5/6" data-i18n="cat.naka">Naka-suji 4/5/6</button>
+            </div>
+            <div class="subtle" id="catDesc" data-i18n="label.pickCat">Pick a category to compute the deal-in verdict.
+            </div>
+          </div>
+          <div class="cond-row">
+            <div class="cond-label" data-i18n="label.modifiers">Deal-in Modifiers</div>
+            <div class="btn-row" id="modRow">
+              <button class="btn" data-mod="dora" data-i18n="mod.dora">Dora</button>
+              <button class="btn" data-mod="sotogawa" data-i18n="mod.sotogawa">Sotogawa</button>
+              <button class="btn" data-mod="oneChance" data-i18n="mod.oneChance">1-chance</button>
+              <button class="btn" data-mod="ankou" data-i18n="mod.ankou">Ankou</button>
+            </div>
+          </div>
+          <div class="cond-row">
+            <div class="cond-label" data-i18n="label.suji">Passed Suji</div>
+            <div class="suji-control">
+              <button class="suji-big-btn" id="sujiMinus" aria-label="Decrease">−</button>
+              <div class="suji-display" id="sujiDisplay">0</div>
+              <button class="suji-big-btn" id="sujiPlus" aria-label="Increase">+</button>
+            </div>
+            <div class="suji-grid" id="sujiGrid"></div>
+          </div>
+        </div>
+      </details>
+
+      <section class="section result-section" id="resultSection"></section>
+
+      <button class="btn-next-tile hidden" id="nextTileBtn">↻ <span data-i18n="action.newTile">New Tile</span></button>
+
+      <button class="btn-reset" id="resetBtn" data-i18n="action.reset">Reset</button>
+
+      <details>
+        <summary data-i18n="ref.dealin">Deal-in Rate Reference</summary>
+        <div class="ref-body" id="dealinRef"></div>
+      </details>
+      <details>
+        <summary data-i18n="ref.shapes">Shape Reference</summary>
+        <div class="ref-body" id="shapeRef"></div>
+      </details>
+      <details>
+        <summary data-i18n="ref.shapeTier">Shape Tier Tables</summary>
+        <div class="ref-body" id="shapeTierRef"></div>
+      </details>
+      <details>
+        <summary data-i18n="ref.threshold">Threshold Tables</summary>
+        <div class="ref-body" id="threshRef"></div>
+      </details>
+
+    </main>
+
+    <div id="aboutModal" class="modal-overlay">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 data-i18n="about.title">About</h2>
+          <button class="modal-close" id="closeAbout" aria-label="Close">×</button>
+        </div>
+        <div class="modal-body">
+          <h3 data-i18n="about.overview">Overview</h3>
+          <p data-i18n="about.p1">…</p>
+          <h3 data-i18n="about.howToUse">How to Use</h3>
+          <div class="modal-prose" data-i18n="about.p2">…</div>
+          <h3 data-i18n="about.sources">Sources and Methodology</h3>
+          <p data-i18n="about.p4">…</p>
+          <h3 data-i18n="about.credits">Credits</h3>
+          <p data-i18n="about.p3">…</p>
+        </div>
+        <img src="birb.png" alt="birb" style="max-width: 75px;">
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* =========================================================
+       TIER MAPS
+       ========================================================= */
+    const CLOSED_TIER_MAP = {
+      'Perfect|4': 1,
+      'Perfect|3': 2, 'Good*2|4': 2,
+      'Perfect|2': 3, 'Good*2|3': 3, 'Good+Ryankan|4': 3,
+      'Perfect|1': 4, 'Good*2|2': 4, 'Good+Ryankan|3': 4, 'Good+Kanchan|4': 4,
+      'Good*2|1': 5, 'Good+Ryankan|2': 5, 'Bad+Ryankan|4': 5, 'Good+Kanchan|3': 5, 'Chiitoi|5': 5,
+      'Bad+Ryankan|3': 6, 'Chiitoi|4': 6,
+      'Good+Ryankan|1': 7, 'Good+Kanchan|2': 7, 'Bad+Ryankan|2': 7, 'Chiitoi|3': 7,
+      'Good+Kanchan|1': 8, 'Bad+Ryankan|1': 8
+    };
+
+    const OPEN_TIER_MAP_ND_C = {
+      'Perfect|4': 1, 'Good*2|4': 2,
+      'Perfect|3': 3, 'Good+Ryankan|4': 3, 'Good+Kanchan|4': 4, 'Good*2|3': 4,
+      'Perfect|2': 5, 'Good+Ryankan|3': 5, 'Good+Kanchan|3': 6, 'Bad+Ryankan|4': 5,
+      'Perfect|1': 6, 'Good*2|2': 6,
+      'Good*2|1': 7, 'Good+Ryankan|2': 7, 'Good+Kanchan|2': 8, 'Bad+Ryankan|3': 7,
+      'Good+Ryankan|1': 8, 'Good+Kanchan|1': 9, 'Bad+Ryankan|2': 9, 'Bad+Ryankan|1': 10
+    };
+
+    const OPEN_TIER_MAP_ND_NC = {
+      'Perfect|4': 2, 'Good*2|4': 3,
+      'Perfect|3': 4, 'Good+Ryankan|4': 4, 'Good*2|3': 5, 'Good+Kanchan|4': 5,
+      'Perfect|2': 6, 'Good+Ryankan|3': 6, 'Bad+Ryankan|4': 6,
+      'Perfect|1': 7, 'Good*2|2': 7, 'Good+Kanchan|3': 7,
+      'Good*2|1': 8, 'Good+Ryankan|2': 8, 'Bad+Ryankan|3': 8,
+      'Good+Ryankan|1': 9, 'Good+Kanchan|2': 9, 'Good+Kanchan|1': 10, 'Bad+Ryankan|2': 10, 'Bad+Ryankan|1': 10
+    };
+
+    const OPEN_TIER_MAP_D_C = {
+      'Perfect|4': 1, 'Good*2|4': 2,
+      'Perfect|3': 3, 'Good+Ryankan|4': 3, 'Good*2|3': 4, 'Good+Kanchan|4': 4,
+      'Perfect|2': 5, 'Good+Ryankan|3': 5, 'Bad+Ryankan|4': 5,
+      'Perfect|1': 6, 'Good*2|2': 6, 'Good+Kanchan|3': 6,
+      'Good*2|1': 8, 'Good+Ryankan|2': 8, 'Good+Kanchan|2': 9, 'Bad+Ryankan|3': 8,
+      'Good+Ryankan|1': 9, 'Good+Kanchan|1': 10, 'Bad+Ryankan|2': 10, 'Bad+Ryankan|1': 11
+    };
+
+    const OPEN_TIER_MAP_D_NC = {
+      'Perfect|4': 2, 'Good*2|4': 3,
+      'Perfect|3': 4, 'Good+Ryankan|4': 4, 'Good*2|3': 5, 'Good+Kanchan|4': 5,
+      'Perfect|2': 6,
+      'Good+Ryankan|3': 7, 'Bad+Ryankan|4': 7,
+      'Perfect|1': 8, 'Good*2|2': 8, 'Good+Kanchan|3': 8,
+      'Good*2|1': 9, 'Good+Ryankan|2': 9, 'Bad+Ryankan|3': 9,
+      'Good+Ryankan|1': 10, 'Good+Kanchan|2': 10, 'Good+Kanchan|1': 11, 'Bad+Ryankan|2': 11
+    };
+
+    /* =========================================================
+       THRESHOLDS
+       ========================================================= */
+    const CLOSED_THRESHOLDS = {
+      "VS Non-Dealer": {
+        "Turn 5": { 1: 1.0, 2: 1.0, 3: 0.15, 4: 0.10, 5: 0.07, 6: 0.06, 7: 0.03, 8: 0.01 },
+        "Turn 9": { 1: 0.23, 2: 0.18, 3: 0.13, 4: 0.08, 5: 0.06, 6: 0.06, 7: 0.03, 8: 0.01 },
+        "Turn 14": { 1: 0.12, 2: 0.10, 3: 0.08, 4: 0.06, 5: 0.04, 6: 0.02, 7: 0.02, 8: 0.01 }
+      },
+      "VS Dealer": {
+        "Turn 5": { 1: 1.0, 2: 0.15, 3: 0.10, 4: 0.07, 5: 0.05, 6: 0.04, 7: 0.02, 8: 0.01 },
+        "Turn 9": { 1: 0.15, 2: 0.13, 3: 0.08, 4: 0.05, 5: 0.04, 6: 0.04, 7: 0.02, 8: 0.01 },
+        "Turn 14": { 1: 0.05, 2: 0.05, 3: 0.04, 4: 0.03, 5: 0.02, 6: 0.02, 7: 0.01, 8: 0.00 }
+      },
+      "As Dealer": {
+        "Turn 5": { 1: 1.0, 2: 1.0, 3: 1.0, 4: 1.0, 5: 0.22, 6: 0.13, 7: 0.09, 8: 0.05 },
+        "Turn 9": { 1: 1.0, 2: 1.0, 3: 1.0, 4: 0.25, 5: 0.20, 6: 0.12, 7: 0.08, 8: 0.05 },
+        "Turn 14": { 1: 0.24, 2: 0.20, 3: 0.17, 4: 0.13, 5: 0.10, 6: 0.09, 7: 0.07, 8: 0.04 }
+      }
+    };
+
+    const OPEN_THRESHOLDS = {
+      "VS Non-Dealer": {
+        "Turn 5": { 1: 1.0, 2: 1.0, 3: 1.0, 4: 0.24, 5: 0.17, 6: 0.13, 7: 0.09, 8: 0.06, 9: 0.04, 10: 0.03, 11: 0.00 },
+        "Turn 9": { 1: 1.0, 2: 1.0, 3: 0.24, 4: 0.21, 5: 0.14, 6: 0.12, 7: 0.08, 8: 0.06, 9: 0.04, 10: 0.03, 11: 0.00 },
+        "Turn 14": { 1: 0.24, 2: 0.18, 3: 0.16, 4: 0.14, 5: 0.11, 6: 0.09, 7: 0.07, 8: 0.06, 9: 0.04, 10: 0.03, 11: 0.00 }
+      },
+      "VS Dealer": {
+        "Turn 5": { 1: 1.0, 2: 1.0, 3: 1.0, 4: 0.18, 5: 0.11, 6: 0.09, 7: 0.07, 8: 0.04, 9: 0.03, 10: 0.02, 11: 0.00 },
+        "Turn 9": { 1: 0.24, 2: 0.21, 3: 0.18, 4: 0.12, 5: 0.10, 6: 0.06, 7: 0.05, 8: 0.04, 9: 0.02, 10: 0.01, 11: 0.00 },
+        "Turn 14": { 1: 0.16, 2: 0.10, 3: 0.09, 4: 0.07, 5: 0.06, 6: 0.05, 7: 0.04, 8: 0.03, 9: 0.02, 10: 0.01, 11: 0.00 }
+      },
+      "As Dealer": {
+        "Turn 5": { 1: 1.0, 2: 1.0, 3: 1.0, 4: 1.0, 5: 1.0, 6: 1.0, 7: 1.0, 8: 1.0, 9: 0.14, 10: 0.10, 11: 0.07 },
+        "Turn 9": { 1: 1.0, 2: 1.0, 3: 1.0, 4: 1.0, 5: 1.0, 6: 0.24, 7: 0.24, 8: 0.18, 9: 0.12, 10: 0.10, 11: 0.07 },
+        "Turn 14": { 1: 1.0, 2: 1.0, 3: 0.30, 4: 0.26, 5: 0.20, 6: 0.18, 7: 0.14, 8: 0.13, 9: 0.10, 10: 0.10, 11: 0.07 }
+      }
+    };
+
+    /* =========================================================
+       DEAL-IN RATES
+       ========================================================= */
+    const DEAL_IN_RATES = {
+      "Double musuji 4/5/6": { 0: 0.06, 1: 0.06, 2: 0.07, 3: 0.08, 4: 0.09, 5: 0.10, 6: 0.12, 7: 0.13, 8: 0.14, 9: 0.16, 10: 0.18, 11: 0.20, 12: 0.22, 13: 0.26 },
+      "Musuji 3/7": { 0: 0.06, 1: 0.06, 2: 0.06, 3: 0.070, 4: 0.08, 5: 0.08, 6: 0.09, 7: 0.09, 8: 0.10, 9: 0.11, 10: 0.13, 11: 0.14, 12: 0.16, 13: 0.19, 14: 0.23 },
+      "Musuji 2/8": { 0: 0.05, 1: 0.05, 2: 0.05, 3: 0.06, 4: 0.07, 5: 0.07, 6: 0.08, 7: 0.09, 8: 0.09, 9: 0.10, 10: 0.12, 11: 0.13, 12: 0.15, 13: 0.18, 14: 0.22 },
+      "Katamusuji 4/5/6": { 0: 0.03, 1: 0.03, 2: 0.04, 3: 0.05, 4: 0.05, 5: 0.06, 6: 0.07, 7: 0.07, 8: 0.08, 9: 0.09, 10: 0.10, 11: 0.12, 12: 0.14, 13: 0.15 },
+      "Musuji 1/9": { 0: 0.03, 1: 0.03, 2: 0.04, 3: 0.05, 4: 0.06, 5: 0.06, 6: 0.07, 7: 0.07, 8: 0.08, 9: 0.09, 10: 0.10, 11: 0.12, 12: 0.14, 13: 0.15 },
+      "Suji 3/7": { 0: 0.06, 1: 0.06, 2: 0.05, 3: 0.05, 4: 0.05, 5: 0.05, 6: 0.05, 7: 0.05, 8: 0.06, 9: 0.06, 10: 0.06, 11: 0.07, 12: 0.08, 13: 0.09 },
+      "Suji 2/8": { 0: 0.04, 1: 0.04, 2: 0.04, 3: 0.04, 4: 0.04, 5: 0.04, 6: 0.04, 7: 0.04, 8: 0.04, 9: 0.04, 10: 0.05, 11: 0.05, 12: 0.06, 13: 0.07 },
+      "Suji 1/9": { 0: 0.02, 1: 0.02, 2: 0.02, 3: 0.02, 4: 0.02, 5: 0.02, 6: 0.02, 7: 0.02, 8: 0.02, 9: 0.02, 10: 0.03, 11: 0.03, 12: 0.04, 13: 0.05 },
+      "Naka-suji 4/5/6": { 0: 0.02, 1: 0.02, 2: 0.02, 3: 0.02, 4: 0.02, 5: 0.02, 6: 0.02, 7: 0.02, 8: 0.02, 9: 0.02, 10: 0.03, 11: 0.03, 12: 0.04, 13: 0.05 }
+    };
+
+    const RATE_BUCKETS = [
+      { label: '< 5%', min: 0.00, max: 0.05, test: r => r < 0.05 },
+      { label: '5 – 10%', min: 0.05, max: 0.10, test: r => r >= 0.05 && r < 0.10 },
+      { label: '10 – 15%', min: 0.10, max: 0.15, test: r => r >= 0.10 && r < 0.15 },
+      { label: '15 – 20%', min: 0.15, max: 0.20, test: r => r >= 0.15 && r < 0.20 },
+      { label: '20 – 25%', min: 0.20, max: 0.25, test: r => r >= 0.20 && r < 0.25 },
+      { label: '> 25%', min: 0.25, max: 1.00, test: r => r >= 0.25 }
+    ];
+
+    const MODIFIER_VALUES = {
+      dora: +0.02,
+      sotogawa: -0.05,
+      oneChance: -0.03,
+      ankou: +0.02
+    };
+
+    /* =========================================================
+       SCORE MAPS: label -> { han, fu, pinfu }
+       ========================================================= */
+    const SCORE_MAP = {
+      closedND: [
+        { label: '1300', han: 1, fu: 40, pinfu: false },
+        { label: '1300~2000', han: 2, fu: 30, pinfu: true },
+        { label: '2600', han: 2, fu: 40, pinfu: false },
+        { label: '2600~3900', han: 3, fu: 30, pinfu: true },
+        { label: '5200', han: 3, fu: 40, pinfu: false },
+        { label: '5200~7700', han: 4, fu: 30, pinfu: true },
+        { label: '8000', han: 4, fu: 40, pinfu: false }
+      ],
+      closedD: [
+        { label: '2000', han: 1, fu: 40, pinfu: false },
+        { label: '2000~2900', han: 2, fu: 30, pinfu: true },
+        { label: '3900', han: 2, fu: 40, pinfu: false },
+        { label: '3900~5800', han: 3, fu: 30, pinfu: true },
+        { label: '7700', han: 3, fu: 40, pinfu: false },
+        { label: '7700~11600', han: 4, fu: 30, pinfu: true },
+        { label: '12000', han: 4, fu: 40, pinfu: false }
+      ],
+      openND: [
+        { label: '1000', han: 1, fu: 30, pinfu: false },
+        { label: '1300', han: 1, fu: 40, pinfu: false },
+        { label: '2000', han: 2, fu: 30, pinfu: false },
+        { label: '2600', han: 2, fu: 40, pinfu: false },
+        { label: '3900', han: 3, fu: 30, pinfu: false },
+        { label: '5200', han: 3, fu: 40, pinfu: false },
+        { label: '7700', han: 4, fu: 30, pinfu: false }
+      ],
+      openD: [
+        { label: '1500', han: 1, fu: 30, pinfu: false },
+        { label: '2000', han: 1, fu: 40, pinfu: false },
+        { label: '2900', han: 2, fu: 30, pinfu: false },
+        { label: '3900', han: 2, fu: 40, pinfu: false },
+        { label: '5800', han: 3, fu: 30, pinfu: false },
+        { label: '7700', han: 3, fu: 40, pinfu: false },
+        { label: '11600', han: 4, fu: 30, pinfu: false }
+      ],
+      chiitoiND: [
+        { label: '3200', han: 3, fu: 25, pinfu: false },
+        { label: '6400', han: 4, fu: 25, pinfu: false },
+        { label: '8000', han: 5, fu: 25, pinfu: false }
+      ],
+      chiitoiD: [
+        { label: '4800', han: 3, fu: 25, pinfu: false },
+        { label: '9600', han: 4, fu: 25, pinfu: false },
+        { label: '12000', han: 5, fu: 25, pinfu: false }
+      ]
+    };
+
+    const POINT_TABLE_BY_FU = {
+      menzenND: {
+        30: { 1: 1000, 2: 2000, 3: 3900, 4: 7700 },
+        40: { 1: 1300, 2: 2600, 3: 5200, 4: 8000 },
+        50: { 1: 1600, 2: 3200, 3: 6400, 4: 8000 }
+      },
+      menzenD: {
+        30: { 1: 1500, 2: 2900, 3: 5800, 4: 11600 },
+        40: { 1: 2000, 2: 3900, 3: 7700, 4: 12000 },
+        50: { 1: 2400, 2: 4800, 3: 9600, 4: 12000 }
+      },
+      openND: {
+        30: { 1: 1000, 2: 2000, 3: 3900, 4: 7700 },
+        40: { 1: 1300, 2: 2600, 3: 5200, 4: 8000 }
+      },
+      openD: {
+        30: { 1: 1500, 2: 2900, 3: 5800, 4: 11600 },
+        40: { 1: 2000, 2: 3900, 3: 7700, 4: 12000 }
+      }
+    };
+    const CHIITOI_POINTS = {
+      nonDealer: { 3: 3200, 4: 6400, 5: 8000 },
+      dealer: { 3: 4800, 4: 9600, 5: 12000 }
+    };
+
+    /* =========================================================
+       SHAPE METADATA
+       ========================================================= */
+    const SHAPES = ['Perfect', 'Good*2', 'Good+Ryankan', 'Good+Kanchan', 'Bad+Ryankan', 'Chiitoi'];
+    const SHAPE_IDS = { 'Perfect': 'A', 'Good*2': 'B', 'Good+Ryankan': 'C', 'Good+Kanchan': 'D', 'Bad+Ryankan': 'E', 'Chiitoi': 'F' };
+    const SHAPE_INFO = {
+      'Perfect': { en: 'Perfect', ja: '完全形', accept: 20, good: '100%', example: '123m234p788p2245s' },
+      'Good*2': { en: 'Ryanmen ×2', ja: '両面×2', accept: 16, good: '100%', example: '123m456m22p45s78s3z' },
+      'Good+Ryankan': { en: 'Ryanmen + Ryankan', ja: '両面＋リャンカン', accept: 16, good: '50%', example: '123m456m22z45s246p' },
+      'Good+Kanchan': { en: 'Ryanmen + Kanchan', ja: '両面＋カンチャン', accept: 12, good: '33%', example: '123m456m11s45s68p5z' },
+      'Bad+Ryankan': { en: 'Kanchan + Ryankan', ja: 'カンチャン＋リャンカン', accept: 12, good: '0%', example: '123m456m22z46s246p' },
+      'Chiitoi': { en: 'Chiitoi', ja: '七対子', accept: 9, good: '0%', example: '22m55m33p88p22s1z5z' }
+    };
+
+    const OTHER_SHAPES = {
+      'BadHeadless': { id: 'C-', baseShape: 'Good+Ryankan', tierOffset: 0, en: 'Bad Headless', ja: '悪いヘッドレス', accept: 16, good: '0%', example: '12368m3789p3678s' },
+      'MediocreHeadless': { id: 'C+', baseShape: 'Good+Ryankan', tierOffset: 0, en: 'Mediocre Headless', ja: 'やや悪いヘッドレス', accept: 24, good: '25%', example: '12368m34789p678s' },
+      'BadKuttsuki': { id: 'C', baseShape: 'Good+Ryankan', tierOffset: 0, en: 'Bad Kuttsuki', ja: '悪いくっつき', accept: 32, good: '25%', example: '12399m2p789p2678s' },
+      'StandardHeadless': { id: 'A-', baseShape: 'Perfect', tierOffset: 0, en: 'Standard Headless', ja: '標準ヘッドレス', accept: 28, good: '43%', example: '12367m34p789p678s' },
+      'StandardKuttsuki': { id: 'A', baseShape: 'Perfect', tierOffset: 0, en: 'Standard Kuttsuki', ja: '標準くっつき', accept: 40, good: '40%', example: '12399m3789p3678s' },
+      'GoodHeadless1': { id: 'S', baseShape: 'Perfect', tierOffset: -1, en: 'Good Conjoined Headless', ja: '連続形ヘッドレス', accept: 33, good: '79%', example: '12345m34789p678s' },
+      'GoodHeadless2': { id: 'S', baseShape: 'Perfect', tierOffset: -1, en: 'Ankou Headless', ja: '暗刻ヘッドレス', accept: 28, good: '100%', example: '12367m34999p678s' },
+      'GoodKuttsuki': { id: 'S+', baseShape: 'Perfect', tierOffset: -1, en: 'Good Kuttsuki', ja: '良いくっつき', accept: 45, good: '53%', example: '12399m3789p5678s' }
+    };
+
+    /* =========================================================
+       I18N
+       ========================================================= */
+    const I18N = {
+      en: {
+        'home.link': 'Return <i class="fa-solid fa-door-open"></i>',
+        'home.about': 'About <i class="fa-solid fa-circle-info"></i>',
+        'app.title': '1-shanten Oracle',
+        'app.title-icon': '<i class="fa-solid fa-hamsa"></i> 1-shanten Oracle',
+        'app.titleSub': 'Push-pull Lookup Table',
+        'app.fullTitle': '1-shanten Oracle',
+        'label.turn': 'Turn',
+        'turn.early': 'Early · 5', 'turn.mid': 'Mid · 9', 'turn.late': 'Late · 14',
+        'label.category': 'Tile Category',
+        'label.pickCat': 'Pick a category to compute the deal-in verdict.',
+        'cat.double': 'Double Musuji 4/5/6', 'cat.m37': 'Musuji 3/7', 'cat.m28': 'Musuji 2/8',
+        'cat.km': 'Katamusuji 4/5/6', 'cat.m19': 'Musuji 1/9',
+        'cat.s37': 'Suji 3/7', 'cat.s28': 'Suji 2/8', 'cat.s19': 'Suji 1/9',
+        'cat.naka': 'Naka-suji 4/5/6',
+        'catdesc.double': '4, 5, or 6 — double non-suji',
+        'catdesc.m37': '3 or 7 — non-suji',
+        'catdesc.m28': '2 or 8 — non-suji',
+        'catdesc.km': 'Middle tile — half suji',
+        'catdesc.m19': 'Terminal — non-suji',
+        'catdesc.s37': '3 or 7 — suji',
+        'catdesc.s28': '2 or 8 — suji',
+        'catdesc.s19': '1 or 9 — suji',
+        'catdesc.naka': '4, 5, or 6 — naka-suji',
+        'label.suji': 'Passed Suji',
+        'label.modifiers': 'Deal-in Modifiers',
+        'label.dealin': 'Estimate Deal-in Rate',
+        'mod.dora': 'Dora', 'mod.sotogawa': 'Sotogawa',
+        'mod.oneChance': '1-chance', 'mod.ankou': 'Ankou / Ankou-suji',
+        'label.conditions': 'Your Conditions',
+        'label.handState': 'Hand State',
+        'label.yakuState': 'Yaku when open',
+        'yaku.noyaku': 'No yaku',
+        'yaku.callable': 'Has yaku',
+        'hand.menzen': 'Closed', 'hand.fuuro': 'Open',
+        'label.you': 'You',
+        'role.dealer': 'Dealer', 'role.nondealer': 'Non-Dealer',
+        'label.riichiRole': 'Riichi Caller',
+        'label.riichiSeat': 'Riichi Caller Seat',
+        'seat.kamicha': 'Kamicha', 'seat.toimen': 'Toimen', 'seat.shimocha': 'Shimocha',
+        'label.ippatsu': 'Ippatsu Turn',
+        'ippatsu.no': 'No Ippatsu',
+        'ippatsu.yes': 'Ippatsu',
+        'ref.ippatsu': 'Ippatsu',
+        'result.ippatsuDealerNote': 'Ippatsu: dealer riichi — hand treated 2 tiers weaker',
+        'result.ippatsuNdNote': 'Ippatsu: non-dealer riichi — VS Dealer threshold chart applied',
+        'label.hand': 'Your Hand', 'label.shape': 'Shape',
+        'label.score': 'Ron value',
+        'shapeA': '[A] Perfect', 'shapeB': '[B] Ryanmen×2', 'shapeC': '[C] Ryanmen+Ryankan',
+        'shapeD': '[D] Ryanmen+Kanchan', 'shapeE': '[E] Kanchan+Ryankan', 'shapeF': '[F] Chiitoi',
+        'shape.other': 'Other Shapes',
+        'shape.o1': '[C−] Bad Headless', 'shape.o2': '[C+] Mediocre Headless',
+        'shape.o3': '[C] Bad Kuttsuki',
+        'shape.o4': '[A−] Std Headless', 'shape.o5': '[A] Std Kuttsuki',
+        'shape.o6': '[S] Good Conjoined Headless', 'shape.o7': '[S] Ankou Headless',
+        'shape.o8': '[S+] Good Kuttsuki',
+        'action.reset': 'Reset',
+        'action.newTile': 'New Tile',
+        'verdict.selectCat': 'Select a tile category to compute',
+        'verdict.empty': '—',
+        'verdict.ironPush': 'IRON PUSH',
+        'verdict.push': 'PUSH',
+        'verdict.pull': 'PULL',
+        'verdict.ironPull': 'IRON PULL',
+        'verdict.borderline': 'BORDERLINE',
+        'verdict.leanPush': 'slightly favors PUSH',
+        'verdict.leanPull': 'slightly favors PULL',
+        'verdict.leanBoth': 'either way',
+        'verdict.mawashi': 'Consider mawashi',
+        'stat.tier': 'Tier', 'stat.threshold': 'Threshold Deal-in Rate',
+        'stat.dealin': 'Deal-in', 'stat.points': 'Points',
+        'table.tier': 'Tier', 'table.turn5': 'Turn 5', 'table.turn9': 'Turn 9', 'table.turn14': 'Turn 14',
+        'explain.ironPush': 'Deal-in well below Threshold → <b>IRON PUSH</b>',
+        'explain.push': 'Deal-in ≤ Threshold Deal-in Rate → <b>PUSH</b>',
+        'explain.pull': 'Deal-in above Threshold → <b>PULL</b>',
+        'explain.ironPull': 'Deal-in well above Threshold → <b>IRON PULL</b>',
+        'explain.borderline': 'Deal-in is very close to Threshold — both answers are acceptable.',
+        'explain.always': 'Threshold is 100% — always push.',
+        'result.modifiersApplied': 'Modifiers applied:',
+        'ref.shapes': 'Shape Reference',
+        'ref.dealin': 'Deal-in Rate Reference',
+        'ref.shapeTier': 'Shape Tier Tables',
+        'ref.threshold': 'Threshold Tables',
+        'ref.accept': 'Tile acceptance', 'ref.good': 'Good wait rate',
+        'ref.example': 'Example',
+        'ref.tiles': '{n} tiles',
+        'ref.minSuji': 'Minimum passed sujis',
+        'ref.modifiers': 'Modifiers',
+        'ref.modifierName': 'Modifier',
+        'ref.modifierValue': 'Effect on Rate',
+        'ref.menzen': 'Closed (Dealer / Non-Dealer)',
+        'ref.fuuro': 'Open (Dealer / Non-Dealer)',
+        'ref.vsND': 'VS Non-Dealer', 'ref.vsD': 'VS Dealer', 'ref.asD': 'As Dealer',
+        'ref.menzenND': 'Closed · Non-Dealer',
+        'ref.menzenD': 'Closed · Dealer',
+        'ref.ndC': 'Open · Non-Dealer · Kamicha Riichi',
+        'ref.ndNC': 'Open · Non-Dealer · Not Kamicha Riichi',
+        'ref.dC': 'Open · Dealer · Kamicha Riichi',
+        'ref.dNC': 'Open · Dealer · Not Kamicha Riichi',
+        'ref.tier': 'Tier',
+        'ref.pointsNote': 'Values shown are the hand\'s ron value at each (shape, tier) combination.',
+        'ref.otherShapes': 'Other Shapes',
+        'ref.baseTier': 'Base tier',
+        'lang': '日本語',
+        'about.title': 'About',
+        'about.overview': 'Overview',
+        'about.p1': 'A portable reference tool for push-pull decisions in 1-shanten situations. Set your conditions, hand shape, ron value, and turn to look up the <b>threshold deal-in rate</b> for your hand. This threshold represents the maximum estimated deal-in rate at which pushing is considered worthwhile. Optionally, expand <b>Estimate Deal-in Rate</b> to select a tile category, apply deal-in modifiers, and enter the number of passed suji to obtain a PUSH/PULL verdict. <b>The tool is primarily intended for push-pull decisions in flat point standing.<b>',
+        'about.howToUse': 'How to Use',
+        'about.p2': 'Work from top to bottom: set your conditions, hand shape, ron value, and turn to view the corresponding threshold table. To get a more specific PUSH/PULL verdict, expand <i>Estimate Deal-in Rate</i> and enter the tile category, applicable modifiers, and number of passed suji. Tap a turn column header to switch between turns.<h4>How the Tables Work</h4>The app first uses the <b>Shape Tier Table</b> to determine the tier corresponding to your hand shape and ron value. The assigned tier depends on whether you are the dealer or non-dealer, whether your hand is closed or open, and, for open hands, whether Kamicha has declared riichi. Each shape is assigned tiers according to its relative value: [A] Perfect generally receives the most favorable tiers, followed by shapes [B] through [F]. The tier also depends on the hand\'s ron value; for example, a 4-han [A] menzen hand is assigned Tier 1, while a 4-han menzen [B] Ryanmen*2 hand is assigned Tier 2, equivalent to a 3-han [A] Perfect hand.<h4>Additional Details</h4>The following rules explain some of the adjustments applied in less straightforward cases, and may also be useful if you want to consult the tables manually:<ul><li><b>Open hands against a Kamicha riichi:</b> A separate table is used when Kamicha has declared riichi, accounting for the increased opportunity to call chii from their discards.</li><li><b>Closed hands with an available yaku when opened:</b> If a closed hand has a valid yaku when opened, it is evaluated using the open-hand table. Its value is classified according to its open-hand ron value, then moved up one tier to reflect the more favorable push conditions.</li><li><b>Non-standard 1-shanten shapes:</b> The Kuttsuki and Headless shapes classified as [S] tier use [A] Perfect as their base tier, adjusted upward by one tier.</li><li><b>Intermediate hand values:</b> Hands capable of scoring pinfu are assigned an interpolated value between two adjacent tiers. For open hands, <i>tenpane</i> (テンパネ)—score increases resulting from additional fu, such as value triplets or quads—is also accounted for by interpolating between adjacent tiers, with slightly less than 50% weight toward the higher tier.</li></ul>',
+        'about.sources': 'Sources and Methodology',
+        'about.p4': 'The shape-tier and threshold tables are adapted primarily from Unimaru\'s book <i>Unimaru-shiki Winning Mahjong with Theory</i> (『うに丸式 セオリーで勝つ麻雀』), which draws on material from <i>Statistical Mahjong Strategy</i> (『統計学のマージャン戦術』) and <i>New: Scientific Mahjong</i> (『新・科学する麻雀』). <br> <br> The [D] Ryanmen + Kanchan shape was not included in the original data and has been interpolated by me. The original [D] and [E] shape classifications have been renamed [E] and [F], respectively. Other shapes are mapped to their base tiers according to their prefixes. Fu-adjusted thresholds are calculated by averaging the values of adjacent tiers. Deal-in rate estimates are adapted from <i>Statistical Mahjong Strategy</i> by Miinin. I have also made numerous estimates of my own when deciding how to handle certain edge cases. As a result, not every situation may be perfectly calibrated to an optimal push-pull decision. <b>Please treat the results as a reference rather than definitive advice.</b>',
+        'about.credits': 'Credits',
+        'about.p3': 'Designed and developed by kakino_tea. X: <a style="color:#738ad0" href="https://x.com/mican8saku" target="_blank" rel="noopener noreferrer">@mican8saku</a>',
+      },
+      ja: {
+        'home.link': '戻る <i class="fa-solid fa-door-open"></i>',
+        'home.about': 'このアプリについて <i class="fa-solid fa-circle-info"></i>',
+        'app.title': 'イーシャンテン オラクル',
+        'app.title-icon': '<i class="fa-solid fa-hamsa"></i> イーシャンテン オラクル',
+        'app.titleSub': '押し引き早見表',
+        'label.turn': '巡目',
+        'turn.early': '序盤・5巡目', 'turn.mid': '中盤・9巡目', 'turn.late': '終盤・14巡目',
+        'label.category': '牌カテゴリ',
+        'label.pickCat': 'カテゴリを選択すると判定を計算します。',
+        'cat.double': 'ダブル無スジ', 'cat.m37': '無スジ 3/7', 'cat.m28': '無スジ 2/8',
+        'cat.km': '片無スジ 4/5/6', 'cat.m19': '無スジ 1/9',
+        'cat.s37': 'スジ 3/7', 'cat.s28': 'スジ 2/8', 'cat.s19': 'スジ 1/9',
+        'cat.naka': '中スジ 4/5/6',
+        'catdesc.double': '4・5・6 — ダブルの無スジ',
+        'catdesc.m37': '3 または 7 — 無スジ',
+        'catdesc.m28': '2 または 8 — 無スジ',
+        'catdesc.km': '中張牌 — 片スジ',
+        'catdesc.m19': '老頭牌 — 無スジ',
+        'catdesc.s37': '3 または 7 — スジ',
+        'catdesc.s28': '2 または 8 — スジ',
+        'catdesc.s19': '1 または 9 — スジ',
+        'catdesc.naka': '4・5・6 — 中スジ',
+        'label.suji': '通ったスジ',
+        'label.modifiers': '放銃率補正',
+        'label.dealin': '放銃率を推定',
+        'mod.dora': 'ドラ', 'mod.sotogawa': '外側',
+        'mod.oneChance': 'ワンチャンス', 'mod.ankou': '暗刻 / 暗刻スジ',
+        'label.conditions': '状況',
+        'label.handState': '手牌の状態',
+        'label.yakuState': '手役（鳴き時）',
+        'label.ippatsu': '一発巡',
+        'ippatsu.no': '非一発巡',
+        'ippatsu.yes': '一発巡',
+        'ref.ippatsu': '一発巡',
+        'result.ippatsuDealerNote': '一発巡：親リーチ ー 手牌を2段階弱く評価',
+        'result.ippatsuNdNote': '一発巡：子リーチ — 親相手のボーダー表を適用',
+        'yaku.noyaku': '役なし',
+        'yaku.callable': '役あり',
+        'hand.menzen': '門前', 'hand.fuuro': '副露',
+        'label.you': '自分',
+        'role.dealer': '親', 'role.nondealer': '子',
+        'label.riichiRole': 'リーチ者',
+        'label.riichiSeat': 'リーチ者の座席',
+        'seat.kamicha': '上家', 'seat.toimen': '対面', 'seat.shimocha': '下家',
+        'label.hand': '手牌', 'label.shape': '形',
+        'label.score': '打点（出上がり）',
+        'shapeA': '[A] 完全形', 'shapeB': '[B] 両面×2', 'shapeC': '[C] 両面＋リャンカン',
+        'shapeD': '[D] 両面＋カンチャン', 'shapeE': '[E] カンチャン＋リャンカン', 'shapeF': '[F] 七対子',
+        'shape.other': 'その他の形',
+        'shape.o1': '[C−] 悪いヘッドレス', 'shape.o2': '[C+] やや悪いヘッドレス',
+        'shape.o3': '[C] 悪いくっつき',
+        'shape.o4': '[A−] 標準ヘッドレス', 'shape.o5': '[A] 標準くっつき',
+        'shape.o6': '[S] 連続形ヘッドレス', 'shape.o7': '[S] 暗刻ヘッドレス',
+        'shape.o8': '[S+] 良いくっつき',
+        'action.reset': 'リセット',
+        'action.newTile': '新しい牌',
+        'verdict.selectCat': '牌カテゴリを選択してください',
+        'verdict.empty': '—',
+        'verdict.ironPush': '鉄押し',
+        'verdict.push': '押し',
+        'verdict.pull': '引き',
+        'verdict.ironPull': '鉄引き',
+        'verdict.borderline': '微差',
+        'verdict.leanPush': '押し寄り',
+        'verdict.leanPull': '引き寄り',
+        'verdict.leanBoth': 'どちらでも可',
+        'verdict.mawashi': '回し打ちも検討',
+        'stat.tier': 'ティア', 'stat.threshold': '押し引きボーダー放銃率',
+        'stat.dealin': '放銃率', 'stat.points': '点数',
+        'table.tier': 'ティア', 'table.turn5': '5巡目', 'table.turn9': '9巡目', 'table.turn14': '14巡目',
+        'explain.ironPush': '放銃率がボーダーより大幅に低い → <b>鉄押し</b>',
+        'explain.push': '放銃率 ≤ ボーダー放銃率 → <b>押し</b>',
+        'explain.pull': '放銃率 > ボーダー放銃率 → <b>引き</b>',
+        'explain.ironPull': '放銃率がボーダーより大幅に高い → <b>鉄引き</b>',
+        'explain.borderline': '放銃率とボーダーがほぼ同じ — どちらも許容。',
+        'explain.always': 'ボーダー 100% — 常に押し。',
+        'result.modifiersApplied': '適用中の補正:',
+        'ref.shapes': '形リファレンス',
+        'ref.dealin': '放銃率リファレンス',
+        'ref.shapeTier': '形ティア表',
+        'ref.threshold': '押し引きボーダー放銃率',
+        'ref.accept': '受け入れ', 'ref.good': '良形率',
+        'ref.example': '例',
+        'ref.tiles': '{n}枚',
+        'ref.minSuji': '必要な通しスジ数の最小値',
+        'ref.modifiers': '補正',
+        'ref.modifierName': '補正',
+        'ref.modifierValue': '放銃率への影響',
+        'ref.menzen': '門前（親・子共通）',
+        'ref.fuuro': '副露（親・子共通）',
+        'ref.vsND': '子相手', 'ref.vsD': '親相手', 'ref.asD': '親として',
+        'ref.menzenND': '門前・子',
+        'ref.menzenD': '門前・親',
+        'ref.ndC': '副露・子・上家リーチ',
+        'ref.ndNC': '副露・子・非上家リーチ',
+        'ref.dC': '副露・親・上家リーチ',
+        'ref.dNC': '副露・親・非上家リーチ',
+        'ref.tier': 'ティア',
+        'ref.pointsNote': '表示は各（形・ティア）でのロン時の点数。',
+        'ref.otherShapes': 'その他の形',
+        'ref.baseTier': '基本ティア',
+        'lang': 'English',
+        'about.title': 'このアプリについて',
+        'about.overview': '概要',
+        'about.overview': '概要',
+        'about.p1': '1シャンテン時の押し引き判断に使う早見表です。自分の状況・手牌の形・ロン打点・巡目を設定すると、手牌に対応する<b>ボーダー放銃率</b>を確認できます。これは、押す価値があると判断される放銃率の目安となる上限値です。さらに「放銃率を推定」を開き、牌のカテゴリ・放銃率の補正要素・通ったスジの数を入力すると、PUSH/PULLの判定を確認できます。<b>主に平場での押し引き判断を想定しています。</b>',
+        'about.howToUse': '使い方',
+        'about.p2': '上から順に、自分の状況・手牌の形・ロン打点・巡目を設定してください。条件に応じてボーダー放銃率の表が更新されます。具体的な押し引き判定を確認したい場合は、「放銃率を推定」を開き、牌のカテゴリ・補正要素・通ったスジの数を入力してください。巡目の列ヘッダーをタップすると、表示する巡目を切り替えられます。<h4>表の見方</h4>まず、<b>形のティア表</b>から、手牌の形とロン打点に対応するティアを決定します。使用する表は、親・子の別、門前・副露の別によって異なり、副露手については上家がリーチしているかどうかでも表が分かれます。各形には、形の相対的な価値に応じてティアが設定されています。基本的には[A] Perfectが最も有利なティアに割り当てられ、[B]から[F]にかけて形に応じたティアが設定されています。また、同じ形でもロン打点によってティアは変わります。例えば、[A]の4翻はTier 1、[B]の4翻はTier 2となり、[A]の3翻と同じティアになります。ティアが決まったら、次に<b>ボーダー放銃率表</b>を参照します。この表は縦軸がティア、横軸が巡目（5巡目・9巡目・14巡目）になっています。該当するティアと巡目が交差する値が、その状況でのボーダー放銃率です。<h4>補足事項</h4>以下は、通常の表の選択・参照に加えて、少し特殊なケースで適用される補正ルールです。手作業で表を参照する場合にも参考になります。<ul><li><b>上家がリーチしている場合の副露手：</b>上家がリーチしている場合は、専用の副露手用の表を使用します。上家の捨て牌からチーできる機会が増えることを考慮しています。</li><li><b>鳴けば役がつく門前手：</b>鳴いた状態で役が成立する門前手は、副露手用の表を使用します。副露時のロン打点で分類したうえで、押しやすさを考慮してティアを1段階上げて評価します。</li><li><b>特殊な1シャンテン形：</b>[S]ティアに分類されるくっつき形・ヘッドレス形は、[A] Perfectを基準となるティアとし、そこからティアを1段階上げて評価します。</li><li><b>中間的な打点の扱い：</b>ピンフが成立する手牌は、隣接する2つのティアの中間値として扱います。また、副露手のテンパネ（暗刻・明刻や槓子などによる符の増加に伴う打点上昇）についても、隣接するティア間の補間値を使用します。ただし、上位ティア側の比重は50%よりやや低く設定しています。</li></ul>',
+        'about.sources': '参考文献・算出方法',
+        'about.p4': '形のティア表およびボーダー放銃率表は、主にうに丸氏の著書『うに丸式 セオリーで勝つ麻雀』を参考にしています。同書で参考にされている『統計学のマージャン戦術』および『新・科学する麻雀』のデータも基になっています。<br> <br> [D] 両面＋カンチャンの形は元データに含まれていなかったため、独自に補間しています。また、元データの[D]・[E]は、それぞれ[E]・[F]に名称を変更しています。その他の形は、形の名称の接頭辞に応じて基本ティアに割り当てています。符による補正値は、隣接するティアの値を平均して算出しています。放銃率の推定値は、みーにん氏の『統計学のマージャン戦術』を参考にしています。なお、特殊なケースの扱いについては、独自の推定や調整も多く含まれています。そのため、すべての状況で最適な押し引き判断と完全に一致するとは限りません。<b>あくまで判断の参考としてご利用ください。</b>',
+        'about.credits': 'クレジット',
+        'about.p3': '制作：kakino_tea<br>X：<a style="color:#738ad0" href="https://x.com/mican8saku" target="_blank" rel="noopener noreferrer">@mican8saku</a>',
+      }
+    };
+
+    function t(key, fb) {
+      const d = I18N[State.lang] || I18N.en;
+      if (d[key] !== undefined) return d[key];
+      if (I18N.en[key] !== undefined) return I18N.en[key];
+      return fb !== undefined ? fb : key;
+    }
+    function tf(key, vars) {
+      let s = t(key);
+      if (vars) for (const k in vars) s = s.replace(new RegExp('\\{' + k + '\\}', 'g'), vars[k]);
+      return s;
+    }
+    function catLabel(cat) { return t('cat.' + cat, cat); }
+    function catDesc(cat) { return t('catdesc.' + cat, ''); }
+
+    /* =========================================================
+       STATE
+       ========================================================= */
+    function defaultState() {
+      return {
+        hand: 'menzen',
+        yakuState: 'noyaku',
+        playerDealer: false,
+        riichiCallerDealer: false,
+        riichiCallerSeat: 'kamicha',
+        ippatsu: false,
+        shape: 'Perfect',
+        score: '2600',
+        turn: 5,
+        category: null,
+        modifiers: { dora: false, sotogawa: false, oneChance: false, ankou: false },
+        passedSuji: 0
+      };
+    }
+    const State = Object.assign({ lang: 'en' }, defaultState());
+
+    /* =========================================================
+       HELPERS
+       ========================================================= */
+    const $ = id => document.getElementById(id);
+
+    function isOtherShape(s) { return !!OTHER_SHAPES[s]; }
+
+    function maxTierForMap(map) {
+      let max = 0;
+      for (const key in map) if (map[key] > max) max = map[key];
+      return max;
+    }
+
+    function getEffectiveConfig() {
+      const isFuuroHand = State.hand === 'fuuro';
+      const is7Pairs = State.shape === 'Chiitoi';
+      const callable = !isFuuroHand && !is7Pairs && State.yakuState === 'callable';
+      const effectiveOpen = isFuuroHand || callable;
+
+      const isKamicha = State.riichiCallerSeat === 'kamicha';
+      let tierMap;
+      if (!effectiveOpen) tierMap = CLOSED_TIER_MAP;
+      else if (State.playerDealer) tierMap = isKamicha ? OPEN_TIER_MAP_D_C : OPEN_TIER_MAP_D_NC;
+      else tierMap = isKamicha ? OPEN_TIER_MAP_ND_C : OPEN_TIER_MAP_ND_NC;
+
+      // Base role
+      let roleKey = State.playerDealer
+        ? 'As Dealer'
+        : (State.riichiCallerDealer ? 'VS Dealer' : 'VS Non-Dealer');
+
+      // ----- Ippatsu adjustment -----
+      // Non-dealer riichi + ippatsu → use VS Dealer chart (same tier).
+      // Dealer riichi + ippatsu     → use VS Dealer chart with tier +2 (worse).
+      let tierAdjust = 0;
+      let ippatsuApplied = false;
+      if (State.ippatsu) {
+        ippatsuApplied = true;
+        if (!State.riichiCallerDealer) {
+          roleKey = 'VS Dealer';   // treat ND riichi as dealer-strength
+        } else {
+          roleKey = 'VS Dealer';
+          tierAdjust = 2;          // treat dealer riichi as 2 tiers weaker for us
+        }
+      }
+
+      const threshTable = effectiveOpen ? OPEN_THRESHOLDS : CLOSED_THRESHOLDS;
+
+      const otherInfo = OTHER_SHAPES[State.shape];
+      const baseShape = otherInfo ? otherInfo.baseShape : State.shape;
+      const shapeOffset = otherInfo ? otherInfo.tierOffset : 0;
+
+      return {
+        isFuuroHand, is7Pairs, callable, effectiveOpen,
+        tierMap, threshTable, roleKey, isKamicha,
+        baseShape, shapeOffset,
+        tierAdjust, ippatsuApplied,
+        maxTier: maxTierForMap(tierMap)
+      };
+    }
+
+    function getShapeTier(tierMap, baseShape, han, offset = 0) {
+      const base = tierMap[`${baseShape}|${han}`];
+      if (base === undefined) return null;
+      return Math.max(1, base + offset);
+    }
+
+    function getScoreList(cfg) {
+      if (cfg.is7Pairs) return State.playerDealer ? SCORE_MAP.chiitoiD : SCORE_MAP.chiitoiND;
+      if (cfg.isFuuroHand) return State.playerDealer ? SCORE_MAP.openD : SCORE_MAP.openND;
+      return State.playerDealer ? SCORE_MAP.closedD : SCORE_MAP.closedND;
+    }
+
+    function getDefaultScoreLabel(cfg) {
+      const list = getScoreList(cfg);
+      return list[Math.floor(list.length / 2)].label;
+    }
+
+    function findScoreEntry(cfg, label) {
+      const list = getScoreList(cfg);
+      return list.find(s => s.label === label) || null;
+    }
+
+    function canPinfu(cfg) {
+      if (cfg.isFuuroHand || cfg.is7Pairs) return false;
+      if (cfg.baseShape !== 'Perfect' && cfg.baseShape !== 'Good*2') return false;
+      return true;
+    }
+
+    function ensureValidScore(cfg) {
+      const list = getScoreList(cfg);
+      const found = list.find(s => s.label === State.score);
+      if (!found) {
+        State.score = getDefaultScoreLabel(cfg);
+        return;
+      }
+      if (found.pinfu && !canPinfu(cfg)) {
+        State.score = getDefaultScoreLabel(cfg);
+      }
+    }
+
+    /* =========================================================
+       COMPUTE
+       ========================================================= */
+    function computeCells(cfg, entry) {
+      const han = entry.han;
+      const fu = entry.fu;
+      const maxTier = cfg.maxTier;
+      let cells;
+
+      // Chiitoi: direct tier lookup
+      if (cfg.is7Pairs) {
+        const tier = getShapeTier(cfg.tierMap, cfg.baseShape, han, cfg.shapeOffset) || maxTier;
+        cells = [{ tier, visualOpacity: 1, calcWeight: 1 }];
+      } else if (cfg.callable) {
+        const calledHan = Math.max(1, han - 1);
+        const baseTier = getShapeTier(cfg.tierMap, cfg.baseShape, calledHan, cfg.shapeOffset);
+        if (baseTier === null) {
+          cells = [{ tier: maxTier, visualOpacity: 1, calcWeight: 1 }];
+        } else {
+          const betterTier = Math.max(1, baseTier - 1);
+          cells = [{ tier: betterTier, visualOpacity: 1, calcWeight: 1 }];
+        }
+      } else if (cfg.isFuuroHand) {
+        const baseTier = getShapeTier(cfg.tierMap, cfg.baseShape, han, cfg.shapeOffset);
+        if (baseTier === null) {
+          cells = [{ tier: maxTier, visualOpacity: 1, calcWeight: 1 }];
+        } else if (fu === 30) {
+          cells = [{ tier: baseTier, visualOpacity: 1, calcWeight: 1 }];
+        } else {
+          const betterTier = Math.max(1, baseTier - 1);
+          if (betterTier === baseTier) {
+            cells = [{ tier: baseTier, visualOpacity: 1, calcWeight: 1 }];
+          } else {
+            cells = [
+              { tier: baseTier, visualOpacity: 0.85, calcWeight: 0.7 },
+              { tier: betterTier, visualOpacity: 0.35, calcWeight: 0.3 }
+            ];
+          }
+        }
+      } else {
+        const baseTier = getShapeTier(cfg.tierMap, cfg.baseShape, han, cfg.shapeOffset);
+        if (baseTier === null) {
+          cells = [{ tier: maxTier, visualOpacity: 1, calcWeight: 1 }];
+        } else if (fu === 40) {
+          cells = [{ tier: baseTier, visualOpacity: 1, calcWeight: 1 }];
+        } else {
+          const adjTier = getShapeTier(cfg.tierMap, cfg.baseShape, han - 1, cfg.shapeOffset);
+          if (adjTier === null || adjTier === baseTier) {
+            cells = [{ tier: baseTier, visualOpacity: 1, calcWeight: 1 }];
+          } else {
+            cells = [
+              { tier: baseTier, visualOpacity: 0.7, calcWeight: 0.5 },
+              { tier: adjTier, visualOpacity: 0.7, calcWeight: 0.5 }
+            ];
+          }
+        }
+      }
+
+      // Ippatsu tier adjustment (dealer riichi → hand treated as 2 tiers weaker)
+      if (cfg.tierAdjust) {
+        cells = cells.map(c => ({
+          ...c,
+          tier: Math.max(1, Math.min(cfg.maxTier, c.tier + cfg.tierAdjust))
+        }));
+      }
+
+      return cells;
+    }
+
+    function computeResult() {
+      const cfg = getEffectiveConfig();
+      ensureValidScore(cfg);
+      const entry = findScoreEntry(cfg, State.score);
+      const cells = computeCells(cfg, entry);
+
+      const turnKey = `Turn ${State.turn}`;
+      let threshSum = 0, weightSum = 0;
+      for (const cell of cells) {
+        const v = cfg.threshTable[cfg.roleKey][turnKey][cell.tier] ?? 0;
+        threshSum += v * cell.calcWeight;
+        weightSum += cell.calcWeight;
+      }
+      const threshold = weightSum > 0 ? threshSum / weightSum : 0;
+
+      return {
+        ...cfg, cells, threshold, points: entry.label, turnKey,
+        baseTier: cells[0].tier
+      };
+    }
+
+    /* =========================================================
+       DEAL-IN HELPERS
+       ========================================================= */
+    function rateToBucket(rate) {
+      for (const b of RATE_BUCKETS) if (b.test(rate)) return b.label;
+      return RATE_BUCKETS[RATE_BUCKETS.length - 1].label;
+    }
+    function lookupRate(cat, suji) {
+      const tbl = DEAL_IN_RATES[cat];
+      const keys = Object.keys(tbl).map(Number).sort((a, b) => a - b);
+      let chosen = keys[0];
+      for (const k of keys) if (suji >= k) chosen = k;
+      return tbl[chosen];
+    }
+    function getModifierSum() {
+      let sum = 0;
+      for (const key in MODIFIER_VALUES) if (State.modifiers[key]) sum += MODIFIER_VALUES[key];
+      return sum;
+    }
+    function activeModifierNames() {
+      const names = [];
+      for (const key in State.modifiers) {
+        if (State.modifiers[key]) names.push(t('mod.' + key));
+      }
+      return names;
+    }
+
+    // Verdict zones based on direct |rate - threshold| gap (not the 5% bucket):
+    //   threshold ≥ 100%              → ironPush  (chart says always push)
+    //   threshold ≈ 0%                → ironPull  (chart says never push)
+    //   |gap| < 0.005                 → borderlineEither
+    //   0.005 ≤ |gap| < 0.025         → borderlineFavorsPush / borderlineFavorsPull
+    //   0.025 ≤ |gap| < 0.10          → push / pull
+    //   |gap| ≥ 0.10                  → ironPush / ironPull
+    function getVerdictLevel(rate, threshold) {
+      if (threshold >= 1.0) return 'ironPush';
+      if (threshold <= 0.001) return 'ironPull';
+
+      // Strict pull whenever rate exceeds threshold
+      if (rate > threshold) {
+        const gap = rate - threshold;
+        return gap >= 0.10 ? 'ironPull' : 'pull';
+      }
+
+      // Exactly at threshold
+      if (rate === threshold) return 'borderlineFavorsPull';
+
+      // Below threshold
+      const gap = threshold - rate;
+
+      if (gap < 0.005) return 'borderlineFavorsPull';
+      if (gap < 0.015) return 'borderlineEither';
+      if (gap < 0.04) return 'borderlineFavorsPush';
+      if (gap < 0.10) return 'push';
+
+      return 'ironPush';
+    }
+
+    function thresholdColor(val) {
+      if (val >= 0.25) return '#86bffa';
+      if (val >= 0.20) return '#a4c2f4';
+      if (val >= 0.15) return '#86efac';
+      if (val >= 0.10) return '#fcd34d';
+      if (val >= 0.05) return '#fca5a5';
+      return '#94a3b8';
+    }
+    function formatRate(rate) {
+      const pct = rate * 100;
+      if (pct < 1 && pct > 0) return pct.toFixed(1) + '%';
+      return Math.round(pct) + '%';
+    }
+
+    /* =========================================================
+       RENDER: BUTTONS
+       ========================================================= */
+    function renderButtonSelections() {
+      $('handRow').querySelectorAll('.btn').forEach(b => {
+        b.classList.toggle('selected', b.dataset.hand === State.hand);
+      });
+
+      const yakuDisabled = State.hand === 'fuuro' || State.shape === 'Chiitoi';
+      $('yakuRow').classList.toggle('disabled', yakuDisabled);
+      $('yakuRowBtns').querySelectorAll('.btn').forEach(b => {
+        b.disabled = yakuDisabled;
+        b.classList.toggle('selected', !yakuDisabled && b.dataset.yaku === State.yakuState);
+      });
+
+      $('playerRow').querySelectorAll('.btn').forEach(b => {
+        const v = b.dataset.player;
+
+        b.classList.toggle(
+          'selected',
+          v === (State.playerDealer ? 'dealer' : 'nondealer')
+        );
+      });
+      $('riichiRoleRow').querySelectorAll('.btn').forEach(b => {
+        const v = b.dataset.riichiRole;
+
+        b.classList.toggle(
+          'selected',
+          v === (State.riichiCallerDealer ? 'dealer' : 'nondealer')
+        );
+      });
+      $('riichiSeatRow').querySelectorAll('.btn').forEach(b => {
+        b.classList.toggle('selected', b.dataset.riichiSeat === State.riichiCallerSeat);
+      });
+      document.querySelectorAll('#shapeRow .btn, #otherShapesRow .btn').forEach(b => {
+        b.classList.toggle('selected', b.dataset.shape === State.shape);
+      });
+      $('shapeRow').querySelectorAll('.btn').forEach(b => {
+        b.disabled = (b.dataset.shape === 'Chiitoi' && State.hand === 'fuuro');
+      });
+      if (isOtherShape(State.shape)) $('otherShapesRow').classList.remove('hidden');
+      $('turnRow').querySelectorAll('.btn').forEach(b => {
+        b.classList.toggle('selected', parseInt(b.dataset.turn, 10) === State.turn);
+      });
+      $('catRow').querySelectorAll('.btn').forEach(b => {
+        b.classList.toggle('selected', b.dataset.cat === State.category);
+      });
+      $('modRow').querySelectorAll('.btn').forEach(b => {
+        b.classList.toggle('selected', !!State.modifiers[b.dataset.mod]);
+      });
+      $('catDesc').textContent = State.category ? catDesc(State.category) : t('label.pickCat');
+      $('ippatsuRow').querySelectorAll('.btn').forEach(b => {
+      const isYes = b.dataset.ippatsu === 'yes';
+      b.classList.toggle('selected', isYes === State.ippatsu);
+      });
+    }
+
+    /* =========================================================
+       RENDER: SCORES
+       ========================================================= */
+    function renderScoreButtons() {
+      const cfg = getEffectiveConfig();
+      ensureValidScore(cfg);
+      const list = getScoreList(cfg);
+      const pinfuOk = canPinfu(cfg);
+
+      const row = $('scoreRow');
+      row.innerHTML = '';
+      list.forEach(entry => {
+        const enabled = !entry.pinfu || pinfuOk;
+        const b = document.createElement('button');
+        b.className = 'btn' + (State.score === entry.label ? ' selected' : '') + (enabled ? '' : ' pinfu-disabled');
+        b.textContent = entry.label;
+        if (enabled) {
+          b.onclick = () => { State.score = entry.label; renderAll(); };
+        } else {
+          b.disabled = true;
+        }
+        row.appendChild(b);
+      });
+    }
+
+    /* =========================================================
+       RENDER: RESULT
+       ========================================================= */
+    function getTableTitle() {
+  const cfg = getEffectiveConfig();
+  let base;
+  if (!cfg.effectiveOpen) {
+    base = State.playerDealer ? t('ref.menzenD') : t('ref.menzenND');
+  } else if (State.playerDealer) {
+    base = State.riichiCallerSeat === 'kamicha' ? t('ref.dC') : t('ref.dNC');
+  } else {
+    base = State.riichiCallerSeat === 'kamicha' ? t('ref.ndC') : t('ref.ndNC');
   }
-  html += '</tbody></table>';
-  return html;
+  if (cfg.ippatsuApplied) {
+    base += ' · ' + t('ref.ippatsu');
+  }
+  return base;
 }
 
-function emptyStatsHtml() {
-  return `
+    function renderThresholdTable(r) {
+      const turns = [5, 9, 14];
+      const highlightTiers = new Set(r.cells.map(c => c.tier));
+      const cellLookup = {};
+      for (const c of r.cells) cellLookup[c.tier] = c;
+
+      let html = '<table class="tier-table"><thead><tr>';
+      html += `<th class="tier-col">${t('table.tier')}</th>`;
+      for (const turn of turns) {
+        const isCur = turn === State.turn;
+        const thKey = 'table.turn' + turn;
+        html += `<th data-turn="${turn}" class="${isCur ? 'current' : ''}">${t(thKey)}</th>`;
+      }
+      html += '</tr></thead><tbody>';
+
+      for (let tt = 1; tt <= r.maxTier; tt++) {
+        const isHL = highlightTiers.has(tt);
+        html += `<tr class="${isHL ? 'current' : ''}">`;
+        html += `<td class="tier-col">${tt}</td>`;
+        for (const turn of turns) {
+          const val = r.threshTable[r.roleKey]['Turn ' + turn][tt];
+          const isCurrentTurn = turn === State.turn;
+          if (val === undefined) {
+            html += `<td data-turn="${turn}">-</td>`;
+          } else if (isHL && isCurrentTurn) {
+            const bg = `rgba(59,130,246,${cellLookup[tt].visualOpacity})`;
+            html += `<td class="highlight-cell" data-turn="${turn}" style="background:${bg}">${Math.round(val * 100)}%</td>`;
+          } else {
+            html += `<td data-turn="${turn}" style="color:${thresholdColor(val)}">${Math.round(val * 100)}%</td>`;
+          }
+        }
+        html += '</tr>';
+      }
+      html += '</tbody></table>';
+      return html;
+    }
+
+    function emptyStatsHtml() {
+      return `
     <div class="stat-grid">
       <div class="stat"><div class="stat-label">${t('stat.tier')}</div><div class="stat-value empty">—</div></div>
       <div class="stat"><div class="stat-label">${t('stat.threshold')}</div><div class="stat-value empty">—</div></div>
@@ -1352,97 +2163,103 @@ function emptyStatsHtml() {
       <div class="stat"><div class="stat-label">${t('stat.points')}</div><div class="stat-value empty">—</div></div>
     </div>
   `;
-}
-
-function renderResult() {
-  const r = computeResult();
-  const dealinExpanded = $('dealinSection').open;
-  const categorySelected = !!State.category;
-
-  const tableTitleHtml = `<div class="ref-subtitle">${getTableTitle()}</div>`;
-  const tableHtml = renderThresholdTable(r);
-
-  // Always-derived from conditions (shown whether deal-in is expanded or not)
-  const tiers = r.cells.map(c => c.tier).sort((a,b) => a-b);
-  const tierStr = tiers.length > 1 ? `${Math.min(...tiers)}–${Math.max(...tiers)}` : String(r.baseTier);
-  const shapeId = OTHER_SHAPES[State.shape]?.id || SHAPE_IDS[State.shape] || '';
-
-  // Defaults (collapsed or no category)
-  let verdictHtml = `<div class="verdict empty">${t('verdict.empty')}</div>`;
-  let modIndicator = '';
-  let explainHtml = '';
-  let dealinValue = '—';
-  let dealinSub = '';
-  let hasDealinValue = false;
-
-  if (dealinExpanded && !categorySelected) {
-    verdictHtml = `<div class="verdict empty">${t('verdict.selectCat')}</div>`;
-  } else if (dealinExpanded && categorySelected) {
-    const baseRate = lookupRate(State.category, State.passedSuji);
-    const modSum = getModifierSum();
-    const rate = Math.max(0, Math.min(1, baseRate + modSum));
-    const rateBucket = rateToBucket(rate);
-    const verdictLevel = getVerdictLevel(rate, r.threshold);
-    const isBorderline = verdictLevel.startsWith('borderline');
-
-    let verdictClass, verdictText, verdictSub = '';
-    if (verdictLevel === 'borderlineFavorsPush') {
-      verdictClass = 'borderline';
-      verdictText = t('verdict.borderline');
-      verdictSub = t('verdict.leanPush');
-    } else if (verdictLevel === 'borderlineEither') {
-      verdictClass = 'borderline';
-      verdictText = t('verdict.borderline');
-      verdictSub = t('verdict.leanBoth');
-    } else if (verdictLevel === 'borderlineFavorsPull') {
-      verdictClass = 'borderline';
-      verdictText = t('verdict.borderline');
-      verdictSub = t('verdict.leanPull');
-    } else if (verdictLevel === 'ironPush') {
-      verdictClass = 'iron-push';
-      verdictText = '▲▲ ' + t('verdict.ironPush');
-    } else if (verdictLevel === 'push') {
-      verdictClass = 'push';
-      verdictText = '▲ ' + t('verdict.push');
-    } else if (verdictLevel === 'ironPull') {
-      verdictClass = 'iron-pull';
-      verdictText = '▼▼ ' + t('verdict.ironPull');
-    } else {
-      verdictClass = 'pull';
-      verdictText = '▼ ' + t('verdict.pull');
     }
 
-    const mawashiHint = isBorderline
-      ? `<span class="verdict-mawashi">${t('verdict.mawashi')}</span>`
-      : '';
+    function renderResult() {
+      const r = computeResult();
+      const dealinExpanded = $('dealinSection').open;
+      const categorySelected = !!State.category;
 
-    verdictHtml = `<div class="verdict ${verdictClass}">
+      const tableTitleHtml = `<div class="ref-subtitle">${getTableTitle()}</div>`;
+      const tableHtml = renderThresholdTable(r);
+
+      // Always-derived from conditions (shown whether deal-in is expanded or not)
+      const tiers = r.cells.map(c => c.tier).sort((a, b) => a - b);
+      const tierStr = tiers.length > 1 ? `${Math.min(...tiers)}–${Math.max(...tiers)}` : String(r.baseTier);
+      const shapeId = OTHER_SHAPES[State.shape]?.id || SHAPE_IDS[State.shape] || '';
+      let ippatsuNote = '';
+      if (r.ippatsuApplied) {
+        const noteKey = r.tierAdjust ? 'result.ippatsuDealerNote' : 'result.ippatsuNdNote';
+        ippatsuNote = `<div class="modifier-indicator">⚠ ${t(noteKey)}</div>`;
+      }
+
+      // Defaults (collapsed or no category)
+      let verdictHtml = `<div class="verdict empty">${t('verdict.empty')}</div>`;
+      let modIndicator = '';
+      let explainHtml = '';
+      let dealinValue = '—';
+      let dealinSub = '';
+      let hasDealinValue = false;
+
+      if (dealinExpanded && !categorySelected) {
+        verdictHtml = `<div class="verdict empty">${t('verdict.selectCat')}</div>`;
+      } else if (dealinExpanded && categorySelected) {
+        const baseRate = lookupRate(State.category, State.passedSuji);
+        const modSum = getModifierSum();
+        const rate = Math.max(0, Math.min(1, baseRate + modSum));
+        const rateBucket = rateToBucket(rate);
+        const verdictLevel = getVerdictLevel(rate, r.threshold);
+        const isBorderline = verdictLevel.startsWith('borderline');
+
+        let verdictClass, verdictText, verdictSub = '';
+        if (verdictLevel === 'borderlineFavorsPush') {
+          verdictClass = 'borderline';
+          verdictText = t('verdict.borderline');
+          verdictSub = t('verdict.leanPush');
+        } else if (verdictLevel === 'borderlineEither') {
+          verdictClass = 'borderline';
+          verdictText = t('verdict.borderline');
+          verdictSub = t('verdict.leanBoth');
+        } else if (verdictLevel === 'borderlineFavorsPull') {
+          verdictClass = 'borderline';
+          verdictText = t('verdict.borderline');
+          verdictSub = t('verdict.leanPull');
+        } else if (verdictLevel === 'ironPush') {
+          verdictClass = 'iron-push';
+          verdictText = '▲▲ ' + t('verdict.ironPush');
+        } else if (verdictLevel === 'push') {
+          verdictClass = 'push';
+          verdictText = '▲ ' + t('verdict.push');
+        } else if (verdictLevel === 'ironPull') {
+          verdictClass = 'iron-pull';
+          verdictText = '▼▼ ' + t('verdict.ironPull');
+        } else {
+          verdictClass = 'pull';
+          verdictText = '▼ ' + t('verdict.pull');
+        }
+
+        const mawashiHint = isBorderline
+          ? `<span class="verdict-mawashi">${t('verdict.mawashi')}</span>`
+          : '';
+
+        verdictHtml = `<div class="verdict ${verdictClass}">
       ${verdictText}
       ${verdictSub ? `<span class="verdict-sub">${verdictSub}</span>` : ''}
       ${mawashiHint}
     </div>`;
 
-    const activeMods = activeModifierNames();
-    modIndicator = activeMods.length
-      ? `<div class="modifier-indicator">◆ ${t('result.modifiersApplied')} ${activeMods.join(', ')}</div>`
-      : '';
+        const activeMods = activeModifierNames();
+        modIndicator = activeMods.length
+          ? `<div class="modifier-indicator">◆ ${t('result.modifiersApplied')} ${activeMods.join(', ')}</div>`
+          : '';
 
-    dealinValue = formatRate(rate);
-    dealinSub = rateBucket;
-    hasDealinValue = true;
+        dealinValue = formatRate(rate);
+        dealinSub = rateBucket;
+        hasDealinValue = true;
 
-    let explain;
-    if (r.threshold >= 1.0) explain = t('explain.always');
-    else if (isBorderline) explain = t('explain.borderline');
-    else if (verdictLevel === 'ironPush') explain = t('explain.ironPush');
-    else if (verdictLevel === 'push') explain = t('explain.push');
-    else if (verdictLevel === 'ironPull') explain = t('explain.ironPull');
-    else explain = t('explain.pull');
-    explainHtml = `<div class="result-explainer">${explain}</div>`;
-  }
+        let explain;
+        if (r.threshold >= 1.0) explain = t('explain.always');
+        else if (isBorderline) explain = t('explain.borderline');
+        else if (verdictLevel === 'ironPush') explain = t('explain.ironPush');
+        else if (verdictLevel === 'push') explain = t('explain.push');
+        else if (verdictLevel === 'ironPull') explain = t('explain.ironPull');
+        else explain = t('explain.pull');
+        explainHtml = `<div class="result-explainer">${explain}</div>`;
+      }
 
-  $('resultSection').innerHTML = `
+      $('resultSection').innerHTML = `
     ${verdictHtml}
+    ${ippatsuNote}
     ${modIndicator}
     <div class="stat-grid">
       <div class="stat">
@@ -1468,57 +2285,57 @@ function renderResult() {
     ${tableHtml}
     ${explainHtml}
   `;
-  attachTableClicks();
-}
+      attachTableClicks();
+    }
 
-function attachTableClicks() {
-  $('resultSection').querySelectorAll('[data-turn]').forEach(el => {
-    el.onclick = () => {
-      State.turn = parseInt(el.dataset.turn, 10);
-      renderAll();
-    };
-  });
-}
+    function attachTableClicks() {
+      $('resultSection').querySelectorAll('[data-turn]').forEach(el => {
+        el.onclick = () => {
+          State.turn = parseInt(el.dataset.turn, 10);
+          renderAll();
+        };
+      });
+    }
 
-/* =========================================================
-   RENDER: SUJI
-   ========================================================= */
-function renderSuji() {
-  $('sujiDisplay').textContent = State.passedSuji;
-  $('sujiMinus').disabled = State.passedSuji <= 0;
-  $('sujiPlus').disabled = State.passedSuji >= 18;
-  $('sujiGrid').querySelectorAll('.suji-btn').forEach(b => {
-    b.classList.toggle('selected', parseInt(b.dataset.val, 10) === State.passedSuji);
-  });
-}
+    /* =========================================================
+       RENDER: SUJI
+       ========================================================= */
+    function renderSuji() {
+      $('sujiDisplay').textContent = State.passedSuji;
+      $('sujiMinus').disabled = State.passedSuji <= 0;
+      $('sujiPlus').disabled = State.passedSuji >= 18;
+      $('sujiGrid').querySelectorAll('.suji-btn').forEach(b => {
+        b.classList.toggle('selected', parseInt(b.dataset.val, 10) === State.passedSuji);
+      });
+    }
 
-/* =========================================================
-   RENDER: ALL
-   ========================================================= */
-function renderAll() {
-  renderButtonSelections();
-  renderScoreButtons();
-  renderResult();
-  renderSuji();
-  updateNextTileBtnVisibility();
-}
+    /* =========================================================
+       RENDER: ALL
+       ========================================================= */
+    function renderAll() {
+      renderButtonSelections();
+      renderScoreButtons();
+      renderResult();
+      renderSuji();
+      updateNextTileBtnVisibility();
+    }
 
-function updateNextTileBtnVisibility() {
-  const expanded = $('dealinSection').open;
-  $('nextTileBtn').classList.toggle('hidden', !expanded);
-}
+    function updateNextTileBtnVisibility() {
+      const expanded = $('dealinSection').open;
+      $('nextTileBtn').classList.toggle('hidden', !expanded);
+    }
 
-/* =========================================================
-   REFERENCE
-   ========================================================= */
-function renderShapeRef() {
-  const wrap = $('shapeRef');
-  let html = '';
-  SHAPES.forEach(shape => {
-    const info = SHAPE_INFO[shape];
-    const id = SHAPE_IDS[shape];
-    const name = State.lang === 'ja' ? info.ja : info.en;
-    html += `<div class="shape-ref-item">
+    /* =========================================================
+       REFERENCE
+       ========================================================= */
+    function renderShapeRef() {
+      const wrap = $('shapeRef');
+      let html = '';
+      SHAPES.forEach(shape => {
+        const info = SHAPE_INFO[shape];
+        const id = SHAPE_IDS[shape];
+        const name = State.lang === 'ja' ? info.ja : info.en;
+        html += `<div class="shape-ref-item">
       <div class="shape-ref-title"><span class="shape-id">${id}</span>${name}</div>
       <div class="shape-ref-meta">
         ${t('ref.accept')}: <strong>${tf('ref.tiles', { n: info.accept })}</strong>
@@ -1526,17 +2343,17 @@ function renderShapeRef() {
       </div>
       <div class="shape-ref-example">${info.example}</div>
     </div>`;
-  });
-  html += `<div class="ref-subtitle" style="margin-top:16px">${t('ref.otherShapes')}</div>`;
-  Object.keys(OTHER_SHAPES).forEach(key => {
-    const info = OTHER_SHAPES[key];
-    const name = State.lang === 'ja' ? info.ja : info.en;
-    const baseId = SHAPE_IDS[info.baseShape];
-    const displayOffset = -info.tierOffset;
-    const baseNote = info.tierOffset === 0
-      ? `${t('ref.baseTier')}: ${baseId}`
-      : `${t('ref.baseTier')}: ${baseId} ${displayOffset > 0 ? '+' : ''}${displayOffset}`;
-    html += `<div class="shape-ref-item">
+      });
+      html += `<div class="ref-subtitle" style="margin-top:16px">${t('ref.otherShapes')}</div>`;
+      Object.keys(OTHER_SHAPES).forEach(key => {
+        const info = OTHER_SHAPES[key];
+        const name = State.lang === 'ja' ? info.ja : info.en;
+        const baseId = SHAPE_IDS[info.baseShape];
+        const displayOffset = -info.tierOffset;
+        const baseNote = info.tierOffset === 0
+          ? `${t('ref.baseTier')}: ${baseId}`
+          : `${t('ref.baseTier')}: ${baseId} ${displayOffset > 0 ? '+' : ''}${displayOffset}`;
+        html += `<div class="shape-ref-item">
       <div class="shape-ref-title"><span class="shape-id">${info.id}</span>${name}</div>
       <div class="shape-ref-meta">
         ${t('ref.accept')}: <strong>${tf('ref.tiles', { n: info.accept })}</strong>
@@ -1545,300 +2362,308 @@ function renderShapeRef() {
       </div>
       <div class="shape-ref-example">${info.example}</div>
     </div>`;
-  });
-  wrap.innerHTML = html;
-}
-
-function renderDealinRef() {
-  const wrap = $('dealinRef');
-  const cats = Object.keys(DEAL_IN_RATES);
-  let html = `<div class="shape-ref-meta" style="margin-bottom:8px">${t('ref.minSuji')}</div>`;
-  html += '<table class="deal-in-table"><thead><tr><th>Rate</th>';
-  cats.forEach(c => { html += `<th>${catLabel(c)}</th>`; });
-  html += '</tr></thead><tbody>';
-  RATE_BUCKETS.forEach(b => {
-    html += `<tr><td>${b.label}</td>`;
-    cats.forEach(c => {
-      const tbl = DEAL_IN_RATES[c];
-      const keys = Object.keys(tbl).map(Number).sort((a, b) => a - b);
-      let minSuji = null;
-      for (const k of keys) if (rateToBucket(tbl[k]) === b.label) { minSuji = k; break; }
-      html += `<td>${minSuji !== null ? minSuji : '—'}</td>`;
-    });
-    html += '</tr>';
-  });
-  html += '</tbody></table>';
-  html += `<div class="ref-subtitle" style="margin-top:14px">${t('ref.modifiers')}</div>`;
-  html += '<table class="deal-in-table"><thead><tr>';
-  html += `<th>${t('ref.modifierName')}</th><th>${t('ref.modifierValue')}</th>`;
-  html += '</tr></thead><tbody>';
-  for (const key in MODIFIER_VALUES) {
-    const v = MODIFIER_VALUES[key];
-    const sign = v > 0 ? '+' : '';
-    const color = v > 0 ? '#fca5a5' : '#86efac';
-    html += `<tr><td>${t('mod.' + key)}</td><td style="color:${color}">${sign}${Math.round(v * 100)}%</td></tr>`;
-  }
-  html += '</tbody></table>';
-  wrap.innerHTML = html;
-}
-
-function getPointsForShapeTier(shape, tier, map, isOpen, isDealer) {
-  for (let h = 1; h <= 5; h++) {
-    if (map[`${shape}|${h}`] === tier) {
-      if (!isOpen && shape === 'Chiitoi') {
-        const tbl = isDealer ? CHIITOI_POINTS.dealer : CHIITOI_POINTS.nonDealer;
-        return tbl[Math.min(h, 5)] || null;
-      }
-      const ptTable = isOpen
-        ? (isDealer ? POINT_TABLE_BY_FU.openD[30] : POINT_TABLE_BY_FU.openND[30])
-        : (isDealer ? POINT_TABLE_BY_FU.menzenD[40] : POINT_TABLE_BY_FU.menzenND[40]);
-      return ptTable ? ptTable[Math.min(h, 4)] || null : null;
-    }
-  }
-  return null;
-}
-
-function renderShapeTierRef() {
-  const wrap = $('shapeTierRef');
-  const variants = [
-    { map: CLOSED_TIER_MAP,    nameKey: 'ref.menzenND', isOpen: false, isDealer: false },
-    { map: CLOSED_TIER_MAP,    nameKey: 'ref.menzenD',  isOpen: false, isDealer: true  },
-    { map: OPEN_TIER_MAP_ND_C, nameKey: 'ref.ndC',      isOpen: true,  isDealer: false },
-    { map: OPEN_TIER_MAP_ND_NC,nameKey: 'ref.ndNC',     isOpen: true,  isDealer: false },
-    { map: OPEN_TIER_MAP_D_C,  nameKey: 'ref.dC',       isOpen: true,  isDealer: true  },
-    { map: OPEN_TIER_MAP_D_NC, nameKey: 'ref.dNC',      isOpen: true,  isDealer: true  }
-  ];
-  let html = `<div class="ref-note">${t('ref.pointsNote')}</div>`;
-  variants.forEach(v => {
-    html += `<div class="ref-subtitle">${t(v.nameKey)}</div>`;
-    html += '<div class="shape-legend">';
-    SHAPES.forEach(s => {
-      const name = State.lang === 'ja' ? SHAPE_INFO[s].ja : SHAPE_INFO[s].en;
-      html += `<span><b>${SHAPE_IDS[s]}</b>${name}</span>`;
-    });
-    html += '</div>';
-    const maxTier = maxTierForMap(v.map);
-    html += '<table class="thresh-ref-table flipped"><thead><tr>';
-    html += `<th>${t('ref.tier')}</th>`;
-    SHAPES.forEach(s => { html += `<th>${SHAPE_IDS[s]}</th>`; });
-    html += '</tr></thead><tbody>';
-    for (let tier = 1; tier <= maxTier; tier++) {
-      html += `<tr><td>${tier}</td>`;
-      SHAPES.forEach(s => {
-        const pts = getPointsForShapeTier(s, tier, v.map, v.isOpen, v.isDealer);
-        if (pts === null) html += '<td class="empty-cell">–</td>';
-        else html += `<td>${pts}</td>`;
       });
-      html += '</tr>';
+      wrap.innerHTML = html;
     }
-    html += '</tbody></table>';
-  });
-  wrap.innerHTML = html;
-}
 
-function renderThreshRef() {
-  const wrap = $('threshRef');
-  const roleKeys = ['VS Non-Dealer', 'VS Dealer', 'As Dealer'];
-  const roleLabelKeys = { 'VS Non-Dealer': 'ref.vsND', 'VS Dealer': 'ref.vsD', 'As Dealer': 'ref.asD' };
-
-  const renderTable = (title, tbl, maxTier) => {
-    let out = `<div class="ref-subtitle">${title}</div>`;
-    out += `<table class="thresh-ref-table"><thead><tr>`;
-    out += `<th>${t('table.tier')}</th>`;
-    out += `<th>${t('table.turn5')}</th>`;
-    out += `<th>${t('table.turn9')}</th>`;
-    out += `<th>${t('table.turn14')}</th>`;
-    out += '</tr></thead><tbody>';
-    for (let tt = 1; tt <= maxTier; tt++) {
-      out += `<tr><td>${tt}</td>`;
-      for (const turn of [5, 9, 14]) {
-        const v = tbl['Turn ' + turn][tt];
-        if (v === undefined) out += '<td>-</td>';
-        else out += `<td style="color:${thresholdColor(v)}">${Math.round(v * 100)}%</td>`;
+    function renderDealinRef() {
+      const wrap = $('dealinRef');
+      const cats = Object.keys(DEAL_IN_RATES);
+      let html = `<div class="shape-ref-meta" style="margin-bottom:8px">${t('ref.minSuji')}</div>`;
+      html += '<table class="deal-in-table"><thead><tr><th>Rate</th>';
+      cats.forEach(c => { html += `<th>${catLabel(c)}</th>`; });
+      html += '</tr></thead><tbody>';
+      RATE_BUCKETS.forEach(b => {
+        html += `<tr><td>${b.label}</td>`;
+        cats.forEach(c => {
+          const tbl = DEAL_IN_RATES[c];
+          const keys = Object.keys(tbl).map(Number).sort((a, b) => a - b);
+          let minSuji = null;
+          for (const k of keys) if (rateToBucket(tbl[k]) === b.label) { minSuji = k; break; }
+          html += `<td>${minSuji !== null ? minSuji : '—'}</td>`;
+        });
+        html += '</tr>';
+      });
+      html += '</tbody></table>';
+      html += `<div class="ref-subtitle" style="margin-top:14px">${t('ref.modifiers')}</div>`;
+      html += '<table class="deal-in-table"><thead><tr>';
+      html += `<th>${t('ref.modifierName')}</th><th>${t('ref.modifierValue')}</th>`;
+      html += '</tr></thead><tbody>';
+      for (const key in MODIFIER_VALUES) {
+        const v = MODIFIER_VALUES[key];
+        const sign = v > 0 ? '+' : '';
+        const color = v > 0 ? '#fca5a5' : '#86efac';
+        html += `<tr><td>${t('mod.' + key)}</td><td style="color:${color}">${sign}${Math.round(v * 100)}%</td></tr>`;
       }
-      out += '</tr>';
-    }
-    out += '</tbody></table>';
-    return out;
-  };
-
-  let html = `<div class="ref-subtitle" style="font-size:12px;margin-top:4px;color:#f8fafc">${t('ref.menzen')}</div>`;
-  for (const rk of roleKeys) html += renderTable(t(roleLabelKeys[rk]), CLOSED_THRESHOLDS[rk], 8);
-  html += `<div class="ref-subtitle" style="font-size:12px;margin-top:14px;color:#f8fafc">${t('ref.fuuro')}</div>`;
-  for (const rk of roleKeys) html += renderTable(t(roleLabelKeys[rk]), OPEN_THRESHOLDS[rk], 11);
-  wrap.innerHTML = html;
-}
-
-/* =========================================================
-   LANGUAGE
-   ========================================================= */
-function applyLanguage(lang) {
-  State.lang = lang;
-  try { localStorage.setItem('shanten_cheat_lang', lang); } catch (e) {}
-  document.documentElement.lang = lang;
-  document.title = t('app.title');
-  document.querySelectorAll('[data-i18n]').forEach(el => {
-    el.innerHTML = t(el.dataset.i18n);
-  });
-  const btn = $('langBtn');
-  if (btn) btn.textContent = t('lang');
-  renderAll();
-  renderShapeRef();
-  renderDealinRef();
-  renderShapeTierRef();
-  renderThreshRef();
-}
-
-/* =========================================================
-   BUILD
-   ========================================================= */
-function buildSujiGrid() {
-  const wrap = $('sujiGrid');
-  wrap.innerHTML = '';
-  for (let v = 0; v <= 18; v++) {
-    const b = document.createElement('button');
-    b.className = 'suji-btn';
-    b.type = 'button';
-    b.dataset.val = v;
-    b.textContent = v;
-    b.onclick = () => { State.passedSuji = v; renderAll(); };
-    wrap.appendChild(b);
-  }
-}
-
-/* =========================================================
-   EVENTS
-   ========================================================= */
-function wireEvents() {
-  $('handRow').querySelectorAll('.btn').forEach(b => {
-    b.onclick = () => {
-      State.hand = b.dataset.hand;
-      if (State.hand === 'fuuro' && State.shape === 'Chiitoi') State.shape = 'Perfect';
-      renderAll();
-    };
-  });
-  $('yakuRowBtns').querySelectorAll('.btn').forEach(b => {
-    b.onclick = () => {
-      if (b.disabled) return;
-      State.yakuState = b.dataset.yaku;
-      renderAll();
-    };
-  });
-  $('playerRow').querySelectorAll('.btn').forEach(b => {
-  b.onclick = () => {
-    State.playerDealer = (b.dataset.player === 'dealer');
-
-    if (State.playerDealer) {
-      State.riichiCallerDealer = false;
+      html += '</tbody></table>';
+      wrap.innerHTML = html;
     }
 
-    renderAll();
-  };
-  });
-  $('riichiRoleRow').querySelectorAll('.btn').forEach(b => {
-  b.onclick = () => {
-    State.riichiCallerDealer = (b.dataset.riichiRole === 'dealer');
-
-    if (State.riichiCallerDealer) {
-      State.playerDealer = false;
+    function getPointsForShapeTier(shape, tier, map, isOpen, isDealer) {
+      for (let h = 1; h <= 5; h++) {
+        if (map[`${shape}|${h}`] === tier) {
+          if (!isOpen && shape === 'Chiitoi') {
+            const tbl = isDealer ? CHIITOI_POINTS.dealer : CHIITOI_POINTS.nonDealer;
+            return tbl[Math.min(h, 5)] || null;
+          }
+          const ptTable = isOpen
+            ? (isDealer ? POINT_TABLE_BY_FU.openD[30] : POINT_TABLE_BY_FU.openND[30])
+            : (isDealer ? POINT_TABLE_BY_FU.menzenD[40] : POINT_TABLE_BY_FU.menzenND[40]);
+          return ptTable ? ptTable[Math.min(h, 4)] || null : null;
+        }
+      }
+      return null;
     }
 
-    renderAll();
-  };  
-  });
-  $('riichiSeatRow').querySelectorAll('.btn').forEach(b => {
-    b.onclick = () => { State.riichiCallerSeat = b.dataset.riichiSeat; renderAll(); };
-  });
-  document.querySelectorAll('#shapeRow .btn, #otherShapesRow .btn').forEach(b => {
-    b.onclick = () => {
-      State.shape = b.dataset.shape;
-      renderAll();
-    };
-  });
-  $('otherToggle').onclick = () => {
-    $('otherShapesRow').classList.toggle('hidden');
-  };
-  $('turnRow').querySelectorAll('.btn').forEach(b => {
-    b.onclick = () => { State.turn = parseInt(b.dataset.turn, 10); renderAll(); };
-  });
-  $('catRow').querySelectorAll('.btn').forEach(b => {
-    b.onclick = () => { State.category = b.dataset.cat; renderAll(); };
-  });
-  $('modRow').querySelectorAll('.btn').forEach(b => {
-    b.onclick = () => {
-      State.modifiers[b.dataset.mod] = !State.modifiers[b.dataset.mod];
-      renderAll();
-    };
-  });
-  $('sujiMinus').onclick = () => {
-    State.passedSuji = Math.max(0, State.passedSuji - 1);
-    renderAll();
-    if (navigator.vibrate) navigator.vibrate(8);
-  };
-  $('sujiPlus').onclick = () => {
-    State.passedSuji = Math.min(18, State.passedSuji + 1);
-    renderAll();
-    if (navigator.vibrate) navigator.vibrate(8);
-  };
-  $('nextTileBtn').onclick = () => {
-    if (!$('dealinSection').open) $('dealinSection').open = true;
-    $('dealinSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
-    if (navigator.vibrate) navigator.vibrate(15);
-  };
-  $('resetBtn').onclick = () => {
-    const fresh = defaultState();
-    Object.keys(fresh).forEach(k => { State[k] = fresh[k]; });
-    State.modifiers = { dora: false, sotogawa: false, oneChance: false, ankou: false };
-    renderAll();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    if (navigator.vibrate) navigator.vibrate(15);
-  };
-  $('langBtn').onclick = () => applyLanguage(State.lang === 'ja' ? 'en' : 'ja');
-  $('aboutBtn').onclick = () => $('aboutModal').classList.add('active');
-  $('closeAbout').onclick = () => $('aboutModal').classList.remove('active');
-  $('aboutModal').onclick = e => { if (e.target.id === 'aboutModal') $('aboutModal').classList.remove('active'); };
-  $('dealinSection').addEventListener('toggle', () => {
-    updateNextTileBtnVisibility();
-    renderResult();
-  });
-}
-
-/* =========================================================
-   TOPBAR AUTO-HIDE
-   ========================================================= */
-function initTopbarScroll() {
-  const topbar = $('topbar');
-  let lastY = window.scrollY;
-  let hidden = false;
-  window.addEventListener('scroll', () => {
-    const y = window.scrollY;
-    const delta = y - lastY;
-    if (y < 60) {
-      if (hidden) { hidden = false; topbar.classList.remove('hidden'); }
-    } else if (delta > 8 && !hidden) {
-      hidden = true; topbar.classList.add('hidden');
-    } else if (delta < -8 && hidden) {
-      hidden = false; topbar.classList.remove('hidden');
+    function renderShapeTierRef() {
+      const wrap = $('shapeTierRef');
+      const variants = [
+        { map: CLOSED_TIER_MAP, nameKey: 'ref.menzenND', isOpen: false, isDealer: false },
+        { map: CLOSED_TIER_MAP, nameKey: 'ref.menzenD', isOpen: false, isDealer: true },
+        { map: OPEN_TIER_MAP_ND_C, nameKey: 'ref.ndC', isOpen: true, isDealer: false },
+        { map: OPEN_TIER_MAP_ND_NC, nameKey: 'ref.ndNC', isOpen: true, isDealer: false },
+        { map: OPEN_TIER_MAP_D_C, nameKey: 'ref.dC', isOpen: true, isDealer: true },
+        { map: OPEN_TIER_MAP_D_NC, nameKey: 'ref.dNC', isOpen: true, isDealer: true }
+      ];
+      let html = `<div class="ref-note">${t('ref.pointsNote')}</div>`;
+      variants.forEach(v => {
+        html += `<div class="ref-subtitle">${t(v.nameKey)}</div>`;
+        html += '<div class="shape-legend">';
+        SHAPES.forEach(s => {
+          const name = State.lang === 'ja' ? SHAPE_INFO[s].ja : SHAPE_INFO[s].en;
+          html += `<span><b>${SHAPE_IDS[s]}</b>${name}</span>`;
+        });
+        html += '</div>';
+        const maxTier = maxTierForMap(v.map);
+        html += '<table class="thresh-ref-table flipped"><thead><tr>';
+        html += `<th>${t('ref.tier')}</th>`;
+        SHAPES.forEach(s => { html += `<th>${SHAPE_IDS[s]}</th>`; });
+        html += '</tr></thead><tbody>';
+        for (let tier = 1; tier <= maxTier; tier++) {
+          html += `<tr><td>${tier}</td>`;
+          SHAPES.forEach(s => {
+            const pts = getPointsForShapeTier(s, tier, v.map, v.isOpen, v.isDealer);
+            if (pts === null) html += '<td class="empty-cell">–</td>';
+            else html += `<td>${pts}</td>`;
+          });
+          html += '</tr>';
+        }
+        html += '</tbody></table>';
+      });
+      wrap.innerHTML = html;
     }
-    lastY = y;
-  }, { passive: true });
-}
 
-/* =========================================================
-   INIT
-   ========================================================= */
-function init() {
-  let saved = 'en';
-  try { saved = localStorage.getItem('shanten_cheat_lang') || 'en'; } catch (e) {}
-  if (!I18N[saved]) saved = 'en';
-  State.lang = saved;
-  buildSujiGrid();
-  wireEvents();
-  initTopbarScroll();
-  applyLanguage(saved);
-}
+    function renderThreshRef() {
+      const wrap = $('threshRef');
+      const roleKeys = ['VS Non-Dealer', 'VS Dealer', 'As Dealer'];
+      const roleLabelKeys = { 'VS Non-Dealer': 'ref.vsND', 'VS Dealer': 'ref.vsD', 'As Dealer': 'ref.asD' };
 
-init();
-</script>
+      const renderTable = (title, tbl, maxTier) => {
+        let out = `<div class="ref-subtitle">${title}</div>`;
+        out += `<table class="thresh-ref-table"><thead><tr>`;
+        out += `<th>${t('table.tier')}</th>`;
+        out += `<th>${t('table.turn5')}</th>`;
+        out += `<th>${t('table.turn9')}</th>`;
+        out += `<th>${t('table.turn14')}</th>`;
+        out += '</tr></thead><tbody>';
+        for (let tt = 1; tt <= maxTier; tt++) {
+          out += `<tr><td>${tt}</td>`;
+          for (const turn of [5, 9, 14]) {
+            const v = tbl['Turn ' + turn][tt];
+            if (v === undefined) out += '<td>-</td>';
+            else out += `<td style="color:${thresholdColor(v)}">${Math.round(v * 100)}%</td>`;
+          }
+          out += '</tr>';
+        }
+        out += '</tbody></table>';
+        return out;
+      };
+
+      let html = `<div class="ref-subtitle" style="font-size:12px;margin-top:4px;color:#f8fafc">${t('ref.menzen')}</div>`;
+      for (const rk of roleKeys) html += renderTable(t(roleLabelKeys[rk]), CLOSED_THRESHOLDS[rk], 8);
+      html += `<div class="ref-subtitle" style="font-size:12px;margin-top:14px;color:#f8fafc">${t('ref.fuuro')}</div>`;
+      for (const rk of roleKeys) html += renderTable(t(roleLabelKeys[rk]), OPEN_THRESHOLDS[rk], 11);
+      wrap.innerHTML = html;
+    }
+
+    /* =========================================================
+       LANGUAGE
+       ========================================================= */
+    function applyLanguage(lang) {
+      State.lang = lang;
+      try { localStorage.setItem('shanten_cheat_lang', lang); } catch (e) { }
+      document.documentElement.lang = lang;
+      document.title = t('app.title');
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        el.innerHTML = t(el.dataset.i18n);
+      });
+      const btn = $('langBtn');
+      if (btn) btn.textContent = t('lang');
+      renderAll();
+      renderShapeRef();
+      renderDealinRef();
+      renderShapeTierRef();
+      renderThreshRef();
+    }
+
+    /* =========================================================
+       BUILD
+       ========================================================= */
+    function buildSujiGrid() {
+      const wrap = $('sujiGrid');
+      wrap.innerHTML = '';
+      for (let v = 0; v <= 18; v++) {
+        const b = document.createElement('button');
+        b.className = 'suji-btn';
+        b.type = 'button';
+        b.dataset.val = v;
+        b.textContent = v;
+        b.onclick = () => { State.passedSuji = v; renderAll(); };
+        wrap.appendChild(b);
+      }
+    }
+
+    /* =========================================================
+       EVENTS
+       ========================================================= */
+    function wireEvents() {
+      $('handRow').querySelectorAll('.btn').forEach(b => {
+        b.onclick = () => {
+          State.hand = b.dataset.hand;
+          if (State.hand === 'fuuro' && State.shape === 'Chiitoi') State.shape = 'Perfect';
+          renderAll();
+        };
+      });
+      $('yakuRowBtns').querySelectorAll('.btn').forEach(b => {
+        b.onclick = () => {
+          if (b.disabled) return;
+          State.yakuState = b.dataset.yaku;
+          renderAll();
+        };
+      });
+      $('playerRow').querySelectorAll('.btn').forEach(b => {
+        b.onclick = () => {
+          State.playerDealer = (b.dataset.player === 'dealer');
+
+          if (State.playerDealer) {
+            State.riichiCallerDealer = false;
+          }
+
+          renderAll();
+        };
+      });
+      $('riichiRoleRow').querySelectorAll('.btn').forEach(b => {
+        b.onclick = () => {
+          State.riichiCallerDealer = (b.dataset.riichiRole === 'dealer');
+
+          if (State.riichiCallerDealer) {
+            State.playerDealer = false;
+          }
+
+          renderAll();
+        };
+      });
+      $('riichiSeatRow').querySelectorAll('.btn').forEach(b => {
+        b.onclick = () => { State.riichiCallerSeat = b.dataset.riichiSeat; renderAll(); };
+      });
+
+      $('ippatsuRow').querySelectorAll('.btn').forEach(b => {
+          b.onclick = () => {
+            State.ippatsu = (b.dataset.ippatsu === 'yes');
+            renderAll();
+          };
+        });
+      document.querySelectorAll('#shapeRow .btn, #otherShapesRow .btn').forEach(b => {
+        b.onclick = () => {
+          State.shape = b.dataset.shape;
+          renderAll();
+        };
+      });
+      $('otherToggle').onclick = () => {
+        $('otherShapesRow').classList.toggle('hidden');
+      };
+      $('turnRow').querySelectorAll('.btn').forEach(b => {
+        b.onclick = () => { State.turn = parseInt(b.dataset.turn, 10); renderAll(); };
+      });
+      $('catRow').querySelectorAll('.btn').forEach(b => {
+        b.onclick = () => { State.category = b.dataset.cat; renderAll(); };
+      });
+      $('modRow').querySelectorAll('.btn').forEach(b => {
+        b.onclick = () => {
+          State.modifiers[b.dataset.mod] = !State.modifiers[b.dataset.mod];
+          renderAll();
+        };
+      });
+      $('sujiMinus').onclick = () => {
+        State.passedSuji = Math.max(0, State.passedSuji - 1);
+        renderAll();
+        if (navigator.vibrate) navigator.vibrate(8);
+      };
+      $('sujiPlus').onclick = () => {
+        State.passedSuji = Math.min(18, State.passedSuji + 1);
+        renderAll();
+        if (navigator.vibrate) navigator.vibrate(8);
+      };
+      $('nextTileBtn').onclick = () => {
+        if (!$('dealinSection').open) $('dealinSection').open = true;
+        $('dealinSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        if (navigator.vibrate) navigator.vibrate(15);
+      };
+      $('resetBtn').onclick = () => {
+        const fresh = defaultState();
+        Object.keys(fresh).forEach(k => { State[k] = fresh[k]; });
+        State.modifiers = { dora: false, sotogawa: false, oneChance: false, ankou: false };
+        renderAll();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        if (navigator.vibrate) navigator.vibrate(15);
+      };
+      $('langBtn').onclick = () => applyLanguage(State.lang === 'ja' ? 'en' : 'ja');
+      $('aboutBtn').onclick = () => $('aboutModal').classList.add('active');
+      $('closeAbout').onclick = () => $('aboutModal').classList.remove('active');
+      $('aboutModal').onclick = e => { if (e.target.id === 'aboutModal') $('aboutModal').classList.remove('active'); };
+      $('dealinSection').addEventListener('toggle', () => {
+        updateNextTileBtnVisibility();
+        renderResult();
+      });
+    }
+
+    /* =========================================================
+       TOPBAR AUTO-HIDE
+       ========================================================= */
+    function initTopbarScroll() {
+      const topbar = $('topbar');
+      let lastY = window.scrollY;
+      let hidden = false;
+      window.addEventListener('scroll', () => {
+        const y = window.scrollY;
+        const delta = y - lastY;
+        if (y < 60) {
+          if (hidden) { hidden = false; topbar.classList.remove('hidden'); }
+        } else if (delta > 8 && !hidden) {
+          hidden = true; topbar.classList.add('hidden');
+        } else if (delta < -8 && hidden) {
+          hidden = false; topbar.classList.remove('hidden');
+        }
+        lastY = y;
+      }, { passive: true });
+    }
+
+    /* =========================================================
+       INIT
+       ========================================================= */
+    function init() {
+      let saved = 'en';
+      try { saved = localStorage.getItem('shanten_cheat_lang') || 'en'; } catch (e) { }
+      if (!I18N[saved]) saved = 'en';
+      State.lang = saved;
+      buildSujiGrid();
+      wireEvents();
+      initTopbarScroll();
+      applyLanguage(saved);
+    }
+
+    init();
+  </script>
 </body>
+
 </html>
