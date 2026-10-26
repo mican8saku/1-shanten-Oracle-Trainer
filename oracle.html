@@ -1232,9 +1232,6 @@ function renderButtonSelections() {
   $('playerRow').querySelectorAll('.btn').forEach(b => {
   const v = b.dataset.player;
 
-  // Player cannot be dealer if riichi caller is dealer
-  b.disabled = State.riichiCallerDealer && v === 'dealer';
-
   b.classList.toggle(
     'selected',
     v === (State.playerDealer ? 'dealer' : 'nondealer')
@@ -1242,9 +1239,6 @@ function renderButtonSelections() {
   });
   $('riichiRoleRow').querySelectorAll('.btn').forEach(b => {
   const v = b.dataset.riichiRole;
-
-  // Riichi caller cannot be dealer if you are dealer
-  b.disabled = State.playerDealer && v === 'dealer';
 
   b.classList.toggle(
     'selected',
@@ -1731,10 +1725,26 @@ function wireEvents() {
     };
   });
   $('playerRow').querySelectorAll('.btn').forEach(b => {
-    b.onclick = () => { State.playerDealer = (b.dataset.player === 'dealer'); renderAll(); };
+  b.onclick = () => {
+    State.playerDealer = (b.dataset.player === 'dealer');
+
+    if (State.playerDealer) {
+      State.riichiCallerDealer = false;
+    }
+
+    renderAll();
+  };
   });
   $('riichiRoleRow').querySelectorAll('.btn').forEach(b => {
-    b.onclick = () => { State.riichiCallerDealer = (b.dataset.riichiRole === 'dealer'); renderAll(); };
+  b.onclick = () => {
+    State.riichiCallerDealer = (b.dataset.riichiRole === 'dealer');
+
+    if (State.riichiCallerDealer) {
+      State.playerDealer = false;
+    }
+
+    renderAll();
+  };  
   });
   $('riichiSeatRow').querySelectorAll('.btn').forEach(b => {
     b.onclick = () => { State.riichiCallerSeat = b.dataset.riichiSeat; renderAll(); };
