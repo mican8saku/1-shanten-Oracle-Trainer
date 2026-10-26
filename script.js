@@ -301,7 +301,7 @@ const I18N = {
     'home.sub': 'Push-pull trainer',
     'home.start': 'Start',
     'home.hint': '↑ ↓ to choose · Enter to start',
-    'home.about': '<i class="fa-solid fa-circle-info"></i> ',
+    'home.about': 'About <i class="fa-solid fa-circle-info"></i> ',
     'home.mode.regular.title': 'Regular',
     'home.mode.regular.desc': '10-question scored run. Score & grade revealed at the end.',
     'home.mode.zen.title': 'Zen Mode',
