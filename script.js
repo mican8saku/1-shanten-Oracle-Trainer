@@ -296,7 +296,7 @@ const LANG_KEY = 'shanten_lang';
 const I18N = {
   en: {
     'page.title': '1-shanten Oracle — Push-Pull Trainer',
-    'home.link': 'Oracle <i class="fa-solid fa-hamsa"></i>',
+    'home.link': 'The Oracle <i class="fa-solid fa-hamsa"></i>',
     'home.heading': '1-shanten Oracle',
     'home.sub': 'Push-pull trainer',
     'home.start': 'Start',
