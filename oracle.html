@@ -327,7 +327,7 @@ summary::-webkit-details-marker{display:none;}
 <header class="topbar" id="topbar">
   <div class="topbar-inner">
     <div class="app-title" id="appTitle">
-      <span data-i18n="app.title">1-shanten Oracle</span>
+      <span data-i18n="app.title-icon">1-shanten Oracle</span>
       <span class="app-sub-title" data-i18n="app.titleSub">Push-pull Lookup Table</span>
     </div>
     
@@ -735,9 +735,10 @@ const OTHER_SHAPES = {
    ========================================================= */
 const I18N = {
   en: {
-    'home.link': 'Home <i class="fa-solid fa-house"></i>',
+    'home.link': 'Return <i class="fa-solid fa-door-open"></i>',
     'home.about': 'About <i class="fa-solid fa-circle-info"></i>',
-    'app.title': '<i class="fa-solid fa-hamsa"></i> 1-shanten Oracle',
+    'app.title': '1-shanten Oracle',
+    'app.title-icon': '<i class="fa-solid fa-hamsa"></i> 1-shanten Oracle',
     'app.titleSub': 'Push-pull Lookup Table',
     'app.fullTitle': '1-shanten Oracle',
     'label.turn': 'Turn',
@@ -843,7 +844,8 @@ const I18N = {
   ja: {
     'home.link': '戻る <i class="fa-solid fa-door-open"></i>',
     'home.about': 'このアプリについて <i class="fa-solid fa-circle-info"></i>',
-    'app.title': '<i class="fa-solid fa-hamsa"></i> イーシャンテン オラクル',
+    'app.title': 'イーシャンテン オラクル',
+    'app.title-icon': '<i class="fa-solid fa-hamsa"></i> イーシャンテン オラクル',
     'app.titleSub': '押し引き早見表',
     'label.turn': '巡目',
     'turn.early': '序盤・5巡目', 'turn.mid': '中盤・9巡目', 'turn.late': '終盤・14巡目',
@@ -1228,12 +1230,26 @@ function renderButtonSelections() {
   });
 
   $('playerRow').querySelectorAll('.btn').forEach(b => {
-    const v = b.dataset.player;
-    b.classList.toggle('selected', v === (State.playerDealer ? 'dealer' : 'nondealer'));
+  const v = b.dataset.player;
+
+  // Player cannot be dealer if riichi caller is dealer
+  b.disabled = State.riichiCallerDealer && v === 'dealer';
+
+  b.classList.toggle(
+    'selected',
+    v === (State.playerDealer ? 'dealer' : 'nondealer')
+  );
   });
   $('riichiRoleRow').querySelectorAll('.btn').forEach(b => {
-    const v = b.dataset.riichiRole;
-    b.classList.toggle('selected', v === (State.riichiCallerDealer ? 'dealer' : 'nondealer'));
+  const v = b.dataset.riichiRole;
+
+  // Riichi caller cannot be dealer if you are dealer
+  b.disabled = State.playerDealer && v === 'dealer';
+
+  b.classList.toggle(
+    'selected',
+    v === (State.riichiCallerDealer ? 'dealer' : 'nondealer')
+  );
   });
   $('riichiSeatRow').querySelectorAll('.btn').forEach(b => {
     b.classList.toggle('selected', b.dataset.riichiSeat === State.riichiCallerSeat);
