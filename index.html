@@ -5,308 +5,2741 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0f172a">
 <link rel="icon" type="image/x-icon" href="favicon.ico">
-<link rel="stylesheet" href="style.css">
-<link rel="stylesheet"  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 <title>1-shanten Oracle — Push-Pull Trainer</title>
+<style>
+:root{--bg:#0f172a;--panel:#1e293b;--panel2:#243038;--border:#334155;--text:#f8fafc;--muted:#94a3b8;--green:#22c55e;--red:#ef4444;--blue:#3b82f6;--amber:#f59e0b;}
+*{box-sizing:border-box;}
+html,body{height:100%;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;overflow:hidden;-webkit-font-smoothing:antialiased;}
+button{font-family:inherit;}
+.screen{display:none;}
+#home.active{display:flex;}#settings.active{display:flex;}#game.active{display:grid;}#results.active{display:flex;}
+#home,#settings{height:100vh;flex-direction:column;align-items:center;justify-content:center;gap:22px;padding:24px;background:radial-gradient(circle at 50% 30%,#16233b 0%,#0f172a 65%);}
+#home{position:relative;overflow:hidden;}
+.home-topbar{position:absolute;top:16px;right:16px;display:flex;gap:8px;z-index:3;}
+.home-topbar .btn{padding:8px 14px;font-size:12.5px;}
+#settings.active{align-items:center;justify-content:flex-start;overflow-y:auto;padding:30px 24px;}
+.home-inner{display:flex;flex-direction:column;align-items:center;gap:16px;max-width:900px;width:100%;}
+#home h1{margin:0;font-size:55px;letter-spacing:-1px;font-weight:800;text-align:center;background:linear-gradient(90deg,#f8fafc,#7dd3fc);-webkit-background-clip:text;background-clip:text;color:transparent;}
+.sub{margin:-10px 0 26px;color:var(--muted);font-size:35px;letter-spacing:2px;text-transform:uppercase;text-align:center;}
+.modes{display:grid;grid-template-columns:1fr 1fr;gap:14px;width:100%;}
+.mode-card{background:var(--panel);border:2px solid var(--border);border-radius:14px;padding:18px 16px;text-align:left;color:var(--text);cursor:pointer;transition:border-color .15s,transform .12s,background .15s;}
+.mode-card:hover{border-color:#475569;transform:translateY(-2px);}
+.mode-card.selected{border-color:var(--blue);background:#1b2942;box-shadow:0 0 0 1px var(--blue),0 8px 22px rgba(59,130,246,.18);}
+.mode-title{font-size:18px;font-weight:800;margin-bottom:6px;}
+.mode-desc{font-size:12.5px;color:var(--muted);line-height:1.45;}
+.hint{color:#64748b;font-size:12px;letter-spacing:.5px;text-align:center;}
+.high-scores{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;width:100%;margin-top:4px;}
+.hs-item{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:10px 12px;text-align:center;}
+.hs-item span{display:block;font-size:10px;letter-spacing:1.3px;text-transform:uppercase;color:var(--muted);font-weight:800;margin-bottom:5px;}
+.hs-item b.hs-rank{display:block;font-size:34px;font-weight:900;color:#f8fafc;line-height:1.05;font-variant-numeric:tabular-nums;letter-spacing:-.5px;}
+.hs-sub{margin-top:5px;font-size:12px;font-weight:800;color:#94a3b8;font-variant-numeric:tabular-nums;letter-spacing:.4px;}
+.btn{border:2px solid var(--border);background:var(--panel);color:var(--text);border-radius:10px;padding:11px 18px;font-size:14px;font-weight:700;cursor:pointer;transition:all .14s;letter-spacing:.3px;}
+.btn:hover:not(:disabled){border-color:#64748b;background:var(--panel2);transform:translateY(-1px);}
+.btn:disabled{opacity:.4;cursor:not-allowed;}
+.btn.primary{border-color:#2563eb;background:#1d4ed8;color:#fff;}
+.btn.primary:hover:not(:disabled){background:#2563eb;border-color:#3b82f6;box-shadow:0 0 18px rgba(37,99,235,.45);}
+.btn.big{padding:14px 44px;font-size:16px;border-radius:12px;}
+.home-actions{display:flex;gap:12px;align-items:center;}
+.settings-card{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:24px 26px;max-width:1100px;width:100%;box-shadow:0 20px 50px rgba(0,0,0,.45);margin:auto 0;flex-shrink:0;}
+.settings-card h1{margin:0 0 4px;font-size:24px;letter-spacing:-.4px;}
+.settings-card p.desc{margin:0 0 20px;color:var(--muted);font-size:13px;line-height:1.5;}
+.settings-columns{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:20px;}
+.settings-col{display:flex;flex-direction:column;gap:16px;min-width:0;}
+.settings-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:8px;}
+.settings-grid.settings-grid-3{grid-template-columns:1fr 1fr 1fr;}
+.settings-grid.settings-grid-4{grid-template-columns:1fr 1fr 1fr 1fr;}
+.settings-section{margin-bottom:0;}
+.settings-section-title{font-size:11px;letter-spacing:1.6px;text-transform:uppercase;color:#7dd3fc;font-weight:800;margin-bottom:8px;}
+.settings-section .settings-note{margin:0;font-size:12px;}
+.settings-actions{display:flex;gap:10px;margin-top:4px;}
+.settings-actions .btn{flex:1;padding:14px 18px;font-size:15px;}
+.chk{display:flex;align-items:center;gap:10px;background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:11px 13px;font-size:13.5px;font-weight:700;cursor:pointer;transition:.13s;user-select:none;}
+.chk:hover{border-color:#475569;background:#2f3f52;}
+.chk input{appearance:none;-webkit-appearance:none;width:18px;height:18px;flex:0 0 auto;border:2px solid var(--border);border-radius:5px;background:#0b1220;position:relative;cursor:pointer;transition:.12s;}
+.chk input:checked{background:var(--blue);border-color:var(--blue);box-shadow:0 0 10px rgba(59,130,246,.4);}
+.chk input:checked::after{content:'';position:absolute;left:4px;top:0px;width:6px;height:11px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg);}
+.settings-note{color:var(--muted);font-size:12.5px;line-height:1.5;margin:0 0 18px;}
+.settings-note.bad{color:#fca5a5;}
+#game{height:100vh;grid-template-columns:310px minmax(0,560px) 280px 340px;grid-template-rows:auto minmax(0,1fr) auto;gap:12px;padding:12px;justify-content:center;}
+#gameHeader{grid-area:1/1/2/5;display:flex;align-items:center;justify-content:space-between;background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:10px 16px;}
+.hdr-left,.hdr-right{display:flex;align-items:center;gap:10px;}
+.logo{font-weight:800;letter-spacing:-.3px;font-size:16px;}
+.pill{background:var(--panel2);border:1px solid var(--border);border-radius:999px;padding:5px 12px;font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.4px;}
+.pill.score{color:#7dd3fc;border-color:#1e40af;background:#172554;}
+.pill.time{color:#fbbf24;border-color:#78350f;background:#1f1503;font-variant-numeric:tabular-nums;}
+.pill.combo{color:#94a3b8;border-color:var(--border);background:var(--panel2);transition:all .2s;}
+.pill.combo.active{color:#fef08a;border-color:#eab308;background:#451a03;}
+.timer-wrapper{position:relative;display:inline-block;}
+.sec-delta{position:absolute;left:calc(100% + 6px);top:50%;transform:translateY(-50%);background:rgba(34,197,94,.95);color:#fff;font-weight:800;font-size:13px;padding:4px 10px;border-radius:8px;pointer-events:none;opacity:0;white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,.35);z-index:100;}
+.sec-delta.negative{background:rgba(239,68,68,.95);}
+.sec-delta.anim{animation:secFloat 1.2s ease-out forwards;}
+@keyframes secFloat{0%{opacity:0;transform:translateY(-50%) translateY(0);}15%{opacity:1;transform:translateY(-50%) translateY(-4px);}70%{opacity:1;transform:translateY(-50%) translateY(-10px);}100%{opacity:0;transform:translateY(-50%) translateY(-18px);}}
+
+#tableWrap{grid-area:2/2/3/3;position:relative;overflow:hidden;background:#131f24;border:1px solid var(--border);border-radius:14px;box-shadow:inset 0 0 80px rgba(0,0,0,.5);}
+#tableWrap::after{content:'';position:absolute;bottom:0;left:0;right:0;height:100px;    background: linear-gradient(to top, rgb(59 130 246 / 21%), rgba(59, 130, 246, .08) 40%, transparent);pointer-events:none;opacity:0;transition:opacity .6s ease;z-index:5;}
+#tableWrap.your-turn::after{opacity:1;}
+#yourTurn {
+    position: absolute;
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 4px 8px;
+    background: rgba(59, 130, 246, .18);
+    border: 2px solid rgba(59, 130, 246, .55);
+    border-radius: 999px;
+    color: #93c5fd;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .5s ease;
+    z-index: 10;
+    box-shadow: 0 0 24px rgb(59 130 246 / 38%);
+    white-space: nowrap;
+}
+
+#yourTurn.show{opacity:1;}
+
+#board{position:absolute;left:0;top:0;width:1120px;height:920px;transform-origin:0 0;}
+.pond{position:absolute;display:flex;flex-wrap:wrap;gap:2px;align-content:flex-start;justify-content:flex-start;}
+.tile{position:relative;width:70px;height:100px;flex:0 0 auto;opacity:0;transition:opacity .18s ease;}
+.tile.shown{opacity:1;}
+.tile>img,.tile>.tile-fallback{position:absolute;left:0;top:0;width:70px;height:100px;filter:drop-shadow(0 4px 6px rgba(0,0,0,.4));display:block;}
+.tile>img{object-fit:contain;}
+.tile.rotated>img,.tile.rotated>.tile-fallback{transform:rotate(90deg) translateY(-15px);}
+.tile.rotated:not(:last-child){margin-right:32px;}
+.tile-fallback{background:#f1f5f9;border-radius:6px;border:1px solid #cbd5e1;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#0f172a;overflow:hidden;}
+.tf-num{font-size:30px;font-weight:800;line-height:1;}
+.tf-suit{font-size:19px;font-weight:700;line-height:1.15;}
+.tf-suit.s-m{color:#b91c1c;}
+.tf-suit.s-p{color:#1d4ed8;}
+.tf-suit.s-s{color:#15803d;}
+.tf-honor{font-size:32px;font-weight:800;color:#0f172a;}
+.tile-fallback.honor{background:#fffdf5;}
+@keyframes riichiDrop{0%{opacity:0;transform:translateY(-32px) scale(.85);}60%{opacity:1;transform:translateY(6px) scale(1.05);}100%{opacity:1;transform:none;}}
+.tile.riichi-drop{animation:riichiDrop .45s cubic-bezier(.2,.8,.3,1) forwards;opacity:1;}
+.riichi-stick{position:absolute;background:#f8fafc;border-radius:5px;box-shadow:0 4px 10px rgba(0,0,0,.6);opacity:0;animation:fadeIn .45s .1s forwards;}
+.riichi-stick::after{content:'';position:absolute;left:50%;top:50%;width:9px;height:9px;margin:-4.5px 0 0 -4.5px;border-radius:50%;background:#dc2626;}
+@keyframes fadeIn{to{opacity:1;}}
+.seat-label{position:absolute;font-size:23px;font-weight:800;letter-spacing:1.4px;color:#94a3b8;text-transform:uppercase;white-space:nowrap;}
+.seat-label .wind{color:#38bdf8;font-size:42px;letter-spacing:0;margin-right:6px;vertical-align:-1px;}
+.center-panel{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:16px 26px;text-align:center;min-width:190px;box-shadow:0 10px 30px rgba(0,0,0,.5);}
+.center-panel .cp-round{font-size:26px;letter-spacing:1.6px;color:#7dd3fc;font-weight:800;text-transform:uppercase;margin-bottom:2px;}
+.center-panel .cp-turn{font-size:20px;letter-spacing:2px;color:var(--muted);font-weight:800;text-transform:uppercase;}
+.center-panel .cp-num{font-size:56px;font-weight:900;line-height:1;margin:4px 0 2px;}
+#sidebar{grid-area:2/4/4/5;display:flex;flex-direction:column;gap:12px;overflow-y:auto;padding-right:2px;}
+#sidebar::-webkit-scrollbar{width:8px;}
+#sidebar::-webkit-scrollbar-thumb{background:#334155;border-radius:4px;}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:14px;}
+.card h3{margin:0 0 10px;font-size:12px;letter-spacing:1.6px;text-transform:uppercase;color:var(--muted);font-weight:800;}
+.discard-cat{font-size:22px;font-weight:900;letter-spacing:-.5px;color:#f8fafc;line-height:1.15;}
+.discard-desc{font-size:12.5px;color:var(--muted);margin-top:6px;line-height:1.5;}
+#quizCard{display:flex;flex-direction:column;gap:14px;}
+.qstep{border-top:1px dashed #334155;padding-top:12px;}
+.qstep:first-child{border-top:none;padding-top:0;}
+.qhead{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:800;letter-spacing:1.3px;text-transform:uppercase;color:#7dd3fc;margin-bottom:8px;}
+.stepnum{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:#1e40af;color:#fff;font-size:11px;}
+.qtext{font-size:13.5px;line-height:1.5;color:#cbd5e1;margin-bottom:12px;}
+.qtext b{color:#f8fafc;}
+.suji-loading{font-size:12px;color:#93c5fd;font-weight:800;letter-spacing:2px;text-align:center;margin-bottom:8px;text-transform:uppercase;animation:pulse 1.4s ease-in-out infinite;}
+.suji-loading.hidden{display:none;}
+@keyframes pulse{0%,100%{opacity:.4;}50%{opacity:1;}}
+.sujigrid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:10px;transition:opacity .3s ease;}
+.sujigrid.loading{opacity:.3;pointer-events:none;}
+.sujibtn{padding:10px 0;background:var(--panel2);border:2px solid var(--border);border-radius:8px;color:var(--text);font-size:15px;font-weight:800;cursor:pointer;transition:.12s;font-variant-numeric:tabular-nums;}
+.sujibtn:hover:not(:disabled){border-color:#64748b;background:#2f3f52;transform:translateY(-1px);}
+.sujibtn:disabled{cursor:default;opacity:.7;}
+.sujibtn.correct{border-color:var(--green)!important;background:rgba(34,197,94,.18)!important;color:#86efac!important;box-shadow:0 0 16px rgba(34,197,94,.3);}
+.sujibtn.wrong{border-color:var(--red)!important;background:rgba(239,68,68,.16)!important;color:#fca5a5!important;}
+.sujibtn.kbd-focus{box-shadow:0 0 0 3px rgba(59,130,246,.45);border-color:var(--blue);}
+.optrow{display:flex;flex-wrap:wrap;gap:8px;}
+.optrow.rate-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.rate-grid .opt{min-width:0;padding:11px 6px;font-size:13px;white-space:nowrap;}
+.opt{flex:1 1 auto;min-width:74px;padding:11px 10px;background:var(--panel2);border:2px solid var(--border);border-radius:10px;color:var(--text);font-size:14px;font-weight:800;cursor:pointer;transition:.13s;letter-spacing:.3px;}
+.opt:hover:not(:disabled){border-color:#64748b;background:#2f3f52;transform:translateY(-1px);}
+.opt:disabled{cursor:default;opacity:.75;}
+.opt.correct{border-color:var(--green)!important;background:rgba(34,197,94,.18)!important;color:#86efac!important;box-shadow:0 0 16px rgba(34,197,94,.3);}
+.opt.wrong{border-color:var(--red)!important;background:rgba(239,68,68,.16)!important;color:#fca5a5!important;}
+.opt.borderline-yellow{border-color:#fde047!important;background:rgba(253,224,71,0.20)!important;color:#fef08a!important;box-shadow:0 0 18px rgba(253,224,71,0.35);opacity:1!important;}
+.opt.borderline-green{border-color:#4ade80!important;background:rgba(74,222,128,0.18)!important;color:#bbf7d0!important;box-shadow:0 0 18px rgba(74,222,128,0.28);opacity:1!important;}
+.opt.kbd-focus{box-shadow:0 0 0 3px rgba(59,130,246,.45);border-color:var(--blue);}
+.fb{margin-top:10px;font-size:12.5px;line-height:1.5;border-radius:9px;padding:9px 11px;display:none;}
+.fb.show{display:block;}
+.fb.ok{background:rgba(34,197,94,.12);border:1px solid #166534;color:#86efac;}
+.fb.part{background:rgba(245,158,11,.12);border:1px solid #78350f;color:#fcd34d;}
+.fb.bad{background:rgba(239,68,68,.1);border:1px solid #7f1d1d;color:#fca5a5;}
+.fb.borderline{background:rgba(253,224,71,0.14);border:1px solid #ca8a04;color:#fde047;}
+.fb b{color:#fff;}
+.fb.borderline b{color:#fef9c3;}
+.fb .special-notes{display:block;margin-top:4px;font-size:11.5px;color:#93c5fd;font-style:italic;}
+.fb .suji-list{display:block;margin-top:4px;font-size:11.5px;color:#cbd5e1;opacity:.85;}
+.locked{display:none!important;}
+#shapeTierCard{grid-area:2/1/3/2;display:flex;flex-direction:column;}
+#thresholdCard{grid-area:2/3/3/4;display:flex;flex-direction:column;}
+.panel-title{font-size:11.5px;font-weight:800;margin-bottom:6px;color:#7dd3fc;letter-spacing:.3px;}
+.panel-table-wrap{flex:1 1 auto;overflow-y:auto;min-height:0;}
+.panel-table-wrap::-webkit-scrollbar{width:6px;}
+.panel-table-wrap::-webkit-scrollbar-thumb{background:#334155;border-radius:3px;}
+.panel-controls{display:flex;justify-content:space-between;align-items:center;margin-top:10px;gap:6px;flex-shrink:0;}
+.panel-controls .btn{padding:12px 25px;font-size:14px;border-radius:9px;flex-shrink:0;}
+.panel-indicator-btn{background:var(--panel2);border:2px solid var(--border);color:var(--text);font-size:13px;font-weight:800;padding:6px 12px;border-radius:8px;cursor:pointer;transition:.12s;font-variant-numeric:tabular-nums;font-family:inherit;letter-spacing:.3px;flex:1;text-align:center;height:46px;}
+.panel-indicator-btn:hover{border-color:#64748b;background:#2f3f52;}
+.panel-indicator-btn.auto-active{border-color:#22c55e;background:rgba(34,197,94,.15);color:#86efac;}
+.thresh-table{width:100%;border-collapse:collapse;font-size:10px;text-align:center;}
+.thresh-table th{background:var(--panel2);color:var(--muted);font-weight:800;padding:3px 1px;border:1px solid var(--border);line-height:1.1;}
+.thresh-table td{padding:2px 1px;border:1px solid var(--border);font-weight:800;font-variant-numeric:tabular-nums;color:#e2e8f0;}
+.thresh-table td:first-child{background:var(--panel2);color:var(--muted);}
+.direct-nav{display:grid;grid-template-columns:1fr 1fr 1fr;grid-auto-rows:44px;gap:4px;margin-top:8px;flex-shrink:0;}
+.direct-nav .btn{padding:3px 4px;font-size:12px;line-height:1.15;height:45px;min-height:45px;border-radius:7px;letter-spacing:0;white-space:normal;overflow:hidden;display:flex;align-items:center;justify-content:center;text-align:center;}
+.direct-nav .btn:hover:not(:disabled){transform:none;}
+.direct-nav .btn.active{border-color:var(--blue);background:rgba(59,130,246,.15);color:#93c5fd;}
+#bottomArea{grid-area:3/1/4/4;display:grid;grid-template-columns:minmax(0,1fr) 224px;gap:10px;min-height:0;}
+#scenario{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:10px;min-height:0;}
+.scard{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:10px 13px;min-width:0;display:flex;flex-direction:column;justify-content:center;}
+.slabel{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#64748b;font-weight:800;margin-bottom:5px;}
+.svalue{font-size:14px;font-weight:800;line-height:1.25;color:#e2e8f0;}
+.svalue.hl{color:#fbbf24;}
+.svalue.open-hand{color:#7dd3fc;}
+.svalue.closed-hand{color:#86efac;}
+#discardCard{display:flex;flex-direction:column;justify-content:center;}
+#results{height:100vh;flex-direction:column;align-items:center;justify-content:center;gap:20px;padding:24px;background:radial-gradient(circle at 50% 25%,#16233b 0%,#0f172a 65%);overflow-y:auto;}
+.results-card{background:var(--panel);border:1px solid var(--border);border-radius:20px;padding:34px 40px;max-width:680px;width:100%;text-align:center;box-shadow:0 24px 60px rgba(0,0,0,.55);position:relative;}
+.results-app-title{font-size:13px;font-weight:800;letter-spacing:1.8px;text-transform:uppercase;color:#7dd3fc;margin-bottom:10px;opacity:.85;}
+.results-card h1{margin:0 0 4px;font-size:26px;letter-spacing:-.5px;}
+.grade{font-size:82px;font-weight:900;line-height:1;margin:12px 0 4px;color:#f8fafc;}
+.grade.g-S\+{background:linear-gradient(180deg,#fde047,#eab308);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 20px rgba(234,179,8,.45));}
+.grade.g-score{font-size:64px;letter-spacing:-2px;font-variant-numeric:tabular-nums;background:linear-gradient(180deg,#f8fafc,#cbd5e1);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 20px rgba(203,213,225,.4));}
+.grade.g-score.tier-2{background:linear-gradient(180deg,#fed7aa,#b45309);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 20px rgba(180,83,9,.5));}
+.grade.g-score.tier-3{background:linear-gradient(180deg,#f1f5f9,#64748b);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 22px rgba(148,163,184,.55));}
+.grade.g-score.tier-4{background:linear-gradient(180deg,#fef9c3,#f59e0b);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 24px rgba(245,158,11,.55));}
+.grade.g-score.tier-5{background:linear-gradient(135deg,#a5f3fc,#a78bfa,#f472b6,#fcd34d,#a5f3fc);background-size:200% 200%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:platShimmer 3s linear infinite;filter:drop-shadow(0 0 28px rgba(167,139,250,.6));}
+@keyframes platShimmer{0%{background-position:0% 50%;}100%{background-position:200% 50%;}}
+.results-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:22px 0 26px;}
+.results-grid>div{background:var(--panel2);border:1px solid var(--border);border-radius:12px;padding:14px;}
+.results-grid span{display:block;font-size:11px;letter-spacing:1.4px;text-transform:uppercase;color:#64748b;font-weight:800;margin-bottom:6px;}
+.results-grid b{font-size:20px;font-weight:900;color:#f8fafc;font-variant-numeric:tabular-nums;}
+.res-actions{display:flex;flex-direction:column;gap:10px;}
+.btn-share-corner{position:absolute;top:12px;right:12px;background:var(--panel2);border:2px solid var(--border);border-radius:8px;padding:6px 12px;font-size:12px;font-weight:800;cursor:pointer;transition:.12s;color:var(--text);letter-spacing:.3px;display:inline-flex;align-items:center;gap:6px;}
+.btn-share-corner:hover{border-color:#64748b;background:#2f3f52;}
+.btn-share-corner.copied{border-color:#22c55e;background:rgba(34,197,94,.15);color:#86efac;}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.62);z-index:9999;align-items:center;justify-content:center;padding:24px;backdrop-filter:blur(2px);}
+.modal-overlay.active{display:flex;}
+.modal-content{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:22px 26px;max-width:760px;width:100%;max-height:85vh;overflow-y:auto;box-shadow:0 24px 60px rgba(0,0,0,.55);}
+.modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;}
+.modal-header h2{margin:0;font-size:20px;letter-spacing:-.3px;}
+.modal-close{background:transparent;border:none;color:var(--muted);font-size:26px;cursor:pointer;line-height:1;padding:0;width:30px;height:30px;border-radius:6px;transition:.12s;}
+.modal-close:hover{background:var(--panel2);color:var(--text);}
+.modal-desc{color:var(--muted);font-size:12.5px;margin:0 0 16px;line-height:1.5;}
+.deal-in-chart{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:16px;}
+.deal-in-chart th{background:var(--panel2);color:var(--muted);font-weight:800;padding:8px 6px;border:1px solid var(--border);font-size:11px;letter-spacing:.5px;text-transform:uppercase;line-height:1.2;}
+.deal-in-chart td{padding:8px 6px;border:1px solid var(--border);text-align:center;font-weight:800;font-variant-numeric:tabular-nums;color:#e2e8f0;}
+.deal-in-chart td:first-child{color:#7dd3fc;white-space:nowrap;}
+.deal-in-chart tr:hover td{background:rgba(59,130,246,.08);}
+.deal-in-note{background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:12.5px;line-height:1.7;color:#cbd5e1;}
+.deal-in-note strong{color:#f8fafc;}
+.deal-in-note .warn{opacity:.72;font-size:11.5px;display:block;margin-top:6px;}
+.shape-list{display:flex;flex-direction:column;}
+.shape-item{padding:14px 0;border-bottom:1px solid var(--border);}
+.shape-item:first-child{padding-top:4px;}
+.shape-item:last-child{border-bottom:none;padding-bottom:0;}
+.shape-item h3{margin:0 0 6px;font-size:16px;font-weight:800;color:#f8fafc;letter-spacing:-.2px;}
+.shape-meta{display:flex;flex-wrap:wrap;gap:18px;font-size:12px;color:var(--muted);margin-bottom:10px;}
+.shape-meta strong{color:#7dd3fc;font-weight:800;}
+.shape-tiles{display:flex;gap:3px;flex-wrap:wrap;align-items:flex-start;}
+.shape-tile{position:relative;width:44px;height:62px;flex:0 0 auto;filter:drop-shadow(0 2px 3px rgba(0,0,0,.4));}
+.shape-tile img{width:100%;height:100%;object-fit:contain;display:block;}
+.shape-tile-fb{width:100%;height:100%;background:#f1f5f9;border-radius:4px;border:1px solid #cbd5e1;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#0f172a;overflow:hidden;}
+.shape-tile-fb.honor{background:#fffdf5;}
+.stf-num{font-size:20px;font-weight:800;line-height:1;}
+.stf-num.stf-red{color:#dc2626;}
+.stf-suit{font-size:12px;font-weight:700;line-height:1.1;}
+.stf-suit.s-m{color:#b91c1c;}
+.stf-suit.s-p{color:#1d4ed8;}
+.stf-suit.s-s{color:#15803d;}
+.stf-honor{font-size:22px;font-weight:800;color:#0f172a;}
+.help-content{font-size:13px;line-height:1.65;color:#cbd5e1;}
+.help-content h3{color:#7dd3fc;font-size:13px;margin:16px 0 6px;font-weight:800;text-transform:uppercase;letter-spacing:1px;}
+.help-content h3:first-child{margin-top:4px;}
+.help-content p{margin:0 0 8px;}
+.help-content ul{margin:0 0 10px;padding-left:20px;}
+.help-content li{margin-bottom:4px;}
+.help-content b{color:#f8fafc;}
+.help-content code{background:#0b1220;border:1px solid #334155;padding:1px 5px;border-radius:4px;font-size:12px;color:#fbbf24;}
+.cover-image{position:absolute;bottom:50px;left:0;pointer-events:none;opacity:.4;max-height:90%;max-width:55%;object-fit:contain;}
+.cover-image-flipped{position:absolute;bottom:50px;right:0;pointer-events:none;opacity:.4;max-height:90%;max-width:55%;object-fit:contain;transform:rotate(180deg);}
+.home-content{position:relative;z-index:1;width:100%;display:flex;justify-content:center;}
+.modal-body{font-size:13px;line-height:1.65;color:#cbd5e1;}
+.modal-body h3{color:#7dd3fc;font-size:12px;margin:14px 0 6px;font-weight:800;text-transform:uppercase;letter-spacing:1px;}
+.modal-body h3:first-child{margin-top:0;}
+.modal-body p{margin:0 0 8px;}
+.modal-body b{color:#f8fafc;}
+.modal-prose{margin:0 0 8px;line-height:1.65;}
+.modal-prose h4{color:#cbd5e1;font-size:12px;margin:12px 0 6px;font-weight:800;letter-spacing:.5px;text-transform:none;}
+.modal-prose ul{margin:4px 0 8px;padding-left:20px;}
+.modal-prose li{margin-bottom:6px;line-height:1.55;}
+.modal-prose i{color:#e2e8f0;}
+.modal-prose a{color:#738ad0;text-decoration:none;}
+.modal-prose a:hover{text-decoration:underline;}
+@media (max-width:1280px){#game{grid-template-columns:270px minmax(0,1fr) 250px 300px;}}
+@media (max-width:980px){
+  html,body{height:auto;overflow-x:hidden;overflow-y:auto;}
+  body{overflow-y:auto;-webkit-overflow-scrolling:touch;}
+  #home,#settings,#results{height:auto;min-height:100vh;}
+  #home{padding:60px 18px 32px;}
+  #settings.active{padding:20px 14px;justify-content:flex-start;}
+  .settings-card{padding:18px 16px;}
+  .settings-columns{grid-template-columns:1fr;gap:18px;}
+  #game.active{display:flex;flex-direction:column;height:auto;min-height:100vh;padding:8px;gap:8px;}
+  #gameHeader{order:0;flex-direction:column;align-items:stretch;gap:8px;padding:8px 10px;}
+  .hdr-left{justify-content:center;}
+  .hdr-right{justify-content:center;flex-wrap:wrap;gap:6px;}
+  .hdr-right .btn{padding:5px 10px!important;font-size:11px!important;}
+  .pill{font-size:11px;padding:4px 9px;}
+  .logo{font-size:13px;}
+  #tableWrap{order:1;height:82vw;max-height:480px;min-height:200px;flex:0 0 auto;}
+  #sidebar{order:2;overflow:visible;padding-right:0;}
+  #bottomArea{order:3;grid-template-columns:1fr;gap:8px;}
+  #shapeTierCard{order:4;}
+  #thresholdCard{order:5;}
+  #scenario{gap:8px;}
+  .scard{padding:8px 10px;}
+  .svalue{font-size:13px;}
+  .discard-cat{font-size:18px;}
+  .sujigrid{gap:4px;}
+  .sujibtn{padding:9px 0;font-size:14px;}
+  .opt{font-size:13px;padding:10px 8px;}
+  .rate-grid .opt{padding:10px 4px;font-size:12px;}
+  .panel-table-wrap{max-height:300px;}
+  .direct-nav{grid-auto-rows:40px;}
+  .direct-nav .btn{height:42px;min-height:42px;font-size:11px;}
+  .panel-controls .btn{padding:10px 18px;font-size:13px;}
+  .modal-overlay{padding:12px;}
+  .modal-content{padding:16px 16px;max-height:90vh;}
+  .deal-in-chart{font-size:11px;}
+  .deal-in-chart th,.deal-in-chart td{padding:5px 3px;}
+  .shape-tile{width:36px;height:52px;}
+  .stf-num{font-size:17px;}
+  .stf-honor{font-size:18px;}
+  .cover-image,.cover-image-flipped{max-width:46%;opacity:.28;}
+  #yourTurn{font-size:12px;padding:6px 20px;bottom:14px;letter-spacing:2px;}
+}
+@media (max-width:700px){
+  #home h1{font-size:38px;letter-spacing:-.5px;}
+  .sub{font-size:18px;letter-spacing:1px;margin-top:-6px;margin-bottom:26px;}
+  .modes{grid-template-columns:1fr;}
+  .high-scores{grid-template-columns:1fr 1fr;}
+  .home-topbar{top:10px;right:10px;gap:6px;}
+  .home-topbar .btn{padding:6px 10px;font-size:11px;}
+  .results-card{padding:24px 18px;border-radius:16px;}
+  .results-card h1{font-size:21px;}
+  .grade{font-size:60px;}
+  .grade.g-score{font-size:44px;}
+  .results-grid{gap:8px;margin:16px 0 20px;}
+  .results-grid>div{padding:10px;}
+  .results-grid b{font-size:17px;}
+  .settings-grid,.settings-grid.settings-grid-3,.settings-grid.settings-grid-4{grid-template-columns:1fr 1fr;}
+  .settings-card h1{font-size:20px;}
+  .settings-actions{flex-direction:column;}
+  #tableWrap{height:88vw;}
+  .qtext{font-size:13px;}
+  .fb{font-size:12px;}
+}
+@media (max-width:420px){
+  #home h1{font-size:29px;}
+  .sub{font-size:15px;}
+  .sujibtn{padding:8px 0;font-size:13px;border-radius:6px;}
+  .sujigrid{gap:3px;}
+  .optrow.rate-grid{grid-template-columns:1fr;}
+}
+</style>
 </head>
 <body>
 <div id="app">
 
-  <div id="home" class="screen active">
-    <img src="long.png" alt="" class="cover-image">
-    <img src="long.png" alt="" class="cover-image-flipped">
-    <div class="home-topbar">
-      <button class="btn" id="langBtn">English</button>
-      <button class="btn" id="aboutBtn" data-i18n="home.about"><span>About</button>
-      <button class="btn" id="linkBtn" data-i18n="home.link" onclick="document.location='oracle.html'">Lookup</button>
-    </div>
-    <div class="home-content">
-    <div class="home-inner">
-      <h1 data-i18n="home.heading">1-shanten Oracle</h1>
-      <p class="sub" data-i18n="home.sub">Push-pull trainer</p>
-      <div class="modes">
-        <button class="mode-card selected" data-mode="regular">
-          <div class="mode-title" data-i18n="home.mode.regular.title">Regular</div>
-          <div class="mode-desc" data-i18n="home.mode.regular.desc">10-question scored run. Score &amp; grade revealed at the end.</div>
-        </button>
-        <button class="mode-card" data-mode="zen">
-          <div class="mode-title" data-i18n="home.mode.zen.title">Zen Mode</div>
-          <div class="mode-desc" data-i18n="home.mode.zen.desc">Endless practice. No timer, no score — just reps.</div>
-        </button>
-        <button class="mode-card" data-mode="timeattack">
-          <div class="mode-title" data-i18n="home.mode.timeattack.title">Time Attack</div>
-          <div class="mode-desc" data-i18n="home.mode.timeattack.desc">45s countdown. Correct push/fold buys time. Runs until the clock hits zero.</div>
-        </button>
-        <button class="mode-card" data-mode="custom">
-          <div class="mode-title" data-i18n="home.mode.custom.title">Custom Practice</div>
-          <div class="mode-desc" data-i18n="home.mode.custom.desc">Endless practice with hand-picked categories, turns, shapes, seatings, roles and length.</div>
-        </button>
-      </div>
-      <div class="high-scores">
-        <div class="hs-item">
-          <span data-i18n="home.hs.regular">Regular Best</span>
-          <b id="hsRegularGrade" class="hs-rank">—</b>
-          <div class="hs-sub" id="hsRegular">0 pts</div>
-        </div>
-        <div class="hs-item">
-          <span data-i18n="home.hs.timeattack">Time Attack Best</span>
-          <b id="hsTimeAttack" class="hs-rank">0</b>
-          <div class="hs-sub" data-i18n="home.hs.points">points</div>
-        </div>
-      </div>
-      <div class="home-actions">
-        <button class="btn primary big" id="startBtn" data-i18n="home.start">Start</button>
-      </div>
-      <p class="hint" data-i18n="home.hint">↑ ↓ to choose &nbsp;·&nbsp; Enter to start</p>
-    </div>
-    </div>
+<div id="home" class="screen active">
+  <img src="long.png" alt="" class="cover-image">
+  <img src="long.png" alt="" class="cover-image-flipped">
+  <div class="home-topbar">
+    <button class="btn" id="langBtn">English</button>
+    <button class="btn" id="aboutBtn" data-i18n="home.about"><span><i class="fa-solid fa-circle-info"></i></span></button>
+    <button class="btn" id="linkBtn" data-i18n="home.link" onclick="document.location='oracle.html'">Oracle</button>
   </div>
+  <div class="home-content">
+  <div class="home-inner">
+    <h1 data-i18n="home.heading">1-shanten Oracle</h1>
+    <p class="sub" data-i18n="home.sub">Push-pull trainer</p>
+    <div class="modes">
+      <button class="mode-card selected" data-mode="regular">
+        <div class="mode-title" data-i18n="home.mode.regular.title">Regular</div>
+        <div class="mode-desc" data-i18n="home.mode.regular.desc">10-question scored run. Score &amp; grade revealed at the end.</div>
+      </button>
+      <button class="mode-card" data-mode="zen">
+        <div class="mode-title" data-i18n="home.mode.zen.title">Zen Mode</div>
+        <div class="mode-desc" data-i18n="home.mode.zen.desc">Endless practice. No timer, no score — just reps.</div>
+      </button>
+      <button class="mode-card" data-mode="timeattack">
+        <div class="mode-title" data-i18n="home.mode.timeattack.title">Time Attack</div>
+        <div class="mode-desc" data-i18n="home.mode.timeattack.desc">45s countdown. Correct push/fold buys time. Runs until the clock hits zero.</div>
+      </button>
+      <button class="mode-card" data-mode="custom">
+        <div class="mode-title" data-i18n="home.mode.custom.title">Custom Practice</div>
+        <div class="mode-desc" data-i18n="home.mode.custom.desc">Endless practice with hand-picked categories, turns, shapes, seatings, roles and length.</div>
+      </button>
+    </div>
+    <div class="high-scores">
+      <div class="hs-item">
+        <span data-i18n="home.hs.regular">Regular Best</span>
+        <b id="hsRegularGrade" class="hs-rank">—</b>
+        <div class="hs-sub" id="hsRegular">0 pts</div>
+      </div>
+      <div class="hs-item">
+        <span data-i18n="home.hs.timeattack">Time Attack Best</span>
+        <b id="hsTimeAttack" class="hs-rank">0</b>
+        <div class="hs-sub" data-i18n="home.hs.points">points</div>
+      </div>
+    </div>
+    <div class="home-actions">
+      <button class="btn primary big" id="startBtn" data-i18n="home.start">Start</button>
+    </div>
+    <p class="hint" data-i18n="home.hint">↑ ↓ to choose &nbsp;·&nbsp; Enter to start</p>
+  </div>
+  </div>
+</div>
 
-  <div id="settings" class="screen">
-    <div class="settings-card">
-      <h1 data-i18n="settings.title">Custom Practice Setup</h1>
-      <p class="desc" data-i18n="settings.desc">Choose exactly what appears in Custom Practice. At least one option per section must remain enabled.</p>
-
-      <div class="settings-columns">
-        <div class="settings-col">
-          <div class="settings-section">
-            <div class="settings-section-title" data-i18n="settings.cat.title">Tile Categories</div>
-            <div class="settings-grid" id="catSettings">
-              <label class="chk"><input type="checkbox" data-cat="Double musuji 4/5/6"><span data-i18n="settings.cat.doubleMusuji">Double Musuji 4/5/6</span></label>
-              <label class="chk"><input type="checkbox" data-cat="Musuji 3/7"><span data-i18n="settings.cat.musuji37">Musuji 3/7</span></label>
-              <label class="chk"><input type="checkbox" data-cat="Musuji 2/8"><span data-i18n="settings.cat.musuji28">Musuji 2/8</span></label>
-              <label class="chk"><input type="checkbox" data-cat="Katamusuji 4/5/6"><span data-i18n="settings.cat.katamusuji">Katamusuji 4/5/6</span></label>
-              <label class="chk"><input type="checkbox" data-cat="Musuji 1/9"><span data-i18n="settings.cat.musuji19">Musuji 1/9</span></label>
-            </div>
-            <p class="settings-note" id="settingsNote" data-i18n="settings.note.cat">Select categories to include.</p>
+<div id="settings" class="screen">
+  <div class="settings-card">
+    <h1 data-i18n="settings.title">Custom Practice Setup</h1>
+    <p class="desc" data-i18n="settings.desc">Choose exactly what appears in Custom Practice. At least one option per section must remain enabled.</p>
+    <div class="settings-columns">
+      <div class="settings-col">
+        <div class="settings-section">
+          <div class="settings-section-title" data-i18n="settings.cat.title">Tile Categories</div>
+          <div class="settings-grid" id="catSettings">
+            <label class="chk"><input type="checkbox" data-cat="Double musuji 4/5/6"><span data-i18n="settings.cat.doubleMusuji">Double Musuji 4/5/6</span></label>
+            <label class="chk"><input type="checkbox" data-cat="Musuji 3/7"><span data-i18n="settings.cat.musuji37">Musuji 3/7</span></label>
+            <label class="chk"><input type="checkbox" data-cat="Musuji 2/8"><span data-i18n="settings.cat.musuji28">Musuji 2/8</span></label>
+            <label class="chk"><input type="checkbox" data-cat="Katamusuji 4/5/6"><span data-i18n="settings.cat.katamusuji">Katamusuji 4/5/6</span></label>
+            <label class="chk"><input type="checkbox" data-cat="Musuji 1/9"><span data-i18n="settings.cat.musuji19">Musuji 1/9</span></label>
           </div>
-
-          <div class="settings-section">
-            <div class="settings-section-title" data-i18n="settings.turn.title">Turns</div>
-            <div class="settings-grid settings-grid-3" id="turnSettings">
-              <label class="chk"><input type="checkbox" data-turn="5"><span data-i18n="settings.turn.5">Turn 5</span></label>
-              <label class="chk"><input type="checkbox" data-turn="9"><span data-i18n="settings.turn.9">Turn 9</span></label>
-              <label class="chk"><input type="checkbox" data-turn="14"><span data-i18n="settings.turn.14">Turn 14</span></label>
-            </div>
-            <p class="settings-note" id="turnsNote" data-i18n="settings.note.turn">Select turns to include.</p>
-          </div>
-
-          <div class="settings-grid settings-grid-3" id="shapeSettings">
-            <label class="chk"><input type="checkbox" data-shape="Perfect"><span data-i18n="settings.shape.perfect">[A] Perfect</span></label>
-            <label class="chk"><input type="checkbox" data-shape="Good*2"><span data-i18n="settings.shape.good2">[B] Ryanmen ×2</span></label>
-            <label class="chk"><input type="checkbox" data-shape="Good+Ryankan"><span data-i18n="settings.shape.goodRyankan">[C] Ryanmen + Ryankan</span></label>
-            <label class="chk"><input type="checkbox" data-shape="Good+Kanchan"><span data-i18n="settings.shape.goodKanchan">[D] Ryanmen + Kanchan</span></label>
-            <label class="chk"><input type="checkbox" data-shape="Bad+Ryankan"><span data-i18n="settings.shape.badRyankan">[E] Kanchan + Ryankan</span></label>
-            <label class="chk"><input type="checkbox" data-shape="Chiitoi"><span data-i18n="settings.shape.pairs">[F] Chiitoi</span></label>
-            <label class="chk"><input type="checkbox" data-shape="BadHeadless"><span data-i18n="settings.shape.badHeadless">[C−] Bad Headless</span></label>
-            <label class="chk"><input type="checkbox" data-shape="MediocreHeadless"><span data-i18n="settings.shape.mediocreHeadless">[C+] Mediocre Headless</span></label>
-            <label class="chk"><input type="checkbox" data-shape="BadKuttsuki"><span data-i18n="settings.shape.badKuttsuki">[C] Bad Kuttsuki</span></label>
-            <label class="chk"><input type="checkbox" data-shape="StandardHeadless"><span data-i18n="settings.shape.standardHeadless">[A−] Std Headless</span></label>
-            <label class="chk"><input type="checkbox" data-shape="StandardKuttsuki"><span data-i18n="settings.shape.standardKuttsuki">[A] Std Kuttsuki</span></label>
-            <label class="chk"><input type="checkbox" data-shape="GoodHeadless1"><span data-i18n="settings.shape.goodHeadless1">[S] Good Conjoined Headless</span></label>
-            <label class="chk"><input type="checkbox" data-shape="GoodHeadless2"><span data-i18n="settings.shape.goodHeadless2">[S] Ankou Headless</span></label>
-            <label class="chk"><input type="checkbox" data-shape="GoodKuttsuki"><span data-i18n="settings.shape.goodKuttsuki">[S+] Good Kuttsuki</span></label>
-          </div>
-
-          <div class="settings-section">
-            <div class="settings-section-title" data-i18n="settings.hand.title">Hand State</div>
-            <div class="settings-grid" id="handSettings">
-              <label class="chk"><input type="checkbox" data-hand="menzen"><span data-i18n="settings.hand.menzen">Menzen (Closed)</span></label>
-              <label class="chk"><input type="checkbox" data-hand="fuuro"><span data-i18n="settings.hand.fuuro">Fuuro (Open)</span></label>
-            </div>
-            <p class="settings-note" id="handsNote" data-i18n="settings.note.hand">Select hand states to include.</p>
-          </div>
+          <p class="settings-note" id="settingsNote" data-i18n="settings.note.cat">Select categories to include.</p>
         </div>
-
-        <div class="settings-col">
-          <div class="settings-section">
-            <div class="settings-section-title" data-i18n="settings.declarer.title">Riichi Caller Seat</div>
-            <div class="settings-grid settings-grid-3" id="declarerSettings">
-              <label class="chk"><input type="checkbox" data-declarer="kamicha"><span data-i18n="settings.declarer.kamicha">Kamicha</span></label>
-              <label class="chk"><input type="checkbox" data-declarer="toimen"><span data-i18n="settings.declarer.toimen">Toimen</span></label>
-              <label class="chk"><input type="checkbox" data-declarer="shimocha"><span data-i18n="settings.declarer.shimocha">Shimocha</span></label>
-            </div>
-            <p class="settings-note" id="declarersNote" data-i18n="settings.note.declarer">Select declarer seats to include.</p>
+        <div class="settings-section">
+          <div class="settings-section-title" data-i18n="settings.turn.title">Turns</div>
+          <div class="settings-grid settings-grid-3" id="turnSettings">
+            <label class="chk"><input type="checkbox" data-turn="5"><span data-i18n="settings.turn.5">Turn 5</span></label>
+            <label class="chk"><input type="checkbox" data-turn="9"><span data-i18n="settings.turn.9">Turn 9</span></label>
+            <label class="chk"><input type="checkbox" data-turn="14"><span data-i18n="settings.turn.14">Turn 14</span></label>
           </div>
-
-          <div class="settings-section">
-            <div class="settings-section-title" data-i18n="settings.playerrole.title">Your Role</div>
-            <div class="settings-grid" id="playerRoleSettings">
-              <label class="chk"><input type="checkbox" data-playerrole="Dealer"><span data-i18n="settings.role.dealer">Dealer</span></label>
-              <label class="chk"><input type="checkbox" data-playerrole="Non-Dealer"><span data-i18n="settings.role.nondealer">Non-Dealer</span></label>
-            </div>
-            <p class="settings-note" id="playerRolesNote" data-i18n="settings.note.playerrole">Select your role to include.</p>
+          <p class="settings-note" id="turnsNote" data-i18n="settings.note.turn">Select turns to include.</p>
+        </div>
+        <div class="settings-section">
+          <div class="settings-section-title" data-i18n="settings.ippatsu.title">Ippatsu Turn</div>
+          <div class="settings-grid" id="ippatsuSettings">
+            <label class="chk"><input type="checkbox" data-ippatsu="ippatsu"><span data-i18n="settings.ippatsu.yes">Ippatsu</span></label>
+            <label class="chk"><input type="checkbox" data-ippatsu="nonIppatsu"><span data-i18n="settings.ippatsu.no">No Ippatsu</span></label>
           </div>
-
-          <div class="settings-section">
-            <div class="settings-section-title" data-i18n="settings.opprole.title">Riichi Caller Role</div>
-            <div class="settings-grid" id="oppRoleSettings">
-              <label class="chk"><input type="checkbox" data-opprole="Dealer"><span data-i18n="settings.role.dealer">Dealer</span></label>
-              <label class="chk"><input type="checkbox" data-opprole="Non-Dealer"><span data-i18n="settings.role.nondealer">Non-Dealer</span></label>
-            </div>
-            <p class="settings-note" id="oppRolesNote" data-i18n="settings.note.opprole">Select the declarer's role to include.</p>
+          <p class="settings-note" id="ippatsuNote" data-i18n="settings.note.ippatsu">Select the riichi scenarios to include.</p>
+        </div>
+        <div class="settings-grid settings-grid-3" id="shapeSettings">
+          <label class="chk"><input type="checkbox" data-shape="Perfect"><span data-i18n="settings.shape.perfect">[A] Perfect</span></label>
+          <label class="chk"><input type="checkbox" data-shape="Good*2"><span data-i18n="settings.shape.good2">[B] Ryanmen ×2</span></label>
+          <label class="chk"><input type="checkbox" data-shape="Good+Ryankan"><span data-i18n="settings.shape.goodRyankan">[C] Ryanmen + Ryankan</span></label>
+          <label class="chk"><input type="checkbox" data-shape="Good+Kanchan"><span data-i18n="settings.shape.goodKanchan">[D] Ryanmen + Kanchan</span></label>
+          <label class="chk"><input type="checkbox" data-shape="Bad+Ryankan"><span data-i18n="settings.shape.badRyankan">[E] Kanchan + Ryankan</span></label>
+          <label class="chk"><input type="checkbox" data-shape="Chiitoi"><span data-i18n="settings.shape.pairs">[F] Chiitoi</span></label>
+          <label class="chk"><input type="checkbox" data-shape="BadHeadless"><span data-i18n="settings.shape.badHeadless">[C−] Bad Headless</span></label>
+          <label class="chk"><input type="checkbox" data-shape="MediocreHeadless"><span data-i18n="settings.shape.mediocreHeadless">[C+] Mediocre Headless</span></label>
+          <label class="chk"><input type="checkbox" data-shape="BadKuttsuki"><span data-i18n="settings.shape.badKuttsuki">[C] Bad Kuttsuki</span></label>
+          <label class="chk"><input type="checkbox" data-shape="StandardHeadless"><span data-i18n="settings.shape.standardHeadless">[A−] Std Headless</span></label>
+          <label class="chk"><input type="checkbox" data-shape="StandardKuttsuki"><span data-i18n="settings.shape.standardKuttsuki">[A] Std Kuttsuki</span></label>
+          <label class="chk"><input type="checkbox" data-shape="GoodHeadless1"><span data-i18n="settings.shape.goodHeadless1">[S] Good Conjoined Headless</span></label>
+          <label class="chk"><input type="checkbox" data-shape="GoodHeadless2"><span data-i18n="settings.shape.goodHeadless2">[S] Ankou Headless</span></label>
+          <label class="chk"><input type="checkbox" data-shape="GoodKuttsuki"><span data-i18n="settings.shape.goodKuttsuki">[S+] Good Kuttsuki</span></label>
+        </div>
+        <div class="settings-section">
+          <div class="settings-section-title" data-i18n="settings.hand.title">Hand State</div>
+          <div class="settings-grid" id="handSettings">
+            <label class="chk"><input type="checkbox" data-hand="menzen"><span data-i18n="settings.hand.menzen">Menzen (Closed)</span></label>
+            <label class="chk"><input type="checkbox" data-hand="fuuro"><span data-i18n="settings.hand.fuuro">Fuuro (Open)</span></label>
           </div>
-
-          <div class="settings-section">
-            <div class="settings-section-title" data-i18n="settings.qcount.title">Question Count</div>
-            <div class="settings-grid settings-grid-4" id="questionCountSettings">
-              <label class="chk"><input type="checkbox" data-qcount="5"><span>5</span></label>
-              <label class="chk"><input type="checkbox" data-qcount="10"><span>10</span></label>
-              <label class="chk"><input type="checkbox" data-qcount="15"><span>15</span></label>
-              <label class="chk"><input type="checkbox" data-qcount="20"><span>20</span></label>
-            </div>
-            <p class="settings-note" id="qcountNote" data-i18n="settings.note.qcount">Choose the length of the practice run.</p>
-          </div>
+          <p class="settings-note" id="handsNote" data-i18n="settings.note.hand">Select hand states to include.</p>
         </div>
       </div>
-
-      <div class="settings-actions">
-        <button class="btn" id="customBack" data-i18n="settings.back">Back</button>
-        <button class="btn primary" id="customStart" data-i18n="settings.start">Start Practice</button>
+      <div class="settings-col">
+        <div class="settings-section">
+          <div class="settings-section-title" data-i18n="settings.declarer.title">Riichi Caller Seat</div>
+          <div class="settings-grid settings-grid-3" id="declarerSettings">
+            <label class="chk"><input type="checkbox" data-declarer="kamicha"><span data-i18n="settings.declarer.kamicha">Kamicha</span></label>
+            <label class="chk"><input type="checkbox" data-declarer="toimen"><span data-i18n="settings.declarer.toimen">Toimen</span></label>
+            <label class="chk"><input type="checkbox" data-declarer="shimocha"><span data-i18n="settings.declarer.shimocha">Shimocha</span></label>
+          </div>
+          <p class="settings-note" id="declarersNote" data-i18n="settings.note.declarer">Select declarer seats to include.</p>
+        </div>
+        <div class="settings-section">
+          <div class="settings-section-title" data-i18n="settings.playerrole.title">Your Role</div>
+          <div class="settings-grid" id="playerRoleSettings">
+            <label class="chk"><input type="checkbox" data-playerrole="Dealer"><span data-i18n="settings.role.dealer">Dealer</span></label>
+            <label class="chk"><input type="checkbox" data-playerrole="Non-Dealer"><span data-i18n="settings.role.nondealer">Non-Dealer</span></label>
+          </div>
+          <p class="settings-note" id="playerRolesNote" data-i18n="settings.note.playerrole">Select your role to include.</p>
+        </div>
+        <div class="settings-section">
+          <div class="settings-section-title" data-i18n="settings.opprole.title">Riichi Caller Role</div>
+          <div class="settings-grid" id="oppRoleSettings">
+            <label class="chk"><input type="checkbox" data-opprole="Dealer"><span data-i18n="settings.role.dealer">Dealer</span></label>
+            <label class="chk"><input type="checkbox" data-opprole="Non-Dealer"><span data-i18n="settings.role.nondealer">Non-Dealer</span></label>
+          </div>
+          <p class="settings-note" id="oppRolesNote" data-i18n="settings.note.opprole">Select the declarer's role to include.</p>
+        </div>
+        <div class="settings-section">
+          <div class="settings-section-title" data-i18n="settings.qcount.title">Question Count</div>
+          <div class="settings-grid settings-grid-4" id="questionCountSettings">
+            <label class="chk"><input type="checkbox" data-qcount="5"><span>5</span></label>
+            <label class="chk"><input type="checkbox" data-qcount="10"><span>10</span></label>
+            <label class="chk"><input type="checkbox" data-qcount="15"><span>15</span></label>
+            <label class="chk"><input type="checkbox" data-qcount="20"><span>20</span></label>
+          </div>
+          <p class="settings-note" id="qcountNote" data-i18n="settings.note.qcount">Choose the length of the practice run.</p>
+        </div>
       </div>
+    </div>
+    <div class="settings-actions">
+      <button class="btn" id="customBack" data-i18n="settings.back">Back</button>
+      <button class="btn primary" id="customStart" data-i18n="settings.start">Start Practice</button>
     </div>
   </div>
+</div>
 
-  <div id="game" class="screen">
-    <header id="gameHeader">
-      <div class="hdr-left">
-        <span class="logo" data-i18n="game.logo">1-shanten Oracle</span>
-        <span class="pill" id="modePill">Regular</span>
-      </div>
-      <div class="hdr-right">
-        <span class="timer-wrapper">
-          <span class="pill time" id="timerPill">0s</span>
-          <span class="sec-delta" id="secDelta"></span>
-        </span>
-        <span class="pill combo" id="comboPill">Combo 0</span>
-        <span class="pill" id="qCounter">Q 1 / 10</span>
-        <span class="pill score" id="scorePill">Score 0</span>
-        <button class="btn" id="helpBtn" style="padding:6px 12px;font-size:14px;font-weight:800;">?</button>
-        <button class="btn" id="dealInBtn" style="padding:6px 14px;font-size:12px;" data-i18n="game.dealin">Deal-in Rate Reference</button>
-        <button class="btn" id="shapesBtn" style="padding:6px 14px;font-size:12px;" data-i18n="game.shapes">Shapes</button>
-        <button class="btn" id="exitBtn" style="padding:6px 14px;font-size:12px;" data-i18n="game.exit">Exit</button>
-      </div>
-    </header>
-
-    <div class="card" id="shapeTierCard">
-      <h3 data-i18n="game.panel.shapeTiers">Shape Tiers</h3>
-      <div class="panel-title" id="shapeTierTitle">Hidden</div>
-      <div class="panel-table-wrap" id="shapeTierTableWrap"></div>
-      <div class="direct-nav" id="shapeTierDirectNav"></div>
-      <div class="panel-controls">
-        <button class="btn" id="shapeTierPrev">◀</button>
-        <button class="panel-indicator-btn" id="shapeTierIndicator" title="Auto-select matching table" type="button">Auto</button>
-        <button class="btn" id="shapeTierNext">▶</button>
-      </div>
+<div id="game" class="screen">
+  <header id="gameHeader">
+    <div class="hdr-left">
+      <span class="logo" data-i18n="game.logo">1-shanten Oracle</span>
+      <span class="pill" id="modePill">Regular</span>
     </div>
-
-    <div id="tableWrap"><div id="board"></div></div>
-
-
-    <div class="card" id="thresholdCard">
-      <h3 data-i18n="game.panel.thresholds">Thresholds</h3>
-      <div class="panel-title" id="thresholdTitle">Hidden</div>
-      <div class="panel-table-wrap" id="thresholdTableWrap"></div>
-      <div class="direct-nav" id="thresholdDirectNav"></div>
-      <div class="panel-controls">
-        <button class="btn" id="threshPrev">◀</button>
-        <button class="panel-indicator-btn" id="threshIndicator" title="Auto-select matching table" type="button">Auto</button>
-        <button class="btn" id="threshNext">▶</button>
-      </div>
+    <div class="hdr-right">
+      <span class="timer-wrapper"><span class="pill time" id="timerPill">0.0s</span><span class="sec-delta" id="secDelta"></span></span>
+      <span class="pill combo" id="comboPill">Combo 0</span>
+      <span class="pill" id="qCounter">Q 1 / 10</span>
+      <span class="pill score" id="scorePill">Score 0</span>
+      <button class="btn" id="helpBtn" style="padding:6px 12px;font-size:14px;font-weight:800;">?</button>
+      <button class="btn" id="dealInBtn" style="padding:6px 14px;font-size:12px;" data-i18n="game.dealin"><i class="fa-solid fa-book"></i> Deal-in</button>
+      <button class="btn" id="shapesBtn" style="padding:6px 14px;font-size:12px;" data-i18n="game.shapes"><i class="fa-solid fa-scroll"></i> Shapes</button>
+      <button class="btn" id="exitBtn" style="padding:6px 14px;font-size:12px;" data-i18n="game.exit">Exit</button>
     </div>
-
-    <aside id="sidebar">
-      <div class="card">
-        <h3 data-i18n="game.quiz.title">Quiz</h3>
-        <div id="quizCard"></div>
-      </div>
-    </aside>
-
-    <div id="bottomArea">
-      <div id="scenario">
-        <div class="scard"><div class="slabel" data-i18n="game.sc.shape">Shape &amp; Status</div><div class="svalue" id="scShape">—</div></div>
-        <div class="scard"><div class="slabel" data-i18n="game.sc.yaku">Yaku &amp; Dora</div><div class="svalue hl" id="scYaku">—</div></div>
-        <div class="scard"><div class="slabel" data-i18n="game.sc.role">Role</div><div class="svalue" id="scRole">—</div></div>
-        <div class="scard"><div class="slabel" data-i18n="game.sc.declarer">Riichi Declarer</div><div class="svalue" id="scDecl">—</div></div>
-      </div>
-      <div class="card" id="discardCard">
-        <h3 data-i18n="game.discard.title">Your Discard — Tile Category</h3>
-        <div class="discard-cat" id="discardCat">Double Musuji</div>
-        <div class="discard-desc" id="discardDesc">4, 5 or 6 — Double non-suji tile</div>
-      </div>
+  </header>
+  <div class="card" id="shapeTierCard">
+    <h3 data-i18n="game.panel.shapeTiers">Shape Tiers</h3>
+    <div class="panel-title" id="shapeTierTitle">Hidden</div>
+    <div class="panel-table-wrap" id="shapeTierTableWrap"></div>
+    <div class="direct-nav" id="shapeTierDirectNav"></div>
+    <div class="panel-controls">
+      <button class="btn" id="shapeTierPrev">◀</button>
+      <button class="panel-indicator-btn" id="shapeTierIndicator" title="Auto-select matching table" type="button">Auto</button>
+      <button class="btn" id="shapeTierNext">▶</button>
     </div>
   </div>
-
-  <div id="results" class="screen">
-    <div class="results-card">
-      <h1 id="resultsTitle">Run Complete</h1>
-      <div class="grade" id="gradeLetter">A</div>
-      <div class="results-grid" id="resultsGrid"></div>
-      <div class="res-actions">
-        <button class="btn primary big" id="playAgain" data-i18n="results.playAgain">Play Again</button>
-        <button class="btn big" id="backToMenu" data-i18n="results.menu">Back to Menu</button>
-      </div>
+  <div id="tableWrap"><div id="board"></div><div id="yourTurn"></div></div>
+  <div class="card" id="thresholdCard">
+    <h3 data-i18n="game.panel.thresholds">Thresholds</h3>
+    <div class="panel-title" id="thresholdTitle">Hidden</div>
+    <div class="panel-table-wrap" id="thresholdTableWrap"></div>
+    <div class="direct-nav" id="thresholdDirectNav"></div>
+    <div class="panel-controls">
+      <button class="btn" id="threshPrev">◀</button>
+      <button class="panel-indicator-btn" id="threshIndicator" title="Auto-select matching table" type="button">Auto</button>
+      <button class="btn" id="threshNext">▶</button>
     </div>
   </div>
-
-  <div id="dealInModal" class="modal-overlay">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2 data-i18n="dealin.title">Deal-in Rate Reference</h2>
-        <button class="modal-close" id="closeDealIn" aria-label="Close">×</button>
-      </div>
-      <p class="modal-desc" data-i18n="dealin.desc">Minimum passed sujis needed to reach each estimated deal-in rate range, by tile category.</p>
-      <div id="dealInChartWrap"></div>
-      <div class="deal-in-note">
-        <strong data-i18n="dealin.modTitle">Common modifiers (not in table):</strong><br>
-        <span data-i18n="dealin.modBody">Dora: +2% · Sotogawa: −5% · 1-chance: −3% · Anko/Anko-suji: +2%</span>
-        <span class="warn" data-i18n="dealin.modWarn">These modifiers are not accounted for when determining the estimated deal-in rates.</span>
-      </div>
+  <aside id="sidebar">
+    <div class="card">
+      <h3 data-i18n="game.quiz.title">Quiz</h3>
+      <div id="quizCard"></div>
+    </div>
+  </aside>
+  <div id="bottomArea">
+    <div id="scenario">
+      <div class="scard"><div class="slabel" data-i18n="game.sc.shape">Shape &amp; Status</div><div class="svalue" id="scShape">—</div></div>
+      <div class="scard"><div class="slabel" data-i18n="game.sc.yaku">Yaku &amp; Dora</div><div class="svalue hl" id="scYaku">—</div></div>
+      <div class="scard"><div class="slabel" data-i18n="game.sc.role">Role</div><div class="svalue" id="scRole">—</div></div>
+      <div class="scard"><div class="slabel" data-i18n="game.sc.declarer">Riichi Declarer</div><div class="svalue" id="scDecl">—</div></div>
+    </div>
+    <div class="card" id="discardCard">
+      <h3 data-i18n="game.discard.title">Your Discard — Tile Category</h3>
+      <div class="discard-cat" id="discardCat">Double Musuji</div>
+      <div class="discard-desc" id="discardDesc">4, 5 or 6 — Double non-suji tile</div>
     </div>
   </div>
+</div>
 
-  <div id="shapesModal" class="modal-overlay">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2 data-i18n="shapes.title">Shape Reference</h2>
-        <button class="modal-close" id="closeShapes" aria-label="Close">×</button>
-      </div>
-      <p class="modal-desc" data-i18n="shapes.desc">Overview of the hand shape categories with example 13-tile hands.</p>
-      <div id="shapesContentWrap" class="shape-list"></div>
+<div id="results" class="screen">
+  <div class="results-card">
+    <button class="btn-share-corner" id="shareBtn" data-i18n="results.share" title="Share result"><i class="fa-solid fa-share-nodes"></i> Share</button>
+    <div class="results-app-title" data-i18n="home.heading">1-shanten Oracle</div>
+    <h1 id="resultsTitle">Run Complete</h1>
+    <div class="grade" id="gradeLetter">A</div>
+    <div class="results-grid" id="resultsGrid"></div>
+    <div class="res-actions">
+      <button class="btn primary big" id="playAgain" data-i18n="results.playAgain">Play Again</button>
+      <button class="btn big" id="backToMenu" data-i18n="results.menu">Back to Menu</button>
     </div>
   </div>
+</div>
 
-  <div id="helpModal" class="modal-overlay">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2 data-i18n="help.title">How to Play</h2>
-        <button class="modal-close" id="closeHelp" aria-label="Close">×</button>
-      </div>
-      <div class="help-content" id="helpBody"></div>
+<div id="dealInModal" class="modal-overlay">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2 data-i18n="dealin.title">Deal-in Rate Reference</h2>
+      <button class="modal-close" id="closeDealIn" aria-label="Close">×</button>
+    </div>
+    <p class="modal-desc" data-i18n="dealin.desc">Minimum passed sujis needed to reach each estimated deal-in rate range, by tile category.</p>
+    <div id="dealInChartWrap"></div>
+    <div class="deal-in-note">
+      <strong data-i18n="dealin.modTitle">Common modifiers (not in table):</strong><br>
+      <span data-i18n="dealin.modBody">Dora: +2% · Sotogawa: −5% · 1-chance: −3% · Anko/Anko-suji: +2%</span>
+      <span class="warn" data-i18n="dealin.modWarn">These modifiers are not accounted for when determining the estimated deal-in rates.</span>
     </div>
   </div>
+</div>
 
-  <div id="aboutModal" class="modal-overlay">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2 data-i18n="about.title">About</h2>
-        <button class="modal-close" id="closeAbout" aria-label="Close">×</button>
-      </div>
-      <div class="modal-body">
-        <h3 data-i18n="about.overview">Overview</h3>
-        <p data-i18n="about.p1">…</p>
-        <h3 data-i18n="about.howToUse">How to Use</h3>
-        <div class="modal-prose" data-i18n="about.p2">…</div>
-        <h3 data-i18n="about.sources">Sources and Methodology</h3>
-        <p data-i18n="about.p4">…</p>
-        <h3 data-i18n="about.credits">Credits</h3>
-        <p data-i18n="about.p3">…</p>
-      </div>
-      <img src="birb.png" alt="birb" style="max-width: 75px; margin-top: 12px;">
+<div id="shapesModal" class="modal-overlay">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2 data-i18n="shapes.title">Shape Reference</h2>
+      <button class="modal-close" id="closeShapes" aria-label="Close">×</button>
     </div>
+    <p class="modal-desc" data-i18n="shapes.desc">Overview of the hand shape categories with example 13-tile hands.</p>
+    <div id="shapesContentWrap" class="shape-list"></div>
   </div>
+</div>
+
+<div id="helpModal" class="modal-overlay">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2 data-i18n="help.title">How to Play</h2>
+      <button class="modal-close" id="closeHelp" aria-label="Close">×</button>
+    </div>
+    <div class="help-content" id="helpBody"></div>
+  </div>
+</div>
+
+<div id="aboutModal" class="modal-overlay">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2 data-i18n="about.title">About</h2>
+      <button class="modal-close" id="closeAbout" aria-label="Close">×</button>
+    </div>
+    <div class="modal-body">
+      <h3 data-i18n="about.overview">Overview</h3>
+      <p data-i18n="about.p1">…</p>
+      <h3 data-i18n="about.howToUse">How to Use</h3>
+      <div class="modal-prose" data-i18n="about.p2">…</div>
+      <h3 data-i18n="about.sources">Sources and Methodology</h3>
+      <p data-i18n="about.p4">…</p>
+      <h3 data-i18n="about.credits">Credits</h3>
+      <p data-i18n="about.p3">…</p>
+    </div>
+    <img src="birb.png" alt="birb" style="max-width: 75px; margin-top: 12px;">
+  </div>
+</div>
 
 </div>
-<script src="script.js"></script>
+<script>
+const DEAL_IN_RATES = {
+  "Double musuji 4/5/6":    { 0: 0.06, 1: 0.06, 2: 0.07, 3: 0.08, 4: 0.09, 5: 0.10, 6: 0.12, 7: 0.13, 8: 0.14, 9: 0.16, 10: 0.18, 11: 0.20, 12: 0.22, 13: 0.26 },
+  "Musuji 3/7":             { 0: 0.06, 1: 0.06, 2: 0.06, 3: 0.07, 4: 0.08, 5: 0.08, 6: 0.09, 7: 0.09, 8: 0.10, 9: 0.11, 10: 0.13, 11: 0.14, 12: 0.16, 13: 0.19, 14: 0.23 },
+  "Musuji 2/8":             { 0: 0.05, 1: 0.05, 2: 0.05, 3: 0.06, 4: 0.07, 5: 0.07, 6: 0.08, 7: 0.09, 8: 0.09, 9: 0.10, 10: 0.12, 11: 0.13, 12: 0.15, 13: 0.18, 14: 0.22 },
+  "Katamusuji 4/5/6":       { 0: 0.03, 1: 0.03, 2: 0.04, 3: 0.05, 4: 0.05, 5: 0.06, 6: 0.07, 7: 0.07, 8: 0.08, 9: 0.09, 10: 0.10, 11: 0.12, 12: 0.14, 13: 0.15 },
+  "Musuji 1/9":             { 0: 0.03, 1: 0.03, 2: 0.04, 3: 0.05, 4: 0.06, 5: 0.06, 6: 0.07, 7: 0.07, 8: 0.08, 9: 0.09, 10: 0.10, 11: 0.12, 12: 0.14, 13: 0.15 }
+};
+const RATE_BUCKETS = [
+  { label: '< 5%', min: 0.00, max: 0.05, test: r => r < 0.05 },
+  { label: '5% – 10%', min: 0.05, max: 0.10, test: r => r >= 0.05 && r < 0.10 },
+  { label: '10% – 15%', min: 0.10, max: 0.15, test: r => r >= 0.10 && r < 0.15 },
+  { label: '15% – 20%', min: 0.15, max: 0.20, test: r => r >= 0.15 && r < 0.20 },
+  { label: '20% – 25%', min: 0.20, max: 0.25, test: r => r >= 0.20 && r < 0.25 },
+  { label: '> 25%', min: 0.25, max: 1.00, test: r => r >= 0.25 }
+];
+function rateToBucket(rate) { for (const b of RATE_BUCKETS) if (b.test(rate)) return b.label; return RATE_BUCKETS[RATE_BUCKETS.length - 1].label; }
+function formatRate(rate) { const pct = rate * 100; if (pct < 1 && pct > 0) return pct.toFixed(1) + '%'; return Math.round(pct) + '%'; }
+function getVerdictLevel(rate, threshold) {
+  if (threshold >= 1.0) return 'ironPush';
+  if (threshold <= 0.001) return 'ironPull';
+  if (rate > threshold) { const gap = rate - threshold; return gap >= 0.10 ? 'ironPull' : 'pull'; }
+  if (rate === threshold) return 'borderlineFavorsPull';
+  const gap = threshold - rate;
+  if (gap < 0.005) return 'borderlineFavorsPull';
+  if (gap < 0.015) return 'borderlineEither';
+  if (gap < 0.04)  return 'borderlineFavorsPush';
+  if (gap < 0.10)  return 'push';
+  return 'ironPush';
+}
+function isBorderlineVerdict(level) { return level.startsWith('borderline'); }
+const CLOSED_THRESHOLDS = {
+  "VS Non-Dealer": { "Turn 5": { 1: 1.0, 2: 1.0, 3: 0.15, 4: 0.10, 5: 0.07, 6: 0.06, 7: 0.03, 8: 0.01 }, "Turn 9": { 1: 0.23, 2: 0.18, 3: 0.13, 4: 0.08, 5: 0.06, 6: 0.06, 7: 0.03, 8: 0.01 }, "Turn 14": { 1: 0.12, 2: 0.10, 3: 0.08, 4: 0.06, 5: 0.04, 6: 0.02, 7: 0.02, 8: 0.01 } },
+  "VS Dealer": { "Turn 5": { 1: 1.0, 2: 0.15, 3: 0.10, 4: 0.07, 5: 0.05, 6: 0.04, 7: 0.02, 8: 0.01 }, "Turn 9": { 1: 0.15, 2: 0.13, 3: 0.08, 4: 0.05, 5: 0.04, 6: 0.04, 7: 0.02, 8: 0.01 }, "Turn 14": { 1: 0.05, 2: 0.05, 3: 0.04, 4: 0.03, 5: 0.02, 6: 0.02, 7: 0.01, 8: 0.00 } },
+  "As Dealer": { "Turn 5": { 1: 1.0, 2: 1.0, 3: 1.0, 4: 1.0, 5: 0.22, 6: 0.13, 7: 0.09, 8: 0.05 }, "Turn 9": { 1: 1.0, 2: 1.0, 3: 1.0, 4: 0.25, 5: 0.20, 6: 0.12, 7: 0.08, 8: 0.05 }, "Turn 14": { 1: 0.24, 2: 0.20, 3: 0.17, 4: 0.13, 5: 0.10, 6: 0.09, 7: 0.07, 8: 0.04 } }
+};
+const OPEN_THRESHOLDS = {
+  "VS Non-Dealer": { "Turn 5": { 1: 1.0, 2: 1.0, 3: 1.0, 4: 0.24, 5: 0.17, 6: 0.13, 7: 0.09, 8: 0.06, 9: 0.04, 10: 0.03, 11: 0.00 }, "Turn 9": { 1: 1.0, 2: 1.0, 3: 0.24, 4: 0.21, 5: 0.14, 6: 0.12, 7: 0.08, 8: 0.06, 9: 0.04, 10: 0.03, 11: 0.00 }, "Turn 14": { 1: 0.24, 2: 0.18, 3: 0.16, 4: 0.14, 5: 0.11, 6: 0.09, 7: 0.07, 8: 0.06, 9: 0.04, 10: 0.03, 11: 0.00 } },
+  "VS Dealer": { "Turn 5": { 1: 1.0, 2: 1.0, 3: 1.0, 4: 0.18, 5: 0.11, 6: 0.09, 7: 0.07, 8: 0.04, 9: 0.03, 10: 0.02, 11: 0.00 }, "Turn 9": { 1: 0.24, 2: 0.21, 3: 0.18, 4: 0.12, 5: 0.10, 6: 0.06, 7: 0.05, 8: 0.04, 9: 0.02, 10: 0.01, 11: 0.00 }, "Turn 14": { 1: 0.16, 2: 0.10, 3: 0.09, 4: 0.07, 5: 0.06, 6: 0.05, 7: 0.04, 8: 0.03, 9: 0.02, 10: 0.01, 11: 0.00 } },
+  "As Dealer": { "Turn 5": { 1: 1.0, 2: 1.0, 3: 1.0, 4: 1.0, 5: 1.0, 6: 1.0, 7: 1.0, 8: 1.0, 9: 0.14, 10: 0.10, 11: 0.07 }, "Turn 9": { 1: 1.0, 2: 1.0, 3: 1.0, 4: 1.0, 5: 1.0, 6: 0.24, 7: 0.24, 8: 0.18, 9: 0.12, 10: 0.10, 11: 0.07 }, "Turn 14": { 1: 1.0, 2: 1.0, 3: 0.30, 4: 0.26, 5: 0.20, 6: 0.18, 7: 0.14, 8: 0.13, 9: 0.10, 10: 0.10, 11: 0.07 } }
+};
+const CLOSED_TIER_MAP = {
+  'Perfect|4': 1, 'Perfect|3': 2, 'Good*2|4': 2, 'Perfect|2': 3, 'Good*2|3': 3, 'Good+Ryankan|4': 3,
+  'Perfect|1': 4, 'Good*2|2': 4, 'Good+Ryankan|3': 4, 'Good+Kanchan|4': 4,
+  'Good*2|1': 5, 'Good+Ryankan|2': 5, 'Bad+Ryankan|4': 5, 'Good+Kanchan|3': 5, 'Chiitoi|5': 5,
+  'Bad+Ryankan|3': 6, 'Chiitoi|4': 6, 'Good+Ryankan|1': 7, 'Good+Kanchan|2': 7, 'Bad+Ryankan|2': 7, 'Chiitoi|3': 7,
+  'Good+Kanchan|1': 8, 'Bad+Ryankan|1': 8
+};
+const CHIITOI_POINTS = { nonDealer: { 3: 3200, 4: 6400, 5: 8000 }, dealer: { 3: 4800, 4: 9600, 5: 12000 } };
+const OPEN_TIER_MAP_ND_C = {
+  'Perfect|4': 1, 'Good*2|4': 2, 'Perfect|3': 3, 'Good+Ryankan|4': 3, 'Good+Kanchan|4': 4, 'Good*2|3': 4,
+  'Perfect|2': 5, 'Good+Ryankan|3': 5, 'Good+Kanchan|3': 6, 'Bad+Ryankan|4': 5, 'Perfect|1': 6, 'Good*2|2': 6,
+  'Good*2|1': 7, 'Good+Ryankan|2': 7, 'Good+Kanchan|2': 8, 'Bad+Ryankan|3': 7,
+  'Good+Ryankan|1': 8, 'Good+Kanchan|1': 9, 'Bad+Ryankan|2': 9, 'Bad+Ryankan|1': 10
+};
+const OPEN_TIER_MAP_ND_NC = {
+  'Perfect|4': 2, 'Good*2|4': 3, 'Perfect|3': 4, 'Good+Ryankan|4': 4, 'Good*2|3': 5, 'Good+Kanchan|4': 5,
+  'Perfect|2': 6, 'Good+Ryankan|3': 6, 'Bad+Ryankan|4': 6, 'Perfect|1': 7, 'Good*2|2': 7, 'Good+Kanchan|3': 7,
+  'Good*2|1': 8, 'Good+Ryankan|2': 8, 'Bad+Ryankan|3': 8,
+  'Good+Ryankan|1': 9, 'Good+Kanchan|2': 9, 'Good+Kanchan|1': 10, 'Bad+Ryankan|2': 10, 'Bad+Ryankan|1': 10
+};
+const OPEN_TIER_MAP_D_C = {
+  'Perfect|4': 1, 'Good*2|4': 2, 'Perfect|3': 3, 'Good+Ryankan|4': 3, 'Good*2|3': 4, 'Good+Kanchan|4': 4,
+  'Perfect|2': 5, 'Good+Ryankan|3': 5, 'Bad+Ryankan|4': 5, 'Perfect|1': 6, 'Good*2|2': 6, 'Good+Kanchan|3': 6,
+  'Good*2|1': 8, 'Good+Ryankan|2': 8, 'Good+Kanchan|2': 9, 'Bad+Ryankan|3': 8,
+  'Good+Ryankan|1': 9, 'Good+Kanchan|1': 10, 'Bad+Ryankan|2': 10, 'Bad+Ryankan|1': 11
+};
+const OPEN_TIER_MAP_D_NC = {
+  'Perfect|4': 2, 'Good*2|4': 3, 'Perfect|3': 4, 'Good+Ryankan|4': 4, 'Good*2|3': 5, 'Good+Kanchan|4': 5,
+  'Perfect|2': 6, 'Good+Ryankan|3': 7, 'Bad+Ryankan|4': 7, 'Perfect|1': 8, 'Good*2|2': 8, 'Good+Kanchan|3': 8,
+  'Good*2|1': 9, 'Good+Ryankan|2': 9, 'Bad+Ryankan|3': 9,
+  'Good+Ryankan|1': 10, 'Good+Kanchan|2': 10, 'Good+Kanchan|1': 11, 'Bad+Ryankan|2': 11
+};
+const SHAPE_LABELS = { 'Perfect': 'Perfect', 'Good*2': 'Ryanmen ×2', 'Good+Ryankan': 'Ryanmen + Ryankan', 'Good+Kanchan': 'Ryanmen + Kanchan', 'Bad+Ryankan': 'Kanchan + Ryankan', 'Chiitoi': 'Chiitoi', 'BadHeadless': 'Bad Headless', 'MediocreHeadless': 'Mediocre Headless', 'BadKuttsuki': 'Bad Kuttsuki', 'StandardHeadless': 'Standard Headless', 'StandardKuttsuki': 'Standard Kuttsuki', 'GoodHeadless1': 'Good Conjoined Headless', 'GoodHeadless2': 'Ankou Headless', 'GoodKuttsuki': 'Good Kuttsuki' };
+const SHAPE_LABEL_KEYS = { 'Perfect': 'settings.shape.perfect', 'Good*2': 'settings.shape.good2', 'Good+Ryankan': 'settings.shape.goodRyankan', 'Good+Kanchan': 'settings.shape.goodKanchan', 'Bad+Ryankan': 'settings.shape.badRyankan', 'Chiitoi': 'settings.shape.pairs', 'BadHeadless': 'settings.shape.badHeadless', 'MediocreHeadless': 'settings.shape.mediocreHeadless', 'BadKuttsuki': 'settings.shape.badKuttsuki', 'StandardHeadless': 'settings.shape.standardHeadless', 'StandardKuttsuki': 'settings.shape.standardKuttsuki', 'GoodHeadless1': 'settings.shape.goodHeadless1', 'GoodHeadless2': 'settings.shape.goodHeadless2', 'GoodKuttsuki': 'settings.shape.goodKuttsuki' };
+const SHAPE_REFERENCE = [
+  { nameKey: 'settings.shape.perfect', acceptance: 20, goodRate: '100%', hand: ['1m','2m','3m','6m','7m','8m','2p','2p','3p','2s','2s','7s','8s'] },
+  { nameKey: 'settings.shape.good2', acceptance: 16, goodRate: '100%', hand: ['2m','2m','2m','4m','5m','6m','3p','4p','4z','4s','5s','8s','8s'] },
+  { nameKey: 'settings.shape.goodRyankan', acceptance: 16, goodRate: '50%', hand: ['2m','3m','0m','6m','7m','1p','3p','5p','9p','9p','3z','3z','3z'] },
+  { nameKey: 'settings.shape.goodKanchan', acceptance: 12, goodRate: '33%', hand: ['2m','3m','5m','6m','7m','4p','6p','9p','9p','3z','3z','3z','9s'] },
+  { nameKey: 'settings.shape.badRyankan', acceptance: 12, goodRate: '0%', hand: ['6m','7m','8m','2p','4p','6p','6p','4s','6s','8s','7z','7z','7z'] },
+  { nameKey: 'settings.shape.pairs', acceptance: 9, goodRate: '0%', hand: ['2m','2m','5m','0m','3p','3p','8p','8p','2s','2s','1z','5z','6z'] }
+];
+const OTHER_SHAPES = {
+  'BadHeadless': { id: 'C-', baseShape: 'Good+Ryankan', tierOffset: 0, en: 'Bad Headless', ja: '悪いヘッドレス', accept: 16, good: '0%' },
+  'MediocreHeadless': { id: 'C+', baseShape: 'Good+Ryankan', tierOffset: 0, en: 'Mediocre Headless', ja: 'やや悪いヘッドレス', accept: 24, good: '25%' },
+  'BadKuttsuki': { id: 'C', baseShape: 'Good+Ryankan', tierOffset: 0, en: 'Bad Kuttsuki', ja: '悪いくっつき', accept: 32, good: '25%' },
+  'StandardHeadless': { id: 'A-', baseShape: 'Perfect', tierOffset: 0, en: 'Standard Headless', ja: '標準ヘッドレス', accept: 28, good: '43%' },
+  'StandardKuttsuki': { id: 'A', baseShape: 'Perfect', tierOffset: 0, en: 'Standard Kuttsuki', ja: '標準くっつき', accept: 40, good: '40%' },
+  'GoodHeadless1': { id: 'S', baseShape: 'Perfect', tierOffset: -1, en: 'Good Conjoined Headless', ja: '連続形ヘッドレス', accept: 33, good: '79%' },
+  'GoodHeadless2': { id: 'S', baseShape: 'Perfect', tierOffset: -1, en: 'Ankou Headless', ja: '暗刻ヘッドレス', accept: 28, good: '100%' },
+  'GoodKuttsuki': { id: 'S+', baseShape: 'Perfect', tierOffset: -1, en: 'Good Kuttsuki', ja: '良いくっつき', accept: 45, good: '53%' }
+};
+const EXTRA_SHAPE_HANDS = {
+  'BadHeadless': ['1m','2m','3m','6m','8m','3p','4p','7p','8p','9p','3s','6s','7s'],
+  'MediocreHeadless': ['1m','2m','3m','6m','7m','3p','4p','7p','8p','9p','6s','7s','8s'],
+  'BadKuttsuki': ['1m','2m','3m','9m','9m','2p','7p','8p','9p','2s','6s','7s','8s'],
+  'StandardHeadless': ['1m','2m','3m','6m','7m','3p','4p','7p','8p','9p','6s','7s','8s'],
+  'StandardKuttsuki': ['1m','2m','3m','9m','9m','3p','7p','8p','9p','3s','6s','7s','8s'],
+  'GoodHeadless1': ['1m','2m','3m','4m','5m','3p','4p','7p','8p','9p','6s','7s','8s'],
+  'GoodHeadless2': ['1m','2m','3m','6m','7m','3p','4p','9p','9p','9p','6s','7s','8s'],
+  'GoodKuttsuki': ['1m','2m','3m','9m','9m','3p','7p','8p','9p','5s','6s','7s','8s']
+};
+function isOtherShape(s) { return !!OTHER_SHAPES[s]; }
+function getBaseShape(shape) { return isOtherShape(shape) ? OTHER_SHAPES[shape].baseShape : shape; }
+function getShapeOffset(shape) { return isOtherShape(shape) ? OTHER_SHAPES[shape].tierOffset : 0; }
+const CATEGORY_INFO = {
+  'Double musuji 4/5/6': { label: 'Double Musuji 4/5/6', desc: '4, 5 or 6 — Double non-suji tile' },
+  'Musuji 3/7': { label: 'Musuji 3/7', desc: 'A 3 or 7 — A non-suji tile' },
+  'Musuji 2/8': { label: 'Musuji 2/8', desc: 'A 2 or 8 — A non-suji tile' },
+  'Katamusuji 4/5/6': { label: 'Katamusuji 4/5/6', desc: 'Middle tile — Half suji.' },
+  'Musuji 1/9': { label: 'Musuji 1/9', desc: 'A terminal — A non-suji tile' }
+};
+const ALL_CATEGORIES = Object.keys(CATEGORY_INFO);
+const ALL_TURNS = [5, 9, 14];
+const ALL_SHAPES = ['Perfect', 'Good*2', 'Good+Ryankan', 'Good+Kanchan', 'Bad+Ryankan', 'Chiitoi'];
+const ALL_OTHER_SHAPES = ['BadHeadless', 'MediocreHeadless', 'BadKuttsuki', 'StandardHeadless', 'StandardKuttsuki', 'GoodHeadless1', 'GoodHeadless2', 'GoodKuttsuki'];
+const ALL_QUESTION_SHAPES = ALL_SHAPES.concat(ALL_OTHER_SHAPES);
+const ALL_HANDS = ['menzen', 'fuuro'];
+const ALL_DECLARERS = ['kamicha', 'toimen', 'shimocha'];
+const ALL_PLAYER_ROLES = ['Dealer', 'Non-Dealer'];
+const ALL_OPP_ROLES = ['Dealer', 'Non-Dealer'];
+const ALL_IPPATSU_OPTIONS = ['ippatsu', 'nonIppatsu'];
+const ALL_QUESTION_COUNTS = [5, 10, 15, 20];
+const MODE_CONFIG = { regular: { total: 10, label: 'Regular' }, zen: { total: 0, label: 'Zen Mode' }, timeattack: { total: 0, label: 'Time Attack' }, custom: { total: 10, label: 'Custom Practice' } };
+const SEAT_LABEL_KEYS = { kamicha: 'seat.kamicha', toimen: 'seat.toimen', shimocha: 'seat.shimocha' };
+const SEAT_ORDER = ['shimocha', 'toimen', 'kamicha', 'player'];
+const WIND_NAMES = ['East', 'South', 'West', 'North'];
+const WIND_CHARS = { East: '東', South: '南', West: '西', North: '北' };
+const ROLE_KEY_MAP = { 'VS Non-Dealer': 'role.vsND', 'VS Dealer': 'role.vsD', 'As Dealer': 'role.asD' };
+const ROUND_LABELS = ['East 1-0','East 1-1','East 1-2','East 2-0','East 2-1','East 2-2','East 3-0','East 3-1','East 3-2','East 4-0','East 4-1','East 4-2'];
+const ALL_TILES = [];
+for (const s of ['m', 'p', 's']) for (let i = 1; i <= 9; i++) ALL_TILES.push(`${i}${s}`);
+for (let i = 1; i <= 7; i++) ALL_TILES.push(`${i}z`);
+const HONOR_CHARS = { 1: '東', 2: '南', 3: '西', 4: '北', 5: '白', 6: '發', 7: '中' };
+const SUIT_CHARS = { m: '萬', p: '筒', s: '索' };
+const SUJI_MAP = { 1: ['4'], 2: ['5'], 3: ['6'], 4: ['4', '7'], 5: ['5', '8'], 6: ['6', '9'], 7: ['7'], 8: ['8'], 9: ['9'] };
+const SUJI_DISPLAY = { 4: '1-4', 5: '2-5', 6: '3-6', 7: '4-7', 8: '5-8', 9: '6-9' };
+const BOARD_W = 1120, BOARD_H = 920;
+const ANCHORS = { toimen: { x: 560, y: 160 }, kamicha: { x: 170, y: 500 }, shimocha: { x: 950, y: 500 }, player: { x: 560, y: 685 } };
+const POND_ROT = { toimen: 180, kamicha: 90, shimocha: -90, player: 0 };
+const PLAYER_POND_TOP = 628;
+const PLAYER_LABEL_Y = 590;
+const HS_KEY = 'shanten_highscores';
+const CUSTOM_KEY = 'shanten_custom_config';
+const LANG_KEY = 'shanten_lang';
+const APP_URL = 'https://1-shanten-oracle-trainer.vercel.app/';
+
+const I18N = {
+  en: {
+    'page.title': '1-shanten Oracle — Push-Pull Trainer',
+    'home.link': 'The Oracle <i class="fa-solid fa-hamsa"></i>',
+    'home.about': '<i class="fa-solid fa-circle-info"></i> About',
+    'home.heading': '1-shanten Oracle',
+    'home.sub': 'Push-pull trainer',
+    'home.start': 'Start',
+    'home.hint': '↑ ↓ to choose · Enter to start',
+    'home.mode.regular.title': 'Regular',
+    'home.mode.regular.desc': '10-question scored run. Score & grade revealed at the end.',
+    'home.mode.zen.title': 'Zen Mode',
+    'home.mode.zen.desc': 'Endless practice. No timer, no score — just reps.',
+    'home.mode.timeattack.title': 'Time Attack',
+    'home.mode.timeattack.desc': '45s countdown. Correct push/pull buys time. Runs until the clock hits zero.',
+    'home.mode.custom.title': 'Custom Practice',
+    'home.mode.custom.desc': 'Endless practice with hand-picked categories, turns, shapes, seatings, roles and length.',
+    'home.hs.regular': 'Regular Best', 'home.hs.timeattack': 'Time Attack Best', 'home.hs.points': 'points', 'home.hs.ptsSuffix': 'pts',
+    'mode.regular': 'Regular', 'mode.zen': 'Zen Mode', 'mode.timeattack': 'Time Attack', 'mode.custom': 'Custom Practice',
+    'settings.title': 'Custom Practice Setup',
+    'settings.desc': 'Choose exactly what appears in Custom Practice. At least one option per section must remain enabled.',
+    'settings.cat.title': 'Tile Categories', 'settings.turn.title': 'Turns', 'settings.ippatsu.title': 'Ippatsu Turn',
+    'settings.shape.title': 'Shapes', 'settings.hand.title': 'Hand State',
+    'settings.declarer.title': 'Riichi Caller Seat', 'settings.playerrole.title': 'Your Role',
+    'settings.opprole.title': 'Riichi Caller Role', 'settings.qcount.title': 'Question Count',
+    'settings.cat.doubleMusuji': 'Double Musuji 4/5/6', 'settings.cat.musuji37': 'Musuji 3/7', 'settings.cat.musuji28': 'Musuji 2/8', 'settings.cat.katamusuji': 'Katamusuji 4/5/6', 'settings.cat.musuji19': 'Musuji 1/9',
+    'settings.turn.5': 'Turn 5', 'settings.turn.9': 'Turn 9', 'settings.turn.14': 'Turn 14',
+    'settings.ippatsu.yes': 'Ippatsu', 'settings.ippatsu.no': 'No Ippatsu',
+    'settings.shape.perfect': '[A] Perfect', 'settings.shape.good2': '[B] Ryanmen ×2', 'settings.shape.goodRyankan': '[C] Ryanmen + Ryankan', 'settings.shape.goodKanchan': '[D] Ryanmen + Kanchan', 'settings.shape.badRyankan': '[E] Kanchan + Ryankan', 'settings.shape.pairs': '[F] Chiitoi',
+    'settings.shape.badHeadless': '[C−] Bad Headless', 'settings.shape.mediocreHeadless': '[C+] Mediocre Headless', 'settings.shape.badKuttsuki': '[C] Bad Kuttsuki',
+    'settings.shape.standardHeadless': '[A−] Std Headless', 'settings.shape.standardKuttsuki': '[A] Std Kuttsuki',
+    'settings.shape.goodHeadless1': '[S] Good Conjoined Headless', 'settings.shape.goodHeadless2': '[S] Ankou Headless', 'settings.shape.goodKuttsuki': '[S+] Good Kuttsuki',
+    'settings.hand.menzen': 'Closed', 'settings.hand.fuuro': 'Open',
+    'settings.declarer.kamicha': 'Kamicha', 'settings.declarer.toimen': 'Toimen', 'settings.declarer.shimocha': 'Shimocha',
+    'settings.role.dealer': 'Dealer', 'settings.role.nondealer': 'Non-Dealer',
+    'settings.note.cat': 'Select categories to include.', 'settings.note.turn': 'Select turns to include.',
+    'settings.note.ippatsu': 'Select riichi scenarios to include.',
+    'settings.note.shape': 'Select shapes to include.', 'settings.note.hand': 'Select hand states to include.',
+    'settings.note.declarer': 'Select declarer seats to include.', 'settings.note.playerrole': 'Select your role to include.',
+    'settings.note.opprole': "Select the declarer's role to include.", 'settings.note.qcount': 'Choose the length of the practice run.',
+    'settings.note.required': 'At least one option must remain enabled.', 'settings.note.all': 'All options enabled.', 'settings.note.some': '{n} of {m} options enabled.',
+    'settings.back': 'Back', 'settings.start': 'Start Practice',
+    'game.logo': '1-shanten Oracle', 'game.score': 'Score', 'game.combo': 'Combo',
+    'game.dealin': '<i class="fa-solid fa-book"></i> Deal-in Rates', 'game.shapes': '<i class="fa-solid fa-scroll"></i> Shapes', 'game.exit': 'Exit',
+    'game.panel.shapeTiers': 'Shape Tiers', 'game.panel.thresholds': 'Deal-in Thresholds',
+    'game.panel.hidden': 'Hidden', 'game.panel.auto': 'Auto', 'game.panel.hide': 'Hide',
+    'game.panel.autoTip': 'Click to auto-select the matching table', 'game.panel.hideTip': 'Hide (turn off auto mode)',
+    'game.panel.autoOnTip': 'Auto mode is on but no table selected yet',
+    'game.panel.emptyHint': 'Click <b>Auto</b> to auto-select the matching table, or jump with the buttons below.',
+    'game.panel.tier': 'Tier', 'game.quiz.title': 'Quiz',
+    'game.sc.shape': 'Shape & Status', 'game.sc.yaku': 'Yaku & Dora', 'game.sc.role': 'Role', 'game.sc.declarer': 'Riichi Declarer',
+    'game.discard.title': 'Your Discard — Tile Category',
+    'board.toimen': 'Toimen', 'board.kamicha': 'Kamicha', 'board.shimocha': 'Shimocha', 'board.you': 'You', 'board.turn': 'Turn',
+    'board.yourTurn': 'Your Turn',
+    'quiz.step1': 'Passed Suji', 'quiz.step1.text': "Analyze the Riichi player's discard pond.<br>How many <b>Unique Passed Sujis</b> are there?",
+    'quiz.step2': 'Deal-in Rate', 'quiz.step2.text': 'What is the approximate <b>Deal-in Rate</b> for a <b>{cat}</b> based on the passed sujis?',
+    'quiz.step3': 'Decision', 'quiz.step3.text': "Based on your hand's Tier and the tile risk, should you <b>PUSH</b> or <b>FOLD</b>?",
+    'quiz.push': 'PUSH', 'quiz.fold': 'FOLD', 'quiz.next': 'Next Question →',
+    'quiz.waiting': 'Wait…',
+    'cat.Double musuji 4/5/6': 'Double Musuji 4/5/6', 'cat.Musuji 3/7': 'Musuji 3/7', 'cat.Musuji 2/8': 'Musuji 2/8', 'cat.Katamusuji 4/5/6': 'Katamusuji 4/5/6', 'cat.Musuji 1/9': 'Musuji 1/9',
+    'catdesc.Double musuji 4/5/6': '4, 5 or 6 — Double non-suji tile',
+    'catdesc.Musuji 3/7': 'A 3 or 7 — A non-suji tile',
+    'catdesc.Musuji 2/8': 'A 2 or 8 — A non-suji tile',
+    'catdesc.Katamusuji 4/5/6': 'Middle tile — Half suji.',
+    'catdesc.Musuji 1/9': 'A terminal — A non-suji tile',
+    'seat.kamicha': 'Kamicha (Left)', 'seat.toimen': 'Toimen (Across)', 'seat.shimocha': 'Shimocha (Right)',
+    'role.vsND': 'VS Non-Dealer', 'role.vsD': 'VS Dealer', 'role.asD': 'As Dealer',
+    'yaku.hanUnit': 'han', 'yaku.Yakuhai': 'Yakuhai Ankou', 'yaku.Tanyao': 'Tanyao', 'yaku.Chiitoi': 'Chiitoi',
+    'yaku.Pinfu': 'Pinfu', 'yaku.Iipeikou': 'Iipeikou', 'yaku.Dora': 'Dora',
+    'sc.callable': 'Callable', 'sc.ippatsu': 'Ippatsu Turn',
+    'dealin.title': 'Deal-in Rate Reference', 'dealin.desc': 'Minimum passed sujis needed to reach each estimated deal-in rate range, by tile category.',
+    'dealin.rateHeader': 'Deal-in Rate', 'dealin.modTitle': 'Common modifiers (not in table):',
+    'dealin.modBody': 'Dora: +2% · Sotogawa: −5% · 1-chance: −3% · Anko/Anko-suji: +2%',
+    'dealin.modWarn': 'These modifiers are not accounted for when determining the estimated deal-in rates.',
+    'shapes.title': 'Shape Reference', 'shapes.desc': 'Overview of the hand shape categories with example 13-tile hands.',
+    'shapes.acceptance': 'Tile acceptance:', 'shapes.goodRate': 'Good wait rate:', 'shapes.tilesUnit': '{n} tiles',
+    'panel.shapeTier.hidden': 'Hidden', 'panel.shapeTier.menzenND': 'Closed · Non-Dealer', 'panel.shapeTier.menzenD': 'Closed · Dealer',
+    'panel.shapeTier.fuuroNDC': 'Open · Non-Dealer · Kamicha Riichi', 'panel.shapeTier.fuuroNDNC': 'Open · Non-Dealer · Not Kamicha Riichi',
+    'panel.shapeTier.fuuroDC': 'Open · Dealer · Kamicha Riichi', 'panel.shapeTier.fuuroDNC': 'Open · Dealer · Not Kamicha Riichi',
+    'panel.thresh.menzenVsND': 'Closed · VS Non-Dealer', 'panel.thresh.menzenVsD': 'Closed · VS Dealer', 'panel.thresh.menzenAsD': 'Closed · As Dealer',
+    'panel.thresh.fuuroVsND': 'Open · VS Non-Dealer', 'panel.thresh.fuuroVsD': 'Open · VS Dealer', 'panel.thresh.fuuroAsD': 'Open · As Dealer',
+    'btn.shape.menzenND': 'Closed as ND', 'btn.shape.fuuroNDC': 'Open as ND + Kami Rii', 'btn.shape.menzenD': 'Closed as D',
+    'btn.shape.fuuroND': 'Open as ND', 'btn.shape.fuuroDC': 'Open as D + Kami Rii', 'btn.shape.fuuroD': 'Open as D',
+    'btn.thresh.menzenVsND': 'Closed vs ND', 'btn.thresh.menzenVsD': 'Closed vs D', 'btn.thresh.menzenAsD': 'Closed as D',
+    'btn.thresh.fuuroVsND': 'Open vs ND', 'btn.thresh.fuuroVsD': 'Open vs D', 'btn.thresh.fuuroAsD': 'Open as D',
+    'help.title': 'How to Play',
+    'help.overview.title': 'Overview', 'help.overview.body': "Each question gives you a 1-shanten hand facing an opponent's riichi. Answer three questions in sequence to build up to a push/pull decision.",
+    'help.step1.title': 'Step 1 — Count Passed Sujis', 'help.step1.body': "Unique sujis blocked by the riichi player's pond. Post-riichi discards count. No-chance applies when all four copies of a tile are visible.",
+    'help.step2.title': 'Step 2 — Estimate Deal-in Rate', 'help.step2.body': 'One of six buckets: <code>&lt;5%</code>, <code>5–10%</code>, <code>10–15%</code>, <code>15–20%</code>, <code>20–25%</code>, <code>&gt;25%</code>.',
+    'help.step3.title': 'Step 3 — Push or Fold', 'help.step3.body': "Look up your hand's <b>threshold value</b> (T) from the tables, based on your role (dealer / non-dealer), hand state (closed / open), turn, and hand <b>tier</b>. Tier comes from your hand's shape, yaku, and dora count.",
+    'help.step3.list': '<li>If the tile\'s deal-in rate (R) is <b>≤ T</b>: <b>PUSH</b>.</li><li>If R is <b>&gt; T</b>: <b>FOLD</b>.</li><li>If T falls <b>inside the bucket range</b>: <b>BORDERLINE</b> — both answers score 200, and the buttons glow green (slightly favored) or yellow (ambiguous).</li>',
+    'help.pinfu.title': 'Pinfu and Iipeikou', 'help.pinfu.body': 'Closed hands can pick up extra yaku. <b>Pinfu</b> (only [A] Perfect and [B] Ryanmen×2) is worth 1 han, and its threshold is interpolated between the two adjacent tiers because pinfu lowers fu compared to a standard hand at the same han count. <b>Iipeikou</b> adds 1 han (any closed non-chiitoi shape). Both disappear if the hand is called.',
+    'help.ippatsu.title': 'Ippatsu vs No Ippatsu', 'help.ippatsu.body': '<b>Ippatsu</b>: opponent just declared riichi and their ippatsu is still live, so you\'re forced to discard a dangerous tile while the +1 han bonus is a threat. Tier and/or role chart is adjusted to reflect lower push thresholds. <b>No Ippatsu</b>: riichi was declared a turn earlier, you safely discarded a genbutsu earlier, and the ippatsu window has closed — you now have to choose whether to push the same dangerous tile under normal conditions.',
+    'help.callable.title': 'Callable Closed Hands', 'help.callable.body': 'If your closed hand has a Tanyao or Yakuhai Ankou, it could be opened for tenpai. The tier is evaluated on the open chart using only the surviving yaku + dora (riichi, pinfu, ippeikou all drop), then bumped up one tier to reflect the flexibility.',
+    'help.grades.title': 'Grades',
+    'help.grades.body': `<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 4px 16px; font-size: 13px;padding-left:20px;"><div><b>S+</b> &gt; 95%</div><div><b>B+</b> 65–70%</div><div><b>S</b> 90–95%</div><div><b>B</b> 60–65%</div><div><b>S-</b> 85–90%</div><div><b>B-</b> 55–60%</div><div><b>A+</b> 80–85%</div><div><b>C</b> 45–55%</div><div><b>A</b> 75–80%</div><div><b>D</b> 30–45%</div><div><b>A-</b> 70–75%</div><div><b>E</b> &lt; 30%</div></div>`,
+    'help.combo.title': 'Combo', 'help.combo.body': 'Consecutive correct push/pulls build a multiplier: ×1.0 at 0–1, +0.1 per combo past 2, capped at ×10 at combo 91. A wrong push/pull resets the streak.',
+    'help.ta.title': 'Time Attack Timing', 'help.ta.list': '<li>Correct push/pull: <b>+10s</b> (borderline ×2 on matching push, ×1.5 on matching fold).</li><li>Wrong push: <b>−15s</b> · Wrong fold: <b>−10s</b>.</li>',
+    'help.controls.title': 'Controls', 'help.controls.body': 'Arrow keys navigate, Enter confirms, Escape closes modals / exits to menu.',
+    'help.scoring.title': 'Scoring', 'help.scoring.list': '<li>Step 1: <b>300</b> exact, <b>100</b> off by 1, else 0</li><li>Step 2: <b>300</b> correct, else 0</li><li>Step 3: <b>400</b> correct, <b>200</b> borderline, else 0</li><li>Time bonus: <b>max(0, 200 − seconds × 10)</b></li>',
+    'help.tables.title': 'Reference Tables', 'help.tables.list': '<li><b>Deal-in Rates</b> — the full rate chart per category / bucket.</li><li><b>Shapes</b> — examples of the hand shapes.</li><li><b>Shape Tiers panel</b> — toggle <b>Auto</b> to auto-select the matching table each question.</li><li><b>Threshold panel</b> — threshold values. Same auto behavior.</li>',
+    'fb.correct': 'Correct!', 'fb.close': 'Close!', 'fb.bad': 'Not quite.',
+    'fb.step1.ok': '{n} unique passed sujis{breakdown}.',
+    'fb.step1.wrong': 'You said {v}. The pond holds <b>{n}</b> unique passed sujis{breakdown}.',
+    'fb.suji.declarer': '{n} declarer', 'fb.suji.postRiichi': '{n} post-riichi', 'fb.suji.noChance': '{n} no-chance',
+    'fb.passedSujis': 'Passed: {list}',
+    'fb.step2.ok': '<b>Correct!</b> Deal-in rate: <b>{b}</b> (exact: <b>{exact}</b>).',
+    'fb.step2.bad': '<b>Incorrect.</b> The correct bucket is <b>{b}</b> (exact: <b>{exact}</b>).',
+    'fb.step3.ok': '<b>Correct!</b>', 'fb.step3.bad': '<b>Incorrect.</b>',
+    'fb.step3.answerIs': 'The answer is <b>{d}</b>.',
+    'fb.step3.borderline': '<b>Borderline!</b> You chose {d}. {lean}',
+    'fb.step3.borderlineDetail': 'Passed Sujis: <b>{n}</b> · Deal-in Rate: <b>{b}</b> (exact: <b>{exact}</b>) · Hand Threshold (Tier {tier}, {role}): <b>{t}</b>',
+    'fb.step3.detail': 'Passed Sujis: <b>{n}</b> · Deal-in Rate: <b>{b}</b> (exact: <b>{exact}</b>) · Hand Threshold (Tier {tier}, {role}): <b>{t}</b>',
+    'fb.step3.comparePush': 'Deal-in ≤ Threshold Value → PUSH',
+    'fb.step3.compareFold': 'Deal-in > Threshold Value → FOLD',
+    'fb.step3.all': 'ALL (always push)',
+    'fb.lean.fold': 'The threshold sits near the low end of the range — <b>FOLD</b> is slightly favored.',
+    'fb.lean.push': 'The threshold sits near the high end of the range — <b>PUSH</b> is slightly favored.',
+    'fb.lean.both': 'The threshold sits near the middle of the range — neither answer is clearly better.',
+    'fb.ta.pts': '+{pts} pts', 'fb.ta.mult': ' (×{mult})', 'fb.ta.plusSec': ' · +{s}s', 'fb.ta.minusSec': ' · -{s}s',
+    'fb.borderlineLabel': 'Borderline!', 'fb.verdict.ironPush': 'Iron push', 'fb.verdict.ironPull': 'Iron pull',
+    'fb.ippatsuNd': 'Ippatsu: switch to VS Dealer chart (same tier)',
+    'fb.ippatsuAsDealer': 'Ippatsu: As Dealer chart, hand treated 1 tier weaker',
+    'fb.ippatsuNdD': 'Ippatsu: VS Dealer chart, hand treated 2 tiers weaker',
+    'fb.pinfuApplied': 'Pinfu threshold: interpolated between the two adjacent tiers',
+    'fb.callableApplied': 'Callable: evaluated on open chart with surviving yaku, one tier better',
+    'results.runComplete': 'Run Complete', 'results.practiceComplete': 'Practice Complete', 'results.timesUp': "Time's Up!",
+    'results.totalScore': 'Total Score', 'results.timeBonus': 'Time Bonus', 'results.suji': 'Suji Accuracy', 'results.dealin': 'Deal-in Accuracy', 'results.pushfold': 'Push/Pull Accuracy', 'results.maxCombo': 'Max Combo',
+    'results.playAgain': 'Play Again', 'results.menu': 'Back to Menu',
+    'results.share': '<i class="fa-solid fa-share-nodes"></i> Share', 'results.shared': '<i class="fa-solid fa-check"></i> Copied!',
+    'results.highScoreRegular': 'A NEW HIGH SCORE WAS JUST MADE!', 'results.highScoreTimeAttack': 'A NEW HIGH SCORE WAS JUST MADE!',
+    'about.title': '<i class="fa-solid fa-circle-info"></i> About', 'about.overview': 'Overview',
+    'about.p1': 'A training tool for push/pull decisions in 1-shanten situations facing an opponent\'s riichi. Each question walks you through the same three steps: count the passed sujis, estimate the deal-in rate, then compare it against your hand\'s <b>threshold deal-in rate</b> to reach a PUSH/FOLD decision. The trainer is intended for flat point standing practice.',
+    'about.howToUse': 'How to Use',
+    'about.p2': 'Each question shows a 1-shanten hand, the opponent\'s riichi pond, the tile category you might discard, and the shape/threshold reference tables. Answer the three quiz steps in order. Both side panels can be auto-selected via the <i>Auto</i> button, or you can jump to a specific table with the direct-nav buttons.<h4>Hand State &amp; Yaku</h4>Closed hands automatically include <b>riichi</b> (+1 han). Closed hands can also pick up <b>pinfu</b> (only [A] Perfect and [B] Ryanmen×2 — worth 1 han but threshold is interpolated between the two adjacent tiers) and <b>iipeikou</b> (any closed non-chiitoi shape, 1 han). A closed hand with a Tanyao or Yakuhai Ankou can be <b>opened for tenpai</b> — evaluated using the open-hand chart with only the surviving yaku + dora, then moved up one tier to reflect the flexibility.<h4>Ippatsu vs No Ippatsu</h4><b>Ippatsu</b>: opponent\'s riichi is still live. If you\'re non-dealer against a non-dealer riichi, the VS Dealer chart is used at the same tier. If you\'re the dealer against a non-dealer riichi, the As Dealer chart is used and your hand is treated one tier weaker. If you\'re non-dealer against a dealer riichi, the VS Dealer chart is used and your hand is treated two tiers weaker. <b>No Ippatsu</b>: riichi was declared a turn earlier — you safely discarded a genbutsu on the turn after, and the ippatsu window has closed. The full chart applies.<h4>Additional Details</h4><ul><li><b>Open hands against a Kamicha riichi:</b> A separate table is used when Kamicha has declared riichi, accounting for the increased opportunity to call chii from their discards.</li><li><b>Non-standard 1-shanten shapes:</b> The Kuttsuki and Headless shapes classified as [S] tier use [A] Perfect as their base tier, adjusted upward by one tier.</li></ul>',
+    'about.sources': 'Sources and Methodology',
+    'about.p4': 'The shape-tier and threshold tables are adapted primarily from Unimaru\'s book <i>Unimaru-shiki Winning Mahjong with Theory</i> (『うに丸式 セオリーで勝つ麻雀』), which draws on material from <i>Statistical Mahjong Strategy</i> (『統計学のマージャン戦術』) and <i>New: Scientific Mahjong</i> (『新・科学する麻雀』). The [D] Ryanmen + Kanchan shape was not included in the original data and has been interpolated. The original [D] and [E] shape classifications have been renamed [E] and [F]. Pinfu thresholds are calculated by averaging the two adjacent tiers. Deal-in rate estimates are adapted from <i>Statistical Mahjong Strategy</i> by Miinin. <b>Please treat the results as a reference rather than definitive advice.</b>',
+    'about.credits': 'Credits',
+    'about.p3': 'Designed and developed by kakino_tea.<br>X: <a style="color:#738ad0" href="https://x.com/mican8saku" target="_blank" rel="noopener noreferrer">@mican8saku</a>'
+  },
+  ja: {
+    'page.title': 'イーシャンテン オラクル 押し引きトレーナー',
+    'home.link': 'オラクル <i class="fa-solid fa-hamsa"></i>',
+    'home.about': '<i class="fa-solid fa-circle-info"></i> このアプリについて',
+    'home.heading': 'イーシャンテン オラクル',
+    'home.sub': '押し引きトレーナー',
+    'home.start': 'スタート',
+    'home.hint': '↑ ↓ で選択 ・ Enter でスタート',
+    'home.mode.regular.title': 'レギュラー', 'home.mode.regular.desc': '10問のスコア制。スコアとランクは最後に発表されます。',
+    'home.mode.zen.title': '禅モード', 'home.mode.zen.desc': '無限練習。タイマーもスコアもなし。反復あるのみ。',
+    'home.mode.timeattack.title': 'タイムアタック', 'home.mode.timeattack.desc': '45秒からのカウントダウン。押し引きを当てると時間が増えます。0秒で終了。',
+    'home.mode.custom.title': 'カスタム練習', 'home.mode.custom.desc': 'カテゴリ・巡目・形・座席・役割・問題数を自由に選んで練習できます。',
+    'home.hs.regular': 'レギュラー ベスト', 'home.hs.timeattack': 'タイムアタック ベスト', 'home.hs.points': '点', 'home.hs.ptsSuffix': '点',
+    'mode.regular': 'レギュラー', 'mode.zen': '禅モード', 'mode.timeattack': 'タイムアタック', 'mode.custom': 'カスタム練習',
+    'settings.title': 'カスタム練習の設定', 'settings.desc': 'カスタム練習に登場する条件を選べます。各セクションで最低1つは選択してください。',
+    'settings.cat.title': '牌カテゴリ', 'settings.turn.title': '巡目', 'settings.ippatsu.title': '一発巡',
+    'settings.shape.title': '形', 'settings.hand.title': '手牌の状態',
+    'settings.declarer.title': 'リーチ者の座席', 'settings.playerrole.title': '自分の立場',
+    'settings.opprole.title': 'リーチ者の立場', 'settings.qcount.title': '問題数',
+    'settings.cat.doubleMusuji': 'ダブル無スジ 4/5/6', 'settings.cat.musuji37': '無スジ 3/7', 'settings.cat.musuji28': '無スジ 2/8', 'settings.cat.katamusuji': '片無スジ 4/5/6', 'settings.cat.musuji19': '無スジ 1/9',
+    'settings.turn.5': '5巡目', 'settings.turn.9': '9巡目', 'settings.turn.14': '14巡目',
+    'settings.ippatsu.yes': '一発巡', 'settings.ippatsu.no': '非一発巡',
+    'settings.shape.perfect': '[A] 完全形', 'settings.shape.good2': '[B] 両面×2', 'settings.shape.goodRyankan': '[C] 両面＋リャンカン', 'settings.shape.goodKanchan': '[D] 両面＋カンチャン', 'settings.shape.badRyankan': '[E] カンチャン＋リャンカン', 'settings.shape.pairs': '[F] 七対子',
+    'settings.shape.badHeadless': '[C−] 悪いヘッドレス', 'settings.shape.mediocreHeadless': '[C+] やや悪いヘッドレス', 'settings.shape.badKuttsuki': '[C] 悪いくっつき',
+    'settings.shape.standardHeadless': '[A−] 標準ヘッドレス', 'settings.shape.standardKuttsuki': '[A] 標準くっつき',
+    'settings.shape.goodHeadless1': '[S] 連続形ヘッドレス', 'settings.shape.goodHeadless2': '[S] 暗刻ヘッドレス', 'settings.shape.goodKuttsuki': '[S+] 良いくっつき',
+    'settings.hand.menzen': '門前', 'settings.hand.fuuro': '副露',
+    'settings.declarer.kamicha': '上家', 'settings.declarer.toimen': '対面', 'settings.declarer.shimocha': '下家',
+    'settings.role.dealer': '親', 'settings.role.nondealer': '子',
+    'settings.note.cat': '含めるカテゴリを選択してください。', 'settings.note.turn': '含める巡目を選択してください。',
+    'settings.note.ippatsu': '含めるリーチのシナリオを選択してください。',
+    'settings.note.shape': '含める形を選択してください。', 'settings.note.hand': '含める手牌の状態を選択してください。',
+    'settings.note.declarer': '含めるリーチ者の座席を選択してください。', 'settings.note.playerrole': '自分の立場を選択してください。',
+    'settings.note.opprole': 'リーチ者の立場を選択してください。', 'settings.note.qcount': '練習の問題数を選んでください。',
+    'settings.note.required': '最低1つは選択してください。', 'settings.note.all': 'すべて選択されています。', 'settings.note.some': '{m}個中{n}個を選択中。',
+    'settings.back': '戻る', 'settings.start': '練習開始',
+    'game.logo': 'イーシャンテン オラクル', 'game.score': 'スコア', 'game.combo': 'コンボ',
+    'game.dealin': '<i class="fa-solid fa-book"></i> 放銃率の目安', 'game.shapes': '<i class="fa-solid fa-scroll"></i> 形', 'game.exit': '終了',
+    'game.panel.shapeTiers': '形ティア', 'game.panel.thresholds': '押し引きボーダー放銃率',
+    'game.panel.hidden': '非表示', 'game.panel.auto': '自動', 'game.panel.hide': '隠す',
+    'game.panel.autoTip': 'クリックで該当する表を自動選択', 'game.panel.hideTip': '隠す（自動モード解除）',
+    'game.panel.autoOnTip': '自動モードが有効ですが、まだ表が選択されていません',
+    'game.panel.emptyHint': '<b>自動</b>をクリックすると該当する表を自動選択します。下のボタンで直接移動もできます。',
+    'game.panel.tier': 'ティア', 'game.quiz.title': 'クイズ',
+    'game.sc.shape': '形と状態', 'game.sc.yaku': '役とドラ', 'game.sc.role': '立場', 'game.sc.declarer': 'リーチ者',
+    'game.discard.title': '打牌 — 牌カテゴリ',
+    'board.toimen': '対面', 'board.kamicha': '上家', 'board.shimocha': '下家', 'board.you': '自分', 'board.turn': '巡目',
+    'board.yourTurn': 'あなたの番',
+    'quiz.step1': '通ったスジの本数', 'quiz.step1.text': 'リーチ者の捨て牌を確認します。<br><b>通ったスジ</b>は何種類あるでしょう？',
+    'quiz.step2': '放銃率', 'quiz.step2.text': '通ったスジから見て、<b>{cat}</b> の<b>放銃率</b>はおよそいくらでしょう？',
+    'quiz.step3': '判断', 'quiz.step3.text': '手牌のティアと牌の危険度から、<b>押す</b>か<b>降りる</b>か選んでください。',
+    'quiz.push': '押す', 'quiz.fold': '降りる', 'quiz.next': '次の問題 →',
+    'quiz.waiting': '少々お待ちください…',
+    'cat.Double musuji 4/5/6': 'ダブル無スジ 4/5/6', 'cat.Musuji 3/7': '無スジ 3/7', 'cat.Musuji 2/8': '無スジ 2/8', 'cat.Katamusuji 4/5/6': '片無スジ 4/5/6', 'cat.Musuji 1/9': '無スジ 1/9',
+    'catdesc.Double musuji 4/5/6': '4・5・6 — ダブルの無スジ牌',
+    'catdesc.Musuji 3/7': '3 または 7 — 無スジ牌',
+    'catdesc.Musuji 2/8': '2 または 8 — 無スジ牌',
+    'catdesc.Katamusuji 4/5/6': '中張牌 — 片スジ',
+    'catdesc.Musuji 1/9': '老頭牌 — 無スジ牌',
+    'seat.kamicha': '上家', 'seat.toimen': '対面', 'seat.shimocha': '下家',
+    'role.vsND': '子から', 'role.vsD': '親から', 'role.asD': '親として',
+    'yaku.hanUnit': '翻', 'yaku.Yakuhai': '役牌暗刻', 'yaku.Tanyao': 'タンヤオ', 'yaku.Chiitoi': '七対子',
+    'yaku.Pinfu': 'ピンフ', 'yaku.Iipeikou': '一盃口', 'yaku.Dora': 'ドラ',
+    'sc.callable': '鳴ける', 'sc.ippatsu': '一発巡',
+    'dealin.title': '放銃率の目安', 'dealin.desc': '牌カテゴリ別、各放銃率レンジに到達するのに必要な通しスジ数の最小値。',
+    'dealin.rateHeader': '放銃率', 'dealin.modTitle': 'よくある補正（表外）:',
+    'dealin.modBody': 'ドラ: +2% ・ 外側: −5% ・ 1チャンス: −3% ・ 暗刻/暗刻スジ: +2%',
+    'dealin.modWarn': 'これらの補正は放銃率の推定には反映されていません。',
+    'shapes.title': '形のリファレンス', 'shapes.desc': '手牌形状カテゴリと、13枚の手牌例。',
+    'shapes.acceptance': '受け入れ:', 'shapes.goodRate': '良形率:', 'shapes.tilesUnit': '{n}枚',
+    'panel.shapeTier.hidden': '非表示', 'panel.shapeTier.menzenND': '門前・子', 'panel.shapeTier.menzenD': '門前・親',
+    'panel.shapeTier.fuuroNDC': '副露・子・上家リーチ', 'panel.shapeTier.fuuroNDNC': '副露・子・非上家リーチ',
+    'panel.shapeTier.fuuroDC': '副露・親・上家リーチ', 'panel.shapeTier.fuuroDNC': '副露・親・非上家リーチ',
+    'panel.thresh.menzenVsND': '門前・子相手', 'panel.thresh.menzenVsD': '門前・親相手', 'panel.thresh.menzenAsD': '門前・親として',
+    'panel.thresh.fuuroVsND': '副露・子相手', 'panel.thresh.fuuroVsD': '副露・親相手', 'panel.thresh.fuuroAsD': '副露・親として',
+    'btn.shape.menzenND': '門前・子', 'btn.shape.fuuroNDC': '副露・子・上', 'btn.shape.menzenD': '門前・親',
+    'btn.shape.fuuroND': '副露・子', 'btn.shape.fuuroDC': '副露・親・上', 'btn.shape.fuuroD': '副露・親',
+    'btn.thresh.menzenVsND': '門前vs子', 'btn.thresh.menzenVsD': '門前vs親', 'btn.thresh.menzenAsD': '門前・親',
+    'btn.thresh.fuuroVsND': '副露vs子', 'btn.thresh.fuuroVsD': '副露vs親', 'btn.thresh.fuuroAsD': '副露・親',
+    'help.title': '遊び方', 'help.overview.title': '概要',
+    'help.overview.body': '1シャンテンの手牌と相手のリーチが提示されます。3つのステップに順番に答えて押し引きを判断します。',
+    'help.step1.title': 'ステップ1 — 通ったスジを数える',
+    'help.step1.body': 'リーチ者の捨て牌で止まっているスジの種類数。リーチ後の捨て牌も含みます。4枚全て見えている牌はノーチャンスとして扱います。',
+    'help.step2.title': 'ステップ2 — 放銃率の見積り',
+    'help.step2.body': '6つの区分: <code>&lt;5%</code>、<code>5–10%</code>、<code>10–15%</code>、<code>15–20%</code>、<code>20–25%</code>、<code>&gt;25%</code>。',
+    'help.step3.title': 'ステップ3 — 押すか降りるか',
+    'help.step3.body': "役職（親・子）、手牌の状態（門前・鳴き）、巡目、および手牌の<b>ティア（段階）</b>に基づいて、表から手牌の<b>ボーダー放銃率（T）</b>を確認します。ティアは手牌の形、役、ドラの数によって決まります。",
+    'help.step3.list': '<li>牌の放銃率（R）が <b>≤ T</b> の場合：<b>押し</b>。</li><li>R が <b>&gt; T</b> の場合：<b>降り</b>。</li><li>T が<b>バケツ（範囲）内</b>に収まる場合：<b>微差</b> — どちらの回答も200点となり、ボタンが緑（わずかに有利）または黄色（曖昧）に光ります。</li>',
+    'help.pinfu.title': 'ピンフと一盃口',
+    'help.pinfu.body': '門前手は追加の役がつくことがあります。<b>ピンフ</b>（[A]完全形と[B]両面×2のみ、1翻）は、同じ翻数の標準手と比べて符が低いため、ボーダー放銃率は隣接する2つのティアの中間値として計算されます。<b>一盃口</b>は1翻追加（門前の七対子以外の形）。いずれも鳴くと消えます。',
+    'help.ippatsu.title': '一発巡 vs 非一発巡',
+    'help.ippatsu.body': '<b>一発巡</b>: 相手がリーチを宣言した直後で、一発がまだ生きているため、危険牌を切らされます。相手の+1翻の脅威を反映してティアや役割表が調整されます。<b>非一発巡</b>: リーチは1巡前に宣言され、あなたは前の巡目に安全な現物を切っており、一発の窓は閉じています。今、同じ危険牌を切るかどうかを通常の条件下で判断します。',
+    'help.callable.title': '鳴ける門前手',
+    'help.callable.body': '門前手にタンヤオまたは役牌暗刻があれば、鳴いてテンパイを取れます。副露表で生き残る役＋ドラのみで評価し、ティアを1段階上げます（リーチ・ピンフ・一盃口は消えます）。',
+    'help.grades.title': 'ランク',
+    'help.grades.body': `<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 4px 16px; font-size: 13px;padding-left:20px;"><div><b>S+</b> &gt; 95%</div><div><b>B+</b> 65–70%</div><div><b>S</b> 90–95%</div><div><b>B</b> 60–65%</div><div><b>S-</b> 85–90%</div><div><b>B-</b> 55–60%</div><div><b>A+</b> 80–85%</div><div><b>C</b> 45–55%</div><div><b>A</b> 75–80%</div><div><b>D</b> 30–45%</div><div><b>A-</b> 70–75%</div><div><b>E</b> &lt; 30%</div></div>`,
+    'help.combo.title': 'コンボ', 'help.combo.body': '押し引きを連続で正解すると倍率が上がります：0〜1で×1.0、2以降は1コンボごとに+0.1、91コンボで×10が上限。間違えるとリセット。',
+    'help.ta.title': 'タイムアタックの時間', 'help.ta.list': '<li>押し引き正解: <b>+10秒</b>（境界線は正解側で×2、×1.5）</li><li>押し間違い: <b>−15秒</b> ・ 降り間違い: <b>−10秒</b></li>',
+    'help.controls.title': '操作', 'help.controls.body': '矢印キーで移動、Enterで決定、Escでモーダルを閉じる／メニューへ戻る。',
+    'help.scoring.title': '得点システム', 'help.scoring.list': '<li>ステップ1：正解で <b>300</b>、±1のズレで <b>100</b>、その他 0</li><li>ステップ2：正解で <b>300</b>、その他 0</li><li>ステップ3：正解で <b>400</b>、微差で <b>200</b>、その他 0</li><li>タイムボーナス：<b>max(0, 200 − 秒数 × 10)</b></li>',
+    'help.tables.title': '参考テーブル', 'help.tables.list': '<li><b>放銃率</b> — カテゴ/バケツごとの全体レート表。</li><li><b>形</b> — 手牌の形の例。</li><li><b>形ティアパネル</b> — <b>Auto</b>をオンにすると、問題ごとに一致する表が自動選択されます。</li><li><b>ボーダーパネル</b> — ボーダー放銃率。同様に自動選択されます。</li>',
+    'fb.correct': '正解！', 'fb.close': 'おしい！', 'fb.bad': '残念。',
+    'fb.step1.ok': '通ったスジは {n} 本{breakdown}。',
+    'fb.step1.wrong': '{v} と答えました。実際は <b>{n}</b> 本の通ったスジ{breakdown}。',
+    'fb.suji.declarer': 'リーチ者{n}本', 'fb.suji.postRiichi': 'リーチ後{n}本', 'fb.suji.noChance': 'ノーチャンス{n}本',
+    'fb.passedSujis': '通ったスジ: {list}',
+    'fb.step2.ok': '<b>正解！</b> 放銃率は <b>{b}</b>（実測: <b>{exact}</b>）。',
+    'fb.step2.bad': '<b>不正解。</b> 正しい区分は <b>{b}</b>（実測: <b>{exact}</b>）。',
+    'fb.step3.ok': '<b>正解！</b>', 'fb.step3.bad': '<b>不正解。</b>',
+    'fb.step3.answerIs': '正解は <b>{d}</b> です。',
+    'fb.step3.borderline': '<b>境界線！</b> {d} を選択。{lean}',
+    'fb.step3.borderlineDetail': '通ったスジ: <b>{n}本</b> ・ 放銃率: <b>{b}</b>（実測: <b>{exact}</b>） ・ 手牌ボーダー放銃率（ティア {tier}, {role}）: <b>{t}</b>',
+    'fb.step3.detail': '通ったスジ: <b>{n}本</b> ・ 放銃率: <b>{b}</b>（実測: <b>{exact}</b>） ・ 手牌ボーダー放銃率（ティア {tier}, {role}）: <b>{t}</b>',
+    'fb.step3.comparePush': '放銃率 ≤ ボーダー放銃率 → 押し',
+    'fb.step3.compareFold': '放銃率 > ボーダー放銃率 → 降り',
+    'fb.step3.all': '全て（常に押し）',
+    'fb.lean.fold': 'ボーダー放銃率は範囲の下端寄り — <b>降り</b>がやや有利。',
+    'fb.lean.push': 'ボーダー放銃率は範囲の上端寄り — <b>押し</b>がやや有利。',
+    'fb.lean.both': 'ボーダー放銃率は範囲の中ほど — どちらとも言えない。微差な選択。',
+    'fb.ta.pts': '+{pts}点', 'fb.ta.mult': ' (×{mult})', 'fb.ta.plusSec': ' ・+{s}秒', 'fb.ta.minusSec': ' ・-{s}秒',
+    'fb.borderlineLabel': '微差！', 'fb.verdict.ironPush': '鉄押し', 'fb.verdict.ironPull': '鉄引き',
+    'fb.ippatsuNd': '一発巡：子リーチ→親相手（VS Dealer）の表を適用（同ティア）',
+    'fb.ippatsuAsDealer': '一発巡：親として（As Dealer）の表、手牌を1段階弱く評価',
+    'fb.ippatsuNdD': '一発巡：親リーチ→親相手（VS Dealer）の表、手牌を2段階弱く評価',
+    'fb.pinfuApplied': 'ピンフ：隣接する2つのティアの中間値でボーダー放銃率を計算',
+    'fb.callableApplied': '鳴き対応：副露表で生き残る役のみで評価、1ティア上',
+    'results.runComplete': '完了', 'results.practiceComplete': '練習完了', 'results.timesUp': 'タイムアップ！',
+    'results.totalScore': '合計スコア', 'results.timeBonus': 'タイムボーナス', 'results.suji': 'スジ精度', 'results.dealin': '放銃率精度', 'results.pushfold': '押し引き精度', 'results.maxCombo': '最大コンボ',
+    'results.playAgain': 'もう一度', 'results.menu': 'メニューへ',
+    'results.share': '<i class="fa-solid fa-share-nodes"></i> 共有', 'results.shared': '<i class="fa-solid fa-check"></i> コピー済み',
+    'results.highScoreRegular': 'ハイスコア更新！', 'results.highScoreTimeAttack': 'ハイスコア更新！',
+    'about.title': '<i class="fa-solid fa-circle-info"></i> このアプリについて', 'about.overview': '概要',
+    'about.p1': '1シャンテンの押し引き判断力を鍛えるトレーニングツールです。相手のリーチに対して、通ったスジの数を数え、放銃率を推定し、手牌の<b>ボーダー放銃率</b>と比較して押し引きを判断するという3ステップを繰り返し練習できます。主に平場での判断を想定しています。',
+    'about.howToUse': '使い方',
+    'about.p2': '各問題では、1シャンテンの手牌・相手のリーチ河・打牌候補の牌カテゴリ・形とボーダーの参照テーブルが表示されます。クイズの3ステップに順番に答えてください。左右のパネルは<i>Auto</i>で自動選択できます。<h4>手牌の状態と役</h4>門前手には自動的に<b>リーチ</b>（+1翻）が付きます。さらに門前手は<b>ピンフ</b>（[A]完全形と[B]両面×2のみ、1翻だがボーダー放銃率は隣接する2ティアの中間値）と<b>一盃口</b>（門前の七対子以外、1翻）が付くことがあります。タンヤオまたは役牌暗刻のある門前手は<b>鳴いてテンパイ</b>を取れると評価され、副露表で生き残る役＋ドラのみで計算し、1ティア上に調整されます。<h4>一発巡 vs 非一発巡</h4><b>一発巡</b>：相手のリーチ直後で一発が生きている状態。子が子のリーチ相手なら同じティアで親相手（VS Dealer）の表を使用。親が子のリーチ相手なら親として（As Dealer）の表で手牌を1段階弱く評価。子が親のリーチ相手なら親相手（VS Dealer）の表で2段階弱く評価。<b>非一発巡</b>：リーチは1巡前、前の巡目に現物を切り、一発の窓は閉じている状態。フルの表が適用されます。<h4>補足事項</h4><ul><li><b>上家がリーチしている場合の副露手：</b>専用の表を使用します。</li><li><b>特殊な1シャンテン形：</b>[S]ティアのくっつき形・ヘッドレス形は、[A] Perfectを基準に1ティア上乗せして評価します。</li></ul>',
+    'about.sources': '参考文献・算出方法',
+    'about.p4': '形のティア表およびボーダー放銃率表は、主にうに丸氏の著書『うに丸式 セオリーで勝つ麻雀』を参考にしています。同書で参考にされている『統計学のマージャン戦術』および『新・科学する麻雀』のデータも基になっています。ピンフのボーダー放銃率は、隣接する2つのティアの平均値で計算しています。放銃率の推定値は、みーにん氏の『統計学のマージャン戦術』を参考にしています。<b>あくまで判断の参考としてご利用ください。</b>',
+    'about.credits': 'クレジット',
+    'about.p3': '制作：kakino_tea<br>X：<a style="color:#738ad0" href="https://x.com/mican8saku" target="_blank" rel="noopener noreferrer">@mican8saku</a>'
+  }
+};
+
+function t(key, fallback) {
+  const lang = (State && State.lang) || 'en';
+  const dict = I18N[lang] || {};
+  if (dict[key] !== undefined) return dict[key];
+  if (I18N.en[key] !== undefined) return I18N.en[key];
+  return fallback !== undefined ? fallback : key;
+}
+function tf(key, vars) { let s = t(key); if (vars) for (const k in vars) s = s.replace(new RegExp('\\{' + k + '\\}', 'g'), vars[k]); return s; }
+function catLabel(cat) { return t('cat.' + cat, CATEGORY_INFO[cat] ? CATEGORY_INFO[cat].label : cat); }
+function catDesc(cat) { return t('catdesc.' + cat, CATEGORY_INFO[cat] ? CATEGORY_INFO[cat].desc : ''); }
+function shapeLabel(shape) { return t(SHAPE_LABEL_KEYS[shape] || '', SHAPE_LABELS[shape] || shape); }
+function roleLabel(roleKey) { return t(ROLE_KEY_MAP[roleKey] || '', roleKey); }
+function roundLabel(en) { if (State.lang !== 'ja') return en; const m = /East (\d+)-(\d+)/.exec(en); if (!m) return en; return `東${m[1]}局`; }
+function taSuffix(pts, mult, secs) { let s = tf('fb.ta.pts', { pts }); if (mult > 1) s += tf('fb.ta.mult', { mult: mult.toFixed(1) }); if (secs !== undefined && secs !== 0) { s += secs > 0 ? tf('fb.ta.plusSec', { s: secs }) : tf('fb.ta.minusSec', { s: Math.abs(secs) }); } return ` <span style="opacity:.85">${s}</span>`; }
+
+const $ = id => document.getElementById(id);
+const pickOne = a => a[Math.floor(Math.random() * a.length)];
+function shuffle(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+const pct = v => Math.round(v * 100) + '%';
+const isHonor = t => t.endsWith('z');
+const baseTile = t => (t && t[0] === '0') ? '5' + t[1] : t;
+function tileNumber(t) { if (!t) return 0; if (t[0] === '0') return 5; return parseInt(t[0], 10); }
+function getComboMultiplier(combo) { if (combo < 2) return 1; return Math.min(10, 1 + (combo - 1) * 0.1); }
+function isRegular() { return State.mode === 'regular'; }
+function isZen() { return State.mode === 'zen'; }
+function isTimeAttack() { return State.mode === 'timeattack'; }
+function isCustom() { return State.mode === 'custom'; }
+function scoringEnabled() { return isRegular() || isTimeAttack(); }
+function getCorrectShapeTierIndex(q) {
+  if (!q) return 0;
+  const isEffOpen = q.effectiveOpen;
+  if (!isEffOpen) return q.playerIsDealer ? 2 : 1;
+  const isC = q.declarer === 'kamicha';
+  if (q.playerIsDealer) return isC ? 5 : 6;
+  return isC ? 3 : 4;
+}
+function getCorrectThresholdIndex(q) {
+  if (!q) return 0;
+  const roleMap = { 'VS Non-Dealer': 1, 'VS Dealer': 2, 'As Dealer': 3 };
+  const base = roleMap[q.roleKey] || 1;
+  return q.effectiveOpen ? base + 3 : base;
+}
+function computeGrade(ratio) {
+  if (ratio > 0.95) return 'S+';
+  if (ratio >= 0.90) return 'S';
+  if (ratio >= 0.85) return 'S-';
+  if (ratio >= 0.80) return 'A+';
+  if (ratio >= 0.75) return 'A';
+  if (ratio >= 0.70) return 'A-';
+  if (ratio >= 0.65) return 'B+';
+  if (ratio >= 0.60) return 'B';
+  if (ratio >= 0.55) return 'B-';
+  if (ratio >= 0.45) return 'C';
+  if (ratio >= 0.30) return 'D';
+  return 'E';
+}
+function resetSecDelta() { const sd = $('secDelta'); if (!sd) return; sd.classList.remove('anim', 'negative'); sd.textContent = ''; }
+function showSecDelta(seconds) {
+  if (!isTimeAttack()) return;
+  if (!seconds) return;
+  const el = $('secDelta');
+  if (!el) return;
+  const positive = seconds > 0;
+  el.textContent = (positive ? '+' : '') + seconds + 's';
+  el.classList.toggle('negative', !positive);
+  el.classList.remove('anim');
+  void el.offsetWidth;
+  el.classList.add('anim');
+}
+
+function showYourTurn(show) {
+  const ind = $('yourTurn');
+  const wrap = $('tableWrap');
+  if (ind) {
+    if (show && !ind.textContent) ind.textContent = t('board.yourTurn');
+    ind.classList.toggle('show', !!show);
+  }
+  if (wrap) wrap.classList.toggle('your-turn', !!show);
+}
+function setQuizStep1Loading(loading) {
+  const grid = $('sujiGrid');
+  const loadingEl = $('sujiLoading');
+  if (grid) {
+    grid.classList.toggle('loading', !!loading);
+    grid.querySelectorAll('.sujibtn').forEach(b => { b.disabled = !!loading; });
+  }
+  if (loadingEl) loadingEl.classList.toggle('hidden', !loading);
+}
+
+function loadHighScores() {
+  let data = {};
+  try { data = JSON.parse(localStorage.getItem(HS_KEY) || '{}'); } catch (e) { data = {}; }
+  const result = { regular: data.regular || 0, regularGrade: data.regularGrade || '', timeattack: data.timeattack || 0 };
+  if (result.regular > 0 && !result.regularGrade) result.regularGrade = computeGrade(result.regular / (MODE_CONFIG.regular.total * 1200));
+  return result;
+}
+function saveHighScore(mode, score, grade) {
+  const hs = loadHighScores();
+  const key = mode === 'regular' ? 'regular' : mode === 'timeattack' ? 'timeattack' : null;
+  if (!key) return hs;
+  const isNewHigh = score > hs[key];
+  const isTie = score === hs[key];
+  const gradeMissing = (key !== 'timeattack') && !hs[key + 'Grade'];
+  if (isNewHigh || (isTie && gradeMissing)) {
+    hs[key] = score;
+    if (key === 'regular') hs[key + 'Grade'] = grade || '';
+    try { localStorage.setItem(HS_KEY, JSON.stringify({ regular: hs.regular, regularGrade: hs.regularGrade, timeattack: hs.timeattack })); } catch (e) {}
+  }
+  return hs;
+}
+function renderHomeHighScores() {
+  const hs = loadHighScores();
+  const rank = $('hsRegularGrade'), regScore = $('hsRegular'), ta = $('hsTimeAttack');
+  if (rank) rank.textContent = hs.regularGrade || '—';
+  if (regScore) regScore.textContent = hs.regular.toLocaleString() + ' ' + t('home.hs.ptsSuffix');
+  if (ta) ta.textContent = hs.timeattack.toLocaleString();
+}
+
+function defaultCustomConfig() {
+  return {
+    categories: ALL_CATEGORIES.slice(), turns: ALL_TURNS.slice(), ippatsuOptions: ALL_IPPATSU_OPTIONS.slice(),
+    shapes: ALL_QUESTION_SHAPES.slice(), hands: ALL_HANDS.slice(), declarers: ALL_DECLARERS.slice(),
+    playerRoles: ALL_PLAYER_ROLES.slice(), oppRoles: ALL_OPP_ROLES.slice(), questionCount: 10
+  };
+}
+function loadCustomConfig() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(CUSTOM_KEY) || 'null');
+    if (!saved) return defaultCustomConfig();
+    const def = defaultCustomConfig();
+    return {
+      categories: (Array.isArray(saved.categories) ? saved.categories : def.categories).filter(c => ALL_CATEGORIES.includes(c)),
+      turns: (Array.isArray(saved.turns) ? saved.turns : def.turns).filter(t => ALL_TURNS.includes(t)),
+      ippatsuOptions: (Array.isArray(saved.ippatsuOptions) ? saved.ippatsuOptions : def.ippatsuOptions).filter(o => ALL_IPPATSU_OPTIONS.includes(o)),
+      shapes: (Array.isArray(saved.shapes) ? saved.shapes : def.shapes).filter(s => ALL_QUESTION_SHAPES.includes(s)),
+      hands: (Array.isArray(saved.hands) ? saved.hands : def.hands).filter(h => ALL_HANDS.includes(h)),
+      declarers: (Array.isArray(saved.declarers) ? saved.declarers : def.declarers).filter(d => ALL_DECLARERS.includes(d)),
+      playerRoles: (Array.isArray(saved.playerRoles) ? saved.playerRoles : def.playerRoles).filter(r => ALL_PLAYER_ROLES.includes(r)),
+      oppRoles: (Array.isArray(saved.oppRoles) ? saved.oppRoles : def.oppRoles).filter(r => ALL_OPP_ROLES.includes(r)),
+      questionCount: ALL_QUESTION_COUNTS.includes(saved.questionCount) ? saved.questionCount : 10
+    };
+  } catch (e) { return defaultCustomConfig(); }
+}
+function readCustomConfigFromUI() {
+  const get = (sel, attr, parse) => [...document.querySelectorAll(sel + ' input[type=checkbox]:checked')].map(c => parse ? parseInt(c.dataset[attr], 10) : c.dataset[attr]);
+  const qcountBox = document.querySelector('#questionCountSettings input[type=checkbox]:checked');
+  return {
+    categories: get('#catSettings', 'cat'),
+    turns: get('#turnSettings', 'turn', true),
+    ippatsuOptions: get('#ippatsuSettings', 'ippatsu'),
+    shapes: get('#shapeSettings', 'shape'),
+    hands: get('#handSettings', 'hand'),
+    declarers: get('#declarerSettings', 'declarer'),
+    playerRoles: get('#playerRoleSettings', 'playerrole'),
+    oppRoles: get('#oppRoleSettings', 'opprole'),
+    questionCount: qcountBox ? parseInt(qcountBox.dataset.qcount, 10) : 10
+  };
+}
+function syncConfigToUI(cfg) {
+  document.querySelectorAll('#catSettings input[type=checkbox]').forEach(c => { c.checked = cfg.categories.includes(c.dataset.cat); });
+  document.querySelectorAll('#turnSettings input[type=checkbox]').forEach(c => { c.checked = cfg.turns.includes(parseInt(c.dataset.turn, 10)); });
+  document.querySelectorAll('#ippatsuSettings input[type=checkbox]').forEach(c => { c.checked = cfg.ippatsuOptions.includes(c.dataset.ippatsu); });
+  document.querySelectorAll('#shapeSettings input[type=checkbox]').forEach(c => { c.checked = cfg.shapes.includes(c.dataset.shape); });
+  document.querySelectorAll('#handSettings input[type=checkbox]').forEach(c => { c.checked = cfg.hands.includes(c.dataset.hand); });
+  document.querySelectorAll('#declarerSettings input[type=checkbox]').forEach(c => { c.checked = cfg.declarers.includes(c.dataset.declarer); });
+  document.querySelectorAll('#playerRoleSettings input[type=checkbox]').forEach(c => { c.checked = cfg.playerRoles.includes(c.dataset.playerrole); });
+  document.querySelectorAll('#oppRoleSettings input[type=checkbox]').forEach(c => { c.checked = cfg.oppRoles.includes(c.dataset.opprole); });
+  document.querySelectorAll('#questionCountSettings input[type=checkbox]').forEach(c => { c.checked = cfg.questionCount === parseInt(c.dataset.qcount, 10); });
+}
+function saveCustomConfig() {
+  const cfg = readCustomConfigFromUI();
+  State.customConfig = cfg;
+  try { localStorage.setItem(CUSTOM_KEY, JSON.stringify(cfg)); } catch (e) {}
+}
+
+function buildSeatAssignment(eastSeat, declarer) {
+  const eastIdx = SEAT_ORDER.indexOf(eastSeat);
+  const seatWinds = {};
+  SEAT_ORDER.forEach((seat, i) => { seatWinds[seat] = WIND_NAMES[(i - eastIdx + 4) % 4]; });
+  return { seatWinds, playerIsDealer: seatWinds.player === 'East', declarerIsDealer: seatWinds[declarer] === 'East' };
+}
+function pickSeatAssignment(declarer, playerRoles, oppRoles) {
+  const candidates = [];
+  if (playerRoles.includes('Dealer') && oppRoles.includes('Non-Dealer')) candidates.push(buildSeatAssignment('player', declarer));
+  if (oppRoles.includes('Dealer') && playerRoles.includes('Non-Dealer')) candidates.push(buildSeatAssignment(declarer, declarer));
+  if (playerRoles.includes('Non-Dealer') && oppRoles.includes('Non-Dealer')) {
+    const others = ['kamicha', 'toimen', 'shimocha'].filter(p => p !== declarer);
+    others.forEach(seat => candidates.push(buildSeatAssignment(seat, declarer)));
+  }
+  if (!candidates.length) return buildSeatAssignment(declarer, declarer);
+  return pickOne(candidates);
+}
+function getTurnOrder(seatWinds) {
+  const order = [];
+  for (const wind of WIND_NAMES) {
+    for (const seat of ['player', 'shimocha', 'toimen', 'kamicha']) {
+      if (seatWinds[seat] === wind) { order.push(seat); break; }
+    }
+  }
+  return order;
+}
+
+function isYakuhaiFeasible(playerSeatWind, rank, ponds) {
+  const tileCounts = {};
+  for (const p in ponds) for (const t of ponds[p]) { const base = baseTile(t); tileCounts[base] = (tileCounts[base] || 0) + 1; }
+  const seatWindTile = { 'East': '1z', 'South': '2z', 'West': '3z', 'North': '4z' }[playerSeatWind];
+  const isDealer = playerSeatWind === 'East';
+  const count = t => tileCounts[t] || 0;
+  const dragons = ['5z', '6z', '7z'];
+  if (rank === 1) {
+    if (isDealer) return dragons.some(t => count(t) < 2);
+    const yakuhai = [...new Set(['1z', seatWindTile, ...dragons])];
+    return yakuhai.some(t => count(t) < 2);
+  }
+  if (isDealer) { if (count('1z') < 2) return true; return dragons.filter(t => count(t) < 2).length >= 2; }
+  const yakuhai = [...new Set(['1z', seatWindTile, ...dragons])];
+  return yakuhai.filter(t => count(t) < 2).length >= 2;
+}
+function pickYakuhaiWithFeasibility(playerSeatWind, ponds) {
+  const isPlayerDealer = playerSeatWind === 'East';
+  const wantRank2 = Math.random() < (isPlayerDealer ? 0.33 : 0.10);
+  const rank2Feasible = isYakuhaiFeasible(playerSeatWind, 2, ponds);
+  const rank1Feasible = isYakuhaiFeasible(playerSeatWind, 1, ponds);
+  let yakuhaiRank = 0;
+  if (wantRank2 && rank2Feasible) yakuhaiRank = 2;
+  else if (rank1Feasible) yakuhaiRank = 1;
+  else if (rank2Feasible) yakuhaiRank = 2;
+  if (yakuhaiRank > 0) return { name: 'Yakuhai', han: yakuhaiRank };
+  return { name: 'Tanyao', han: 1 };
+}
+function pickYaku(shape, isOpen, playerSeatWind, ponds) {
+  const yaku = [];
+  if (isOpen) {
+    if (Math.random() < 0.5) yaku.push(pickYakuhaiWithFeasibility(playerSeatWind, ponds));
+    else yaku.push({ name: 'Tanyao', han: 1 });
+    return yaku;
+  }
+  if (shape === 'Chiitoi') { yaku.push({ name: 'Chiitoi', han: 2 }); return yaku; }
+  if (Math.random() < 0.25) {
+    if (Math.random() < 0.5) yaku.push(pickYakuhaiWithFeasibility(playerSeatWind, ponds));
+    else yaku.push({ name: 'Tanyao', han: 1 });
+  }
+  if ((shape === 'Perfect' || shape === 'Good*2') && Math.random() < 0.5) yaku.push({ name: 'Pinfu', han: 1 });
+  if (Math.random() < 0.30) yaku.push({ name: 'Iipeikou', han: 1 });
+  return yaku;
+}
+
+function countPassedSuji(declarer, ponds, postStart) {
+  const fromDeclarer = new Set();
+  for (const t of ponds[declarer]) { if (isHonor(t)) continue; const num = tileNumber(t); const suit = t[1]; for (const s of SUJI_MAP[num]) fromDeclarer.add(s + suit); }
+  const fromOthers = new Set();
+  for (const p of Object.keys(ponds)) {
+    if (p === declarer) continue;
+    const start = postStart[p] ?? ponds[p].length;
+    for (let i = start; i < ponds[p].length; i++) {
+      const t = ponds[p][i];
+      if (!t || isHonor(t)) continue;
+      const num = tileNumber(t); const suit = t[1];
+      for (const s of SUJI_MAP[num]) fromOthers.add(s + suit);
+    }
+  }
+  const fromDiscards = new Set([...fromDeclarer, ...fromOthers]);
+  const tileCounts = {};
+  for (const p in ponds) for (const t of ponds[p]) { const base = baseTile(t); tileCounts[base] = (tileCounts[base] || 0) + 1; }
+  const fromNoChance = new Set();
+  for (const tk in tileCounts) {
+    if (tileCounts[tk] < 4) continue;
+    if (isHonor(tk)) continue;
+    const num = tileNumber(tk); const suit = tk[1];
+    for (const offset of [1, 2]) {
+      const sujiNum = num + offset;
+      if (sujiNum >= 4 && sujiNum <= 9) {
+        const key = sujiNum + suit;
+        if (!fromDiscards.has(key)) fromNoChance.add(key);
+      }
+    }
+  }
+  const total = new Set([...fromDiscards, ...fromNoChance]);
+  const fromOthersAdded = [...fromOthers].filter(s => !fromDeclarer.has(s)).length;
+  const suitOrder = { m: 0, p: 1, s: 2 };
+  const list = [...total].sort((a, b) => {
+    if (suitOrder[a[1]] !== suitOrder[b[1]]) return suitOrder[a[1]] - suitOrder[b[1]];
+    return parseInt(a[0], 10) - parseInt(b[0], 10);
+  });
+  return { total: total.size, fromDiscards: fromDiscards.size, fromDeclarer: fromDeclarer.size, fromOthersAdded, fromNoChance: fromNoChance.size, list };
+}
+function lookupRate(category, sujiCount) {
+  const table = DEAL_IN_RATES[category];
+  const keys = Object.keys(table).map(Number).sort((a, b) => a - b);
+  let chosen = keys[0];
+  for (const k of keys) if (sujiCount >= k) chosen = k;
+  return table[chosen];
+}
+
+function tileWeightsForPosition(i) {
+  if (i < 2)  return { honor: 10,  term: 6.5, e28: 1.0, mid: 0.25 };
+  if (i < 3)  return { honor: 8.0, term: 10.0, e28: 2.0, mid: 0.5 };
+  if (i < 5)  return { honor: 6.5, term: 6.5, e28: 5.0, mid: 2.0 };
+  if (i < 9)  return { honor: 5.0, term: 5.5, e28: 10, mid: 3.0 };
+  if (i < 13) return { honor: 3.5, term: 4.0, e28: 6.5, mid: 4.5 };
+  return       { honor: 4.0, term: 4.0, e28: 6.5, mid: 5.5 };
+}
+function pickWeightedTile(counts, position) {
+  const w = tileWeightsForPosition(position);
+  const candidates = [];
+  const weights = [];
+  for (const tl of ALL_TILES) {
+    if (counts[tl] >= 4) continue;
+    let weight;
+    if (isHonor(tl)) weight = w.honor;
+    else { const num = tileNumber(tl); if (num === 1 || num === 9) weight = w.term; else if (num === 2 || num === 8) weight = w.e28; else weight = w.mid; }
+    candidates.push(tl); weights.push(weight);
+  }
+  if (!candidates.length) return null;
+  const totalW = weights.reduce((a, b) => a + b, 0);
+  if (totalW <= 0) { const tl = candidates[Math.floor(Math.random() * candidates.length)]; counts[tl]++; return tl; }
+  let r = Math.random() * totalW;
+  for (let k = 0; k < candidates.length; k++) { r -= weights[k]; if (r <= 0) { counts[candidates[k]]++; return candidates[k]; } }
+  const last = candidates[candidates.length - 1];
+  counts[last]++;
+  return last;
+}
+
+function generatePonds(declarer, T, ippatsu, seatWinds) {
+  const counts = {};
+  ALL_TILES.forEach(tl => counts[tl] = 0);
+  const ponds = { kamicha: [], toimen: [], shimocha: [], player: [] };
+  const redPlaced = { "5m": false, "5p": false, "5s": false };
+  function pushPick(player, canonicalTile, allowRed = true) {
+    if (!canonicalTile) return;
+    let display = canonicalTile;
+    if (allowRed && !redPlaced[canonicalTile] && (canonicalTile === "5m" || canonicalTile === "5p" || canonicalTile === "5s")) {
+      const k = counts[canonicalTile];
+      if (Math.random() < 1 / (5 - k)) { redPlaced[canonicalTile] = true; display = "0" + canonicalTile[1]; }
+    }
+    ponds[player].push(display);
+  }
+  const turnOrder = getTurnOrder(seatWinds);
+  const playerPos = turnOrder.indexOf('player');
+  const declarerPos = turnOrder.indexOf(declarer);
+  const pondSize = {};
+  for (const seat of turnOrder) {
+    if (seat === 'player') pondSize[seat] = T - 1;
+    else if (turnOrder.indexOf(seat) < playerPos) pondSize[seat] = T;
+    else pondSize[seat] = T - 1;
+  }
+  let riichiIndex;
+  if (ippatsu) riichiIndex = (declarerPos < playerPos) ? T - 1 : Math.max(0, T - 2);
+  else riichiIndex = (declarerPos < playerPos) ? Math.max(0, T - 2) : Math.max(0, T - 3);
+  for (const seat of turnOrder) {
+    for (let i = 0; i < pondSize[seat]; i++) { const tl = pickWeightedTile(counts, i); pushPick(seat, tl); }
+  }
+  if (riichiIndex >= 0 && riichiIndex < ponds[declarer].length && isHonor(ponds[declarer][riichiIndex])) {
+    const numIdx = ponds[declarer].findIndex((tl, i) => i !== riichiIndex && !isHonor(tl));
+    if (numIdx !== -1) { const tmp = ponds[declarer][riichiIndex]; ponds[declarer][riichiIndex] = ponds[declarer][numIdx]; ponds[declarer][numIdx] = tmp; }
+  }
+  const postStart = {};
+  for (const seat of turnOrder) {
+    if (seat === declarer) { postStart[seat] = pondSize[seat]; continue; }
+    const seatPos = turnOrder.indexOf(seat);
+    const ownSize = pondSize[seat];
+    let start = ownSize;
+    if (ippatsu) {
+      if (declarerPos < playerPos) { if (seatPos > declarerPos && seatPos < playerPos) start = T - 1; }
+      else { if (seatPos > declarerPos) start = T - 2; else if (seatPos < playerPos) start = T - 1; }
+    } else {
+      if (declarerPos < playerPos) { if (seatPos > declarerPos) start = T - 2; else if (seatPos < playerPos) start = T - 1; }
+      else { if (seatPos > declarerPos) start = T - 3; else start = T - 2; }
+    }
+    postStart[seat] = Math.min(start, ownSize);
+  }
+  if (ippatsu) {
+    for (const seat of turnOrder) {
+      if (seat === declarer) continue;
+      const start = postStart[seat];
+      if (start < ponds[seat].length && Math.random() < 0.65) {
+        const currentTile = baseTile(ponds[seat][start]);
+        const pool = ponds[declarer].filter(x => counts[baseTile(x)] < 4 && baseTile(x) !== currentTile);
+        if (pool.length) {
+          const chosen = pool[Math.floor(Math.random() * pool.length)];
+          counts[currentTile]--; counts[baseTile(chosen)]++; ponds[seat][start] = baseTile(chosen);
+        }
+      }
+    }
+  }
+  if (!ippatsu) {
+    const lastIdx = ponds.player.length - 1;
+    if (lastIdx >= 0) {
+      const currentTile = baseTile(ponds.player[lastIdx]);
+      const pool = ponds[declarer].filter(x => counts[baseTile(x)] < 4 && baseTile(x) !== currentTile);
+      if (pool.length) {
+        const chosen = pool[Math.floor(Math.random() * pool.length)];
+        counts[currentTile]--; counts[baseTile(chosen)]++; ponds.player[lastIdx] = baseTile(chosen);
+      }
+    }
+  }
+  const all = [];
+  for (const p in ponds) ponds[p].forEach((tl, i) => all.push({ p, i, t: tl }));
+  const total = all.length;
+  const honors = all.filter(x => isHonor(x.t)).length;
+  let need = Math.ceil(total * 0.30) - honors;
+  if (need > 0) {
+    const protectedSet = new Set();
+    protectedSet.add(`${declarer}-${riichiIndex}`);
+    if (!ippatsu) protectedSet.add(`player-${ponds.player.length - 1}`);
+    if (ippatsu) {
+      for (const seat of Object.keys(postStart)) {
+        if (postStart[seat] < ponds[seat].length) protectedSet.add(`${seat}-${postStart[seat]}`);
+      }
+    }
+    const conv = shuffle(all.filter(x => {
+      if (x.p === declarer) return false;
+      if (protectedSet.has(`${x.p}-${x.i}`)) return false;
+      if (isHonor(x.t)) return false;
+      return (counts[baseTile(x.t)] || 0) < 4;
+    }));
+    for (const c of conv) {
+      if (need <= 0) break;
+      const hc = ALL_TILES.filter(tl => isHonor(tl) && counts[tl] < 4);
+      if (!hc.length) break;
+      const nt = hc[Math.floor(Math.random() * hc.length)];
+      counts[baseTile(c.t)]--; counts[nt]++; ponds[c.p][c.i] = nt; need--;
+    }
+  }
+  return { ponds, riichiIndex, postStart, ippatsu, turnOrder };
+}
+
+function computeShapeTierData(config) {
+  if (config.empty) return null;
+  const points = config.isOpen
+    ? (config.isDealer ? {1:1500, 2:2900, 3:5800, 4:11600} : {1:1000, 2:2000, 3:3900, 4:7700})
+    : (config.isDealer ? {1:2000, 2:3900, 3:7700, 4:12000} : {1:1300, 2:2600, 3:5200, 4:8000});
+  const chiitoiPts = config.isDealer ? CHIITOI_POINTS.dealer : CHIITOI_POINTS.nonDealer;
+  const maxTier = config.isOpen ? 11 : 8;
+  const shapes = ['Perfect', 'Good*2', 'Good+Ryankan', 'Good+Kanchan', 'Bad+Ryankan', 'Chiitoi'];
+  const cells = {};
+  for (let tier = 1; tier <= maxTier; tier++) { cells[tier] = {}; shapes.forEach(s => cells[tier][s] = new Set()); }
+  for (const key in config.map) {
+    const parts = key.split('|'); const shape = parts[0]; const han = parseInt(parts[1], 10); const tier = config.map[key];
+    if (tier < 1 || tier > maxTier) continue;
+    if (!cells[tier][shape]) cells[tier][shape] = new Set();
+    let ptVal;
+    if (!config.isOpen && shape === 'Chiitoi') ptVal = chiitoiPts[Math.min(han, 5)]; else ptVal = points[Math.min(han, 4)];
+    if (ptVal !== undefined) cells[tier][shape].add(ptVal);
+  }
+  const rows = [];
+  for (let tier = 1; tier <= maxTier; tier++) {
+    const row = { tier, cells: {} };
+    shapes.forEach(s => { row.cells[s] = [...cells[tier][s]].sort((a, b) => a - b); });
+    rows.push(row);
+  }
+  return { rows, shapes, maxTier };
+}
+const SHAPE_TIER_TABLES = [
+  { labelKey: 'panel.shapeTier.hidden', empty: true },
+  { labelKey: 'panel.shapeTier.menzenND', map: CLOSED_TIER_MAP, isOpen: false, isDealer: false },
+  { labelKey: 'panel.shapeTier.menzenD', map: CLOSED_TIER_MAP, isOpen: false, isDealer: true },
+  { labelKey: 'panel.shapeTier.fuuroNDC', map: OPEN_TIER_MAP_ND_C, isOpen: true, isDealer: false },
+  { labelKey: 'panel.shapeTier.fuuroNDNC', map: OPEN_TIER_MAP_ND_NC, isOpen: true, isDealer: false },
+  { labelKey: 'panel.shapeTier.fuuroDC', map: OPEN_TIER_MAP_D_C, isOpen: true, isDealer: true },
+  { labelKey: 'panel.shapeTier.fuuroDNC', map: OPEN_TIER_MAP_D_NC, isOpen: true, isDealer: true }
+];
+const SHAPE_TIER_DATA = SHAPE_TIER_TABLES.map(computeShapeTierData);
+const THRESHOLD_TABLES = [
+  { labelKey: 'panel.thresh.menzenVsND', table: CLOSED_THRESHOLDS['VS Non-Dealer'], maxTier: 8 },
+  { labelKey: 'panel.thresh.menzenVsD',  table: CLOSED_THRESHOLDS['VS Dealer'],     maxTier: 8 },
+  { labelKey: 'panel.thresh.menzenAsD',  table: CLOSED_THRESHOLDS['As Dealer'],     maxTier: 8 },
+  { labelKey: 'panel.thresh.fuuroVsND',  table: OPEN_THRESHOLDS['VS Non-Dealer'],   maxTier: 11 },
+  { labelKey: 'panel.thresh.fuuroVsD',   table: OPEN_THRESHOLDS['VS Dealer'],       maxTier: 11 },
+  { labelKey: 'panel.thresh.fuuroAsD',   table: OPEN_THRESHOLDS['As Dealer'],       maxTier: 11 }
+];
+const SHAPE_TIER_BTN_CONFIG = [
+  { labelKey: 'btn.shape.menzenND', state: 1 }, { labelKey: 'btn.shape.fuuroNDC', state: 3 },
+  { labelKey: 'btn.shape.menzenD', state: 2 }, { labelKey: 'btn.shape.fuuroND', state: 4 },
+  { labelKey: 'btn.shape.fuuroDC', state: 5 }, { labelKey: 'btn.shape.fuuroD', state: 6 }
+];
+const THRESHOLD_BTN_CONFIG = [
+  { labelKey: 'btn.thresh.menzenVsND', state: 1 }, { labelKey: 'btn.thresh.menzenVsD',  state: 2 },
+  { labelKey: 'btn.thresh.menzenAsD',  state: 3 }, { labelKey: 'btn.thresh.fuuroVsND',  state: 4 },
+  { labelKey: 'btn.thresh.fuuroVsD',   state: 5 }, { labelKey: 'btn.thresh.fuuroAsD',   state: 6 }
+];
+
+let State = {
+  mode: 'regular', lang: 'en', index: 0, total: 10, score: 0, combo: 0, maxCombo: 0, log: [],
+  q: null, step: 0, timerStart: 0, timerStopped: true, raf: null, kbdIdx: 0, boardToken: 0,
+  session: 0, transitioning: false,
+  stats: { s1Total: 0, s1Correct: 0, s2Total: 0, s2Correct: 0, s3Total: 0, s3Correct: 0 },
+  customConfig: defaultCustomConfig(),
+  thresholdIndex: 0, shapeTierIndex: 0, thresholdAuto: false, shapeTierAuto: false,
+  lastResult: null
+};
+let TimeAttackState = { active: false, timeLeft: 45, lastTick: 0, rafId: null, questionsAnswered: 0, paused: true };
+State.customConfig = loadCustomConfig();
+
+function updateComboDisplay() {
+  const pill = $('comboPill'); if (!pill) return;
+  const displayCombo = Math.min(100, State.combo);
+  const mult = getComboMultiplier(State.combo);
+  pill.textContent = t('game.combo') + ' ' + displayCombo + (mult > 1 ? ' · ×' + mult.toFixed(1) : '');
+  pill.classList.toggle('active', mult > 1);
+}
+function updateScorePill() { const pill = $('scorePill'); if (pill) pill.textContent = t('game.score') + ' ' + State.score; }
+
+function startTimeAttack() {
+  TimeAttackState = { active: true, timeLeft: 45, lastTick: performance.now(), rafId: null, questionsAnswered: 0, paused: true };
+  TimeAttackState.rafId = requestAnimationFrame(timeAttackTick);
+  updateTimeAttackDisplay();
+}
+function timeAttackTick(now) {
+  if (!TimeAttackState.active) return;
+  const dt = (now - TimeAttackState.lastTick) / 1000;
+  TimeAttackState.lastTick = now;
+  if (!TimeAttackState.paused) {
+    TimeAttackState.timeLeft -= dt;
+    if (TimeAttackState.timeLeft <= 0) { TimeAttackState.timeLeft = 0; updateTimeAttackDisplay(); endTimeAttack(); return; }
+  }
+  updateTimeAttackDisplay();
+  TimeAttackState.rafId = requestAnimationFrame(timeAttackTick);
+}
+function pauseTimeAttack() { if (TimeAttackState.active) TimeAttackState.paused = true; }
+function resumeTimeAttack() { if (!TimeAttackState.active) return; TimeAttackState.paused = false; TimeAttackState.lastTick = performance.now(); }
+function addTimeAttackTime(seconds) { if (!TimeAttackState.active) return; TimeAttackState.timeLeft = Math.max(0, TimeAttackState.timeLeft + seconds); }
+function updateTimeAttackDisplay() {
+  const pill = $('timerPill');
+  if (pill) {
+    const secs = Math.max(0, TimeAttackState.timeLeft);
+    pill.textContent = secs.toFixed(1) + 's';
+    if (secs < 10) { pill.style.color = '#fca5a5'; pill.style.borderColor = '#dc2626'; }
+    else { pill.style.color = ''; pill.style.borderColor = ''; }
+  }
+}
+function endTimeAttack() {
+  if (!TimeAttackState.active) return;
+  TimeAttackState.active = false;
+  if (TimeAttackState.rafId) { cancelAnimationFrame(TimeAttackState.rafId); TimeAttackState.rafId = null; }
+  State.q = null;
+  showTimeAttackResults();
+}
+
+function buildBar(pctVal) {
+  const full = Math.max(1, Math.min(5, Math.ceil(pctVal / 20)));
+  return '▰'.repeat(full) + '▱'.repeat(5 - full);
+}
+function buildShareText() {
+  if (!State.lastResult) return '';
+  const r = State.lastResult;
+  const lang = State.lang || 'en';
+  const lines = [];
+  lines.push('🪬 ' + (lang === 'ja' ? 'イーシャンテン オラクル' : '1-shanten Oracle') + ' · ' + t('mode.' + r.mode));
+  if (r.isHighScore) lines.push('🏅 ' + t('results.highScoreRegular'));
+  lines.push('');
+  if (r.mode === 'regular' && r.grade) lines.push('🏆 ' + r.grade + ' · ' + r.score.toLocaleString() + ' ' + t('home.hs.ptsSuffix'));
+  else if (r.mode === 'timeattack') lines.push('🏆 ' + r.score.toLocaleString() + ' ' + t('home.hs.ptsSuffix'));
+  else lines.push('🎯 ' + t('results.practiceComplete'));
+  lines.push('');
+  lines.push('🎯 ' + t('results.suji').padEnd(11) + ' ' + buildBar(r.s1Pct) + ' ' + r.s1Pct + '%');
+  lines.push('🎲 ' + t('results.dealin').padEnd(11) + ' ' + buildBar(r.s2Pct) + ' ' + r.s2Pct + '%');
+  lines.push('🀄 ' + t('results.pushfold').padEnd(11) + ' ' + buildBar(r.s3Pct) + ' ' + r.s3Pct + '%');
+  lines.push('🔥 ' + t('results.maxCombo').padEnd(11) + ' ×' + r.maxCombo);
+  lines.push('');
+  lines.push(APP_URL);
+  return lines.join('\n');
+}
+async function shareResult() {
+  const txt = buildShareText();
+  if (!txt) return;
+  const btn = $('shareBtn');
+  try {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      await navigator.clipboard.writeText(txt);
+    } else {
+      const ta = document.createElement('textarea');
+      ta.value = txt; ta.style.position = 'fixed'; ta.style.left = '-9999px';
+      document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+    }
+    btn.innerHTML = t('results.shared');
+    btn.classList.add('copied');
+  } catch (e) { btn.innerHTML = '❌'; }
+  setTimeout(() => { btn.innerHTML = t('results.share'); btn.classList.remove('copied'); }, 1500);
+}
+
+function recordResult(mode, total, grade, s1Pct, s2Pct, s3Pct, isHighScore) {
+  State.lastResult = { mode, score: total, grade, s1Pct, s2Pct, s3Pct, maxCombo: State.maxCombo, isHighScore };
+  const sb = $('shareBtn');
+  if (sb) { sb.innerHTML = t('results.share'); sb.classList.remove('copied'); }
+}
+function getTimeAttackTier(score) {
+  if (score >= 100000) return 5;
+  if (score >= 75000) return 4;
+  if (score >= 50000) return 3;
+  if (score >= 25000) return 2;
+  return 1;
+}
+function showTimeAttackResults() {
+  const hs = loadHighScores();
+  const isHighScore = State.score > hs.timeattack;
+  saveHighScore('timeattack', State.score);
+  renderHomeHighScores();
+  const s1Pct = Math.round((State.stats.s1Correct / Math.max(1, State.stats.s1Total)) * 100);
+  const s2Pct = Math.round((State.stats.s2Correct / Math.max(1, State.stats.s2Total)) * 100);
+  const s3Pct = Math.round((State.stats.s3Correct / Math.max(1, State.stats.s3Total)) * 100);
+  $('resultsTitle').textContent = t('results.timesUp');
+  $('gradeLetter').style.display = '';
+  const tier = getTimeAttackTier(State.score);
+  $('gradeLetter').className = 'grade g-score tier-' + tier;
+  $('gradeLetter').textContent = State.score.toLocaleString();
+  $('resultsGrid').innerHTML = `
+    <div><span>${t('results.suji')}</span><b>${s1Pct}% <span style="font-size:12px;color:#94a3b8;font-weight:700;">(${State.stats.s1Correct}/${State.stats.s1Total})</span></b></div>
+    <div><span>${t('results.dealin')}</span><b>${s2Pct}% <span style="font-size:12px;color:#94a3b8;font-weight:700;">(${State.stats.s2Correct}/${State.stats.s2Total})</span></b></div>
+    <div><span>${t('results.pushfold')}</span><b>${s3Pct}% <span style="font-size:12px;color:#94a3b8;font-weight:700;">(${State.stats.s3Correct}/${State.stats.s3Total})</span></b></div>
+    <div><span>${t('results.maxCombo')}</span><b>${State.maxCombo}</b></div>
+  `;
+  recordResult('timeattack', State.score, null, s1Pct, s2Pct, s3Pct, isHighScore);
+  $('game').classList.remove('active');
+  $('results').classList.add('active');
+}
+function showRegularResults() {
+  const totals = State.log.reduce((a, l) => { a.pts += l.pts; a.correct += l.correct; a.steps += l.steps; a.timeBonus += l.timeBonus; return a; }, { pts: 0, correct: 0, steps: 0, timeBonus: 0 });
+  const total = totals.pts + totals.timeBonus;
+  const ratio = total / (State.total * 1200);
+  const grade = computeGrade(ratio);
+  const hs = loadHighScores();
+  const isHighScore = total > hs.regular;
+  saveHighScore('regular', total, grade);
+  renderHomeHighScores();
+  const s1Pct = Math.round((State.stats.s1Correct / Math.max(1, State.stats.s1Total)) * 100);
+  const s2Pct = Math.round((State.stats.s2Correct / Math.max(1, State.stats.s2Total)) * 100);
+  const s3Pct = Math.round((State.stats.s3Correct / Math.max(1, State.stats.s3Total)) * 100);
+  $('resultsTitle').textContent = t('results.runComplete');
+  $('gradeLetter').style.display = '';
+  $('gradeLetter').textContent = grade;
+  $('gradeLetter').className = 'grade g-' + grade;
+  $('resultsGrid').innerHTML = `
+    <div><span>${t('results.totalScore')}</span><b>${total.toLocaleString()}</b></div>
+    <div><span>${t('results.timeBonus')}</span><b>+${totals.timeBonus.toLocaleString()}</b></div>
+    <div><span>${t('results.suji')}</span><b>${s1Pct}% <span style="font-size:12px;color:#94a3b8;font-weight:700;">(${State.stats.s1Correct}/${State.stats.s1Total})</span></b></div>
+    <div><span>${t('results.dealin')}</span><b>${s2Pct}% <span style="font-size:12px;color:#94a3b8;font-weight:700;">(${State.stats.s2Correct}/${State.stats.s2Total})</span></b></div>
+    <div><span>${t('results.pushfold')}</span><b>${s3Pct}% <span style="font-size:12px;color:#94a3b8;font-weight:700;">(${State.stats.s3Correct}/${State.stats.s3Total})</span></b></div>
+    <div><span>${t('results.maxCombo')}</span><b>${State.maxCombo}</b></div>
+  `;
+  recordResult('regular', total, grade, s1Pct, s2Pct, s3Pct, isHighScore);
+  $('game').classList.remove('active');
+  $('results').classList.add('active');
+}
+function showCustomResults() {
+  const s1Pct = Math.round((State.stats.s1Correct / Math.max(1, State.stats.s1Total)) * 100);
+  const s2Pct = Math.round((State.stats.s2Correct / Math.max(1, State.stats.s2Total)) * 100);
+  const s3Pct = Math.round((State.stats.s3Correct / Math.max(1, State.stats.s3Total)) * 100);
+  $('resultsTitle').textContent = t('results.practiceComplete');
+  $('gradeLetter').style.display = 'none';
+  $('resultsGrid').innerHTML = `
+    <div><span>${t('results.suji')}</span><b>${s1Pct}% <span style="font-size:12px;color:#94a3b8;font-weight:700;">(${State.stats.s1Correct}/${State.stats.s1Total})</span></b></div>
+    <div><span>${t('results.dealin')}</span><b>${s2Pct}% <span style="font-size:12px;color:#94a3b8;font-weight:700;">(${State.stats.s2Correct}/${State.stats.s2Total})</span></b></div>
+    <div><span>${t('results.pushfold')}</span><b>${s3Pct}% <span style="font-size:12px;color:#94a3b8;font-weight:700;">(${State.stats.s3Correct}/${State.stats.s3Total})</span></b></div>
+    <div><span>${t('results.maxCombo')}</span><b>${State.maxCombo}</b></div>
+  `;
+  recordResult('custom', 0, null, s1Pct, s2Pct, s3Pct, false);
+  $('game').classList.remove('active');
+  $('results').classList.add('active');
+}
+
+function thresholdCellStyle(val) {
+  if (val >= 0.25) return { bg: '#6fa8dc', color: '#fff' };
+  if (val >= 0.20) return { bg: '#a4c2f4', color: '#000' };
+  if (val >= 0.15) return { bg: '#93c47d', color: '#000' };
+  if (val >= 0.10) return { bg: '#ffd966', color: '#000' };
+  if (val >= 0.05) return { bg: '#ea9999', color: '#000' };
+  return { bg: '#b7b7b7', color: '#fff' };
+}
+function updateIndicatorButton(btn, index, autoEnabled) {
+  if (!btn) return;
+  if (index === 0) {
+    btn.textContent = t('game.panel.auto');
+    btn.title = autoEnabled ? t('game.panel.autoOnTip') : t('game.panel.autoTip');
+    btn.classList.toggle('auto-active', autoEnabled);
+  } else {
+    btn.textContent = t('game.panel.hide');
+    btn.title = t('game.panel.hideTip');
+    btn.classList.remove('auto-active');
+  }
+}
+function renderThresholdPanel() {
+  const wrap = $('thresholdTableWrap'), title = $('thresholdTitle'), indicator = $('threshIndicator'), idx = State.thresholdIndex;
+  updateIndicatorButton(indicator, idx, State.thresholdAuto);
+  const directNav = $('thresholdDirectNav');
+  if (directNav) directNav.querySelectorAll('.btn').forEach(btn => btn.classList.toggle('active', parseInt(btn.dataset.state, 10) === idx));
+  if (idx === 0) { title.textContent = t('game.panel.hidden'); wrap.innerHTML = `<div style="font-size:11px;color:var(--muted);padding:14px 0;text-align:center;">${t('game.panel.emptyHint')}</div>`; return; }
+  const entry = THRESHOLD_TABLES[idx - 1];
+  title.textContent = t(entry.labelKey);
+  const turns = ['Turn 5', 'Turn 9', 'Turn 14'];
+  const turnKeys = ['settings.turn.5', 'settings.turn.9', 'settings.turn.14'];
+  let html = `<table class="thresh-table"><thead><tr><th>${t('game.panel.tier')}</th>`;
+  turns.forEach((_, i) => html += `<th>${t(turnKeys[i])}</th>`);
+  html += '</tr></thead><tbody>';
+  for (let tier = 1; tier <= entry.maxTier; tier++) {
+    html += `<tr><td>${tier}</td>`;
+    for (const turn of turns) {
+      const val = entry.table[turn][tier];
+      if (val === undefined) html += '<td>-</td>';
+      else { const style = thresholdCellStyle(val); html += `<td style="background:${style.bg};color:${style.color};">${Math.round(val*100)}%</td>`; }
+    }
+    html += '</tr>';
+  }
+  html += '</tbody></table>';
+  wrap.innerHTML = html;
+}
+function renderShapeTierPanel() {
+  const wrap = $('shapeTierTableWrap'), title = $('shapeTierTitle'), indicator = $('shapeTierIndicator'), idx = State.shapeTierIndex;
+  updateIndicatorButton(indicator, idx, State.shapeTierAuto);
+  const directNav = $('shapeTierDirectNav');
+  if (directNav) directNav.querySelectorAll('.btn').forEach(btn => btn.classList.toggle('active', parseInt(btn.dataset.state, 10) === idx));
+  if (idx === 0) { title.textContent = t('game.panel.hidden'); wrap.innerHTML = `<div style="font-size:11px;color:var(--muted);padding:14px 0;text-align:center;">${t('game.panel.emptyHint')}</div>`; return; }
+  const entry = SHAPE_TIER_TABLES[idx], data = SHAPE_TIER_DATA[idx];
+  title.textContent = t(entry.labelKey);
+  if (!data) { wrap.innerHTML = '<div style="font-size:11px;color:var(--muted);padding:14px 0;text-align:center;">-</div>'; return; }
+  let html = `<table class="thresh-table"><thead><tr><th>${t('game.panel.tier')}</th>`;
+  data.shapes.forEach(s => {
+    let label = s;
+    if (s === 'Perfect') label = 'A'; else if (s === 'Good*2') label = 'B'; else if (s === 'Good+Ryankan') label = 'C';
+    else if (s === 'Good+Kanchan') label = 'D'; else if (s === 'Bad+Ryankan') label = 'E'; else if (s === 'Chiitoi') label = 'F';
+    html += `<th>${label}</th>`;
+  });
+  html += '</tr></thead><tbody>';
+  for (const row of data.rows) {
+    html += `<tr><td>${row.tier}</td>`;
+    for (const shape of data.shapes) {
+      const scores = row.cells[shape] || [];
+      if (!scores.length) html += '<td>-</td>';
+      else html += `<td>${scores.join('/')}</td>`;
+    }
+    html += '</tr>';
+  }
+  html += '</tbody></table>';
+  wrap.innerHTML = html;
+}
+function buildDirectNav(navId, config, onPick) {
+  const nav = $(navId);
+  nav.innerHTML = '';
+  config.forEach(item => {
+    const btn = document.createElement('button');
+    btn.className = 'btn'; btn.type = 'button'; btn.dataset.state = item.state; btn.textContent = t(item.labelKey);
+    btn.addEventListener('click', () => onPick(item.state));
+    nav.appendChild(btn);
+  });
+}
+
+function buildDealInChartHTML() {
+  const categories = ['Double musuji 4/5/6', 'Musuji 3/7', 'Musuji 2/8', 'Katamusuji 4/5/6', 'Musuji 1/9'];
+  const minSujiForBucket = (cat, bucketLabel) => {
+    const table = DEAL_IN_RATES[cat];
+    const keys = Object.keys(table).map(Number).sort((a, b) => a - b);
+    for (const k of keys) if (rateToBucket(table[k]) === bucketLabel) return k;
+    return null;
+  };
+  let html = `<table class="deal-in-chart"><thead><tr><th>${t('dealin.rateHeader')}</th>`;
+  for (const cat of categories) html += `<th>${catLabel(cat)}</th>`;
+  html += '</tr></thead><tbody>';
+  for (const bucket of RATE_BUCKETS) {
+    html += `<tr><td>${bucket.label}</td>`;
+    for (const cat of categories) { const minSuji = minSujiForBucket(cat, bucket.label); html += `<td>${minSuji !== null ? minSuji : '—'}</td>`; }
+    html += '</tr>';
+  }
+  html += '</tbody></table>';
+  return html;
+}
+function openDealInModal() { $('dealInChartWrap').innerHTML = buildDealInChartHTML(); $('dealInModal').classList.add('active'); }
+function closeDealInModal() { $('dealInModal').classList.remove('active'); }
+function shapeTileEl(name) {
+  const wrap = document.createElement('div');
+  wrap.className = 'shape-tile';
+  const img = document.createElement('img');
+  img.src = `./tiles/${name}.webp`; img.alt = name; img.draggable = false;
+  img.onerror = () => {
+    img.remove();
+    const fb = document.createElement('div');
+    fb.className = 'shape-tile-fb';
+    if (name.endsWith('z')) { fb.classList.add('honor'); fb.innerHTML = `<span class="stf-honor">${HONOR_CHARS[name[0]]}</span>`; }
+    else { const isRed = name[0] === '0'; const numDisplay = isRed ? '5' : name[0]; fb.innerHTML = `<span class="stf-num${isRed ? ' stf-red' : ''}">${numDisplay}</span><span class="stf-suit s-${name[1]}">${SUIT_CHARS[name[1]]}</span>`; }
+    wrap.appendChild(fb);
+  };
+  wrap.appendChild(img);
+  return wrap;
+}
+function getAllShapeReference() {
+  return SHAPE_REFERENCE.concat(ALL_OTHER_SHAPES.map(k => ({ nameKey: SHAPE_LABEL_KEYS[k], acceptance: OTHER_SHAPES[k].accept, goodRate: OTHER_SHAPES[k].good, hand: EXTRA_SHAPE_HANDS[k] })));
+}
+function buildShapesContent() {
+  const wrap = $('shapesContentWrap');
+  wrap.innerHTML = '';
+  getAllShapeReference().forEach(shape => {
+    const item = document.createElement('div');
+    item.className = 'shape-item';
+    const h3 = document.createElement('h3'); h3.textContent = t(shape.nameKey); item.appendChild(h3);
+    const meta = document.createElement('div'); meta.className = 'shape-meta';
+    meta.innerHTML = `<span>${t('shapes.acceptance')} <strong>${tf('shapes.tilesUnit', { n: shape.acceptance })}</strong></span><span>${t('shapes.goodRate')} <strong>${shape.goodRate}</strong></span>`;
+    item.appendChild(meta);
+    const row = document.createElement('div'); row.className = 'shape-tiles';
+    shape.hand.forEach(name => row.appendChild(shapeTileEl(name)));
+    item.appendChild(row); wrap.appendChild(item);
+  });
+}
+function openShapesModal() { buildShapesContent(); $('shapesModal').classList.add('active'); }
+function closeShapesModal() { $('shapesModal').classList.remove('active'); }
+function renderHelpBody() {
+  $('helpBody').innerHTML = `
+    <h3>${t('help.overview.title')}</h3><p>${t('help.overview.body')}</p>
+    <h3>${t('help.step1.title')}</h3><p>${t('help.step1.body')}</p>
+    <h3>${t('help.step2.title')}</h3><p>${t('help.step2.body')}</p>
+    <h3>${t('help.step3.title')}</h3><p>${t('help.step3.body')}</p><ul>${t('help.step3.list')}</ul>
+    <h3>${t('help.pinfu.title')}</h3><p>${t('help.pinfu.body')}</p>
+    <h3>${t('help.ippatsu.title')}</h3><p>${t('help.ippatsu.body')}</p>
+    <h3>${t('help.callable.title')}</h3><p>${t('help.callable.body')}</p>
+    <h3>${t('help.scoring.title')}</h3><ul>${t('help.scoring.list')}</ul>
+    <h3>${t('help.tables.title')}</h3><ul>${t('help.tables.list')}</ul>
+    <h3>${t('help.grades.title')}</h3><p>${t('help.grades.body')}</p>
+    <h3>${t('help.combo.title')}</h3><p>${t('help.combo.body')}</p>
+    <h3>${t('help.ta.title')}</h3><ul>${t('help.ta.list')}</ul>
+    <h3>${t('help.controls.title')}</h3><p>${t('help.controls.body')}</p>
+  `;
+}
+function openHelpModal() { renderHelpBody(); $('helpModal').classList.add('active'); }
+function closeHelpModal() { $('helpModal').classList.remove('active'); }
+function openAboutModal() { $('aboutModal').classList.add('active'); }
+function closeAboutModal() { $('aboutModal').classList.remove('active'); }
+
+function getQuestionOptions() {
+  if (isCustom()) return State.customConfig;
+  return { categories: ALL_CATEGORIES, turns: ALL_TURNS, ippatsuOptions: ALL_IPPATSU_OPTIONS, shapes: ALL_SHAPES, hands: ALL_HANDS, declarers: ALL_DECLARERS, playerRoles: ALL_PLAYER_ROLES, oppRoles: ALL_OPP_ROLES };
+}
+
+function computeTierInfo(q) {
+  const { isOpen, yaku, doraCount, shape, playerIsDealer, declarerIsDealer, declarer, turn, ippatsu } = q;
+  const hasPinfu = yaku.some(y => y.name === 'Pinfu');
+  const hasSurviving = yaku.some(y => y.name === 'Tanyao' || y.name === 'Yakuhai');
+  const canCall = !isOpen && hasSurviving && shape !== 'Chiitoi';
+  let baseHan, useOpenChart = false, callableOffset = 0;
+  if (isOpen) { baseHan = yaku.reduce((s, y) => s + y.han, 0) + doraCount; useOpenChart = true; }
+  else if (canCall) { baseHan = yaku.filter(y => y.name === 'Tanyao' || y.name === 'Yakuhai').reduce((s, y) => s + y.han, 0) + doraCount; useOpenChart = true; callableOffset = -1; }
+  else { baseHan = yaku.reduce((s, y) => s + y.han, 0) + doraCount + 1; }
+  baseHan = Math.max(1, baseHan);
+  const baseShape = getBaseShape(shape);
+  const shapeOffset = getShapeOffset(shape);
+  const cFlag = declarer === 'kamicha' ? 'C' : 'NC';
+  let tierMap;
+  if (useOpenChart) { tierMap = playerIsDealer ? (cFlag === 'C' ? OPEN_TIER_MAP_D_C : OPEN_TIER_MAP_D_NC) : (cFlag === 'C' ? OPEN_TIER_MAP_ND_C : OPEN_TIER_MAP_ND_NC); }
+  else tierMap = CLOSED_TIER_MAP;
+  const maxTier = useOpenChart ? 11 : 8;
+  const rawTier = tierMap[`${baseShape}|${baseHan}`];
+  let tier, tier2 = null;
+  if (rawTier === undefined) tier = maxTier;
+  else tier = Math.max(1, rawTier + shapeOffset + callableOffset);
+  if (hasPinfu && !canCall && !isOpen) {
+    const adjHan = baseHan - 1;
+    const adjRawTier = tierMap[`${baseShape}|${adjHan}`];
+    if (adjRawTier !== undefined && adjRawTier !== rawTier) tier2 = Math.max(1, Math.min(maxTier, adjRawTier + shapeOffset));
+  }
+  let roleKey = playerIsDealer ? 'As Dealer' : (declarerIsDealer ? 'VS Dealer' : 'VS Non-Dealer');
+  let ippatsuApplied = false, ippatsuCase = null, tierAdjust = 0;
+  if (ippatsu) {
+    ippatsuApplied = true;
+    if (playerIsDealer && !declarerIsDealer) { ippatsuCase = 'asDealerND'; tierAdjust = 1; }
+    else if (!declarerIsDealer) { ippatsuCase = 'ndND'; roleKey = 'VS Dealer'; }
+    else { ippatsuCase = 'ndD'; roleKey = 'VS Dealer'; tierAdjust = 2; }
+  }
+  tier = Math.max(1, Math.min(maxTier, tier + tierAdjust));
+  if (tier2 !== null) tier2 = Math.max(1, Math.min(maxTier, tier2 + tierAdjust));
+  const threshTable = useOpenChart ? OPEN_THRESHOLDS : CLOSED_THRESHOLDS;
+  const turnKey = `Turn ${turn}`;
+  const threshA = threshTable[roleKey][turnKey][tier] ?? 0;
+  let threshold;
+  if (tier2 !== null) { const threshB = threshTable[roleKey][turnKey][tier2] ?? 0; threshold = (threshA + threshB) / 2; }
+  else threshold = threshA;
+  return { tier, tier2, threshold, roleKey, ippatsuApplied, ippatsuCase, useOpenChart, canCall, hasPinfu, baseHan };
+}
+
+function makeQuestion() {
+  const opts = getQuestionOptions();
+  const declarer = pickOne(opts.declarers);
+  const turn = pickOne(opts.turns);
+  const category = pickOne(opts.categories);
+  const ippatsu = opts.ippatsuOptions.includes('ippatsu') && opts.ippatsuOptions.includes('nonIppatsu')
+    ? Math.random() < 0.4
+    : opts.ippatsuOptions.includes('ippatsu');
+  const seatAssign = pickSeatAssignment(declarer, opts.playerRoles, opts.oppRoles);
+  const seatWinds = seatAssign.seatWinds;
+  const playerIsDealer = seatAssign.playerIsDealer;
+  const declarerIsDealer = seatAssign.declarerIsDealer;
+  const roundLabel = pickOne(ROUND_LABELS);
+  const { ponds, riichiIndex, postStart } = generatePonds(declarer, turn, ippatsu, seatWinds);
+  const sujiResult = countPassedSuji(declarer, ponds, postStart);
+  const passedSuji = sujiResult.total;
+  const rate = lookupRate(category, passedSuji);
+  let allowedHands = opts.hands.filter(h => h === 'menzen' || h === 'fuuro');
+  if (!allowedHands.length) allowedHands = ['menzen'];
+  const shapesForClosed = opts.shapes.filter(s => { if (s === 'Chiitoi') return allowedHands.includes('menzen'); return true; });
+  const shapesForOpen = opts.shapes.filter(s => s !== 'Chiitoi');
+  allowedHands = allowedHands.filter(h => { if (h === 'menzen') return shapesForClosed.length > 0; if (h === 'fuuro') return shapesForOpen.length > 0; return false; });
+  if (!allowedHands.length) allowedHands = ['menzen'];
+  const isOpen = allowedHands.length === 1 ? (allowedHands[0] === 'fuuro') : (Math.random() < 0.45);
+  const compatibleShapes = isOpen ? shapesForOpen : shapesForClosed;
+  const shape = pickOne(compatibleShapes.length ? compatibleShapes : ['Perfect']);
+  const doraCount = pickOne([0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 3]);
+  const yaku = pickYaku(shape, isOpen, seatWinds.player, ponds);
+  const yakuHan = yaku.reduce((s, y) => s + y.han, 0);
+  const riichiHan = isOpen ? 0 : 1;
+  const han = Math.min(5, yakuHan + doraCount + riichiHan);
+  const q = {
+    declarer, turn, ponds, passedSuji, sujiResult, category, rate, rateBucket: rateToBucket(rate),
+    isOpen, shape, yaku, doraCount, han, riichiHan, ippatsu, riichiIndex, postStart,
+    playerIsDealer, declarerIsDealer, seatWinds, roundLabel,
+    answered: { s1: false, s2: false, s3: false }, elapsed: 0
+  };
+  const tierInfo = computeTierInfo(q);
+  q.tier = tierInfo.tier;
+  q.tier2 = tierInfo.tier2;
+  q.threshold = tierInfo.threshold;
+  q.roleKey = tierInfo.roleKey;
+  q.ippatsuApplied = tierInfo.ippatsuApplied;
+  q.ippatsuCase = tierInfo.ippatsuCase;
+  q.effectiveOpen = isOpen || tierInfo.canCall;
+  q.canCall = tierInfo.canCall;
+  q.hasPinfu = tierInfo.hasPinfu;
+  const verdictLevel = getVerdictLevel(rate, q.threshold);
+  q.verdictLevel = verdictLevel;
+  q.borderline = isBorderlineVerdict(verdictLevel);
+  q.decision = (verdictLevel === 'push' || verdictLevel === 'ironPush') ? 'PUSH'
+             : (verdictLevel === 'pull' || verdictLevel === 'ironPull') ? 'FOLD' : 'PUSH';
+  return q;
+}
+
+function tileEl(name, rotated) {
+  const div = document.createElement('div');
+  div.className = 'tile' + (rotated ? ' rotated' : '');
+  const img = document.createElement('img');
+  img.src = `./tiles/${name}.webp`; img.alt = name; img.draggable = false;
+  img.onerror = () => {
+    img.remove();
+    const fb = document.createElement('div');
+    fb.className = 'tile-fallback';
+    if (name.endsWith('z')) { fb.classList.add('honor'); fb.innerHTML = `<span class="tf-honor">${HONOR_CHARS[name[0]]}</span>`; }
+    else { const isRed = name[0] === '0'; const numDisplay = isRed ? '5' : name[0]; const redStyle = isRed ? 'color:#dc2626;' : ''; fb.innerHTML = `<span class="tf-num" style="${redStyle}">${numDisplay}</span><span class="tf-suit s-${name[1]}">${SUIT_CHARS[name[1]]}</span>`; }
+    div.appendChild(fb);
+  };
+  div.appendChild(img);
+  return div;
+}
+function fitBoard() {
+  const wrap = $('tableWrap'), board = $('board');
+  if (!wrap || !board) return;
+  const w = wrap.clientWidth, h = wrap.clientHeight;
+  if (!w || !h) return;
+  const s = Math.min(w / BOARD_W, h / BOARD_H) * 0.97;
+  const tx = (w - BOARD_W * s) / 2, ty = (h - BOARD_H * s) / 2;
+  board.style.transform = `translate(${tx}px, ${ty}px) scale(${s})`;
+}
+window.addEventListener('resize', () => { clearTimeout(fitBoard._t); fitBoard._t = setTimeout(fitBoard, 80); });
+window.addEventListener('orientationchange', () => { setTimeout(fitBoard, 180); });
+
+function renderBoard(q) {
+  return new Promise(resolve => {
+    const token = ++State.boardToken;
+    const board = $('board');
+    board.innerHTML = '';
+    const windChar = w => WIND_CHARS[w] || '';
+    const lblT = document.createElement('div');
+    lblT.className = 'seat-label'; lblT.id = 'seatLabelToimen';
+    lblT.style.left = '560px'; lblT.style.top = '335px'; lblT.style.transform = 'translate(-50%, -50%) rotate(180deg)';
+    lblT.innerHTML = `<span class="wind">${windChar(q.seatWinds.toimen)}</span>${t('board.toimen')}`;
+    board.appendChild(lblT);
+    const lblK = document.createElement('div');
+    lblK.className = 'seat-label'; lblK.id = 'seatLabelKamicha';
+    lblK.style.left = '395px'; lblK.style.top = '460px'; lblK.style.transform = 'translate(-50%, -50%) rotate(90deg)';
+    lblK.innerHTML = `<span class="wind">${windChar(q.seatWinds.kamicha)}</span>${t('board.kamicha')}`;
+    board.appendChild(lblK);
+    const lblS = document.createElement('div');
+    lblS.className = 'seat-label'; lblS.id = 'seatLabelShimocha';
+    lblS.style.left = '725px'; lblS.style.top = '460px'; lblS.style.transform = 'translate(-50%, -50%) rotate(-90deg)';
+    lblS.innerHTML = `<span class="wind">${windChar(q.seatWinds.shimocha)}</span>${t('board.shimocha')}`;
+    board.appendChild(lblS);
+
+    const keys = ['toimen', 'kamicha', 'shimocha', 'player'];
+    const pondEls = {};
+    for (const key of keys) {
+      const el = document.createElement('div');
+      el.className = 'pond';
+      const tiles = q.ponds[key];
+      const perRow = Math.min(6, tiles.length);
+      let extraW = 0;
+      if (key === q.declarer && q.riichiIndex >= 0 && q.riichiIndex < tiles.length - 1) extraW = 32;
+      el.style.width = (perRow * 70 + Math.max(0, perRow - 1) * 2 + 1 + extraW) + 'px';
+      tiles.forEach((tl, i) => {
+        const isRiichi = (key === q.declarer && i === q.riichiIndex);
+        const te = tileEl(tl, isRiichi);
+        if (isRiichi) te.classList.add('riichi-tile');
+        el.appendChild(te);
+      });
+      board.appendChild(el);
+      pondEls[key] = el;
+    }
+
+    const cp = document.createElement('div');
+    cp.className = 'center-panel'; cp.id = 'centerPanel';
+    cp.innerHTML = `<div class="cp-round" id="centerPanelRound">${roundLabel(q.roundLabel)}</div><div class="cp-turn" id="centerPanelTurn">${t('board.turn')}</div><div class="cp-num">${q.turn}</div>`;
+    board.appendChild(cp);
+    const ps = document.createElement('div');
+    ps.className = 'seat-label'; ps.id = 'seatLabelYou';
+    ps.style.left = '560px'; ps.style.top = PLAYER_LABEL_Y + 'px'; ps.style.transform = 'translate(-50%, -50%)';
+    ps.style.fontSize = '23px';
+    ps.innerHTML = `<span class="wind">${windChar(q.seatWinds.player)}</span>${t('board.you')}`;
+    board.appendChild(ps);
+
+    requestAnimationFrame(() => {
+      if (token !== State.boardToken) return;
+      for (const key of keys) {
+        const el = pondEls[key];
+        const a = ANCHORS[key];
+        const w = el.offsetWidth, h = el.offsetHeight;
+        const posX = a.x - w / 2;
+        const posY = key === 'player' ? PLAYER_POND_TOP : (a.y - h / 2);
+        el.style.left = posX + 'px'; el.style.top = posY + 'px';
+        el.style.transform = `rotate(${POND_ROT[key]}deg)`;
+        el.style.transformOrigin = 'center center';
+      }
+
+      const turnOrder = getTurnOrder(q.seatWinds);
+      const declarerPos = turnOrder.indexOf(q.declarer);
+      const riichiIndex = q.riichiIndex;
+      const maxLen = Math.max(...keys.map(k => q.ponds[k].length));
+
+      // ---------- Phase 1: fast-forward through turns before riichi ----------
+      let fastStep = 0;
+      const FAST_DELAY = 60;
+
+      const doFastForward = () => {
+        if (token !== State.boardToken) return;
+
+        if (fastStep < riichiIndex) {
+          for (const key of keys) {
+            const tile = pondEls[key].children[fastStep];
+            if (tile) tile.classList.add('shown');
+          }
+          fastStep++;
+          setTimeout(doFastForward, FAST_DELAY);
+          return;
+        }
+
+        // Fast-forward through same turn for players BEFORE declarer (chronologically before riichi)
+        for (let p = 0; p < declarerPos; p++) {
+          const player = turnOrder[p];
+          const tile = pondEls[player].children[riichiIndex];
+          if (tile) tile.classList.add('shown');
+        }
+
+        setTimeout(doRiichiTile, 250);
+      };
+
+      // ---------- Phase 2: riichi tile + stick ----------
+      const doRiichiTile = () => {
+        if (token !== State.boardToken) return;
+        const riichiTile = pondEls[q.declarer].children[riichiIndex];
+        if (riichiTile) riichiTile.classList.add('riichi-drop');
+        setTimeout(() => {
+          if (token !== State.boardToken) return;
+          addRiichiStick(q, pondEls, board);
+          setTimeout(doSlowPhase, 400);
+        }, 300);
+      };
+
+      // ---------- Phase 3: one-by-one slow discards in turn order ----------
+      const doSlowPhase = () => {
+        if (token !== State.boardToken) return;
+
+        const remaining = [];
+        // Same turn (riichiIndex) for players after declarer
+        for (let p = declarerPos + 1; p < 4; p++) {
+          const player = turnOrder[p];
+          const tile = pondEls[player].children[riichiIndex];
+          if (tile) remaining.push(tile);
+        }
+        // Later turns
+        for (let idx = riichiIndex + 1; idx < maxLen; idx++) {
+          for (let p = 0; p < 4; p++) {
+            const player = turnOrder[p];
+            const tile = pondEls[player].children[idx];
+            if (tile) remaining.push(tile);
+          }
+        }
+
+        if (remaining.length === 0) {
+          setTimeout(() => { if (token === State.boardToken) resolve(); }, 300);
+          return;
+        }
+
+        let idx = 0;
+        const SLOW_DELAY = 650;
+        const dropNext = () => {
+          if (token !== State.boardToken) return;
+          if (idx >= remaining.length) {
+            setTimeout(() => { if (token === State.boardToken) resolve(); }, 300);
+            return;
+          }
+          remaining[idx].classList.add('riichi-drop');
+          idx++;
+          setTimeout(dropNext, SLOW_DELAY);
+        };
+        dropNext();
+      };
+
+      setTimeout(doFastForward, 130);
+    });
+  });
+}
+function addRiichiStick(q, pondEls, board) {
+  const el = pondEls[q.declarer], a = ANCHORS[q.declarer], h = el.offsetHeight;
+  const stick = document.createElement('div');
+  stick.className = 'riichi-stick';
+  if (q.declarer === 'toimen') { stick.style.left = (a.x - 65) + 'px'; stick.style.top = (a.y + h / 2 + 18) + 'px'; stick.style.width = '130px'; stick.style.height = '18px'; }
+  else if (q.declarer === 'kamicha') { stick.style.left = (a.x + h / 2 + 18) + 'px'; stick.style.top = (a.y - 65) + 'px'; stick.style.width = '18px'; stick.style.height = '130px'; }
+  else { stick.style.left = (a.x - h / 2 - 32) + 'px'; stick.style.top = (a.y - 65) + 'px'; stick.style.width = '18px'; stick.style.height = '130px'; }
+  board.appendChild(stick);
+}
+
+function renderScenario(q) {
+  $('scRole').textContent = q.playerIsDealer ? t('settings.role.dealer') : t('settings.role.nondealer');
+  const parts = [];
+  q.yaku.forEach(y => parts.push(t('yaku.' + y.name, y.name)));
+  let yakuText = parts.length ? parts.join(' + ') : '—';
+  if (q.doraCount > 0) {
+    const doraLabel = `${t('yaku.Dora')} (${q.doraCount})`;
+    yakuText = yakuText === '—' ? doraLabel : `${yakuText} + ${doraLabel}`;
+  }
+  $('scYaku').textContent = yakuText;
+  const handLabel = q.isOpen ? t('settings.hand.fuuro') : t('settings.hand.menzen');
+  let extra = '';
+  if (q.effectiveOpen && !q.isOpen) extra = ` · ${t('sc.callable')}`;
+  $('scShape').textContent = `${shapeLabel(q.shape)} · ${handLabel}${extra}`;
+  $('scShape').className = 'svalue ' + (q.isOpen ? 'open-hand' : 'closed-hand');
+  const declRole = q.declarerIsDealer ? t('settings.role.dealer') : t('settings.role.nondealer');
+  $('scDecl').textContent = q.ippatsu ? `${declRole} · ${t('sc.ippatsu')}` : declRole;
+  $('discardCat').textContent = catLabel(q.category);
+  $('discardDesc').textContent = catDesc(q.category);
+}
+
+function buildQuiz(q) {
+  const card = $('quizCard');
+  card.innerHTML = '';
+  State.step = 1;
+  State.kbdIdx = 0;
+  const s1 = document.createElement('div');
+  s1.className = 'qstep'; s1.id = 'step1';
+  s1.innerHTML = `<div class="qhead"><span class="stepnum">1</span> ${t('quiz.step1')}</div><div class="qtext">${t('quiz.step1.text')}</div><div class="suji-loading" id="sujiLoading">${t('quiz.waiting')}</div><div class="sujigrid loading" id="sujiGrid"></div><div class="fb" id="fb1"></div>`;
+  card.appendChild(s1);
+  const grid = s1.querySelector('#sujiGrid');
+  for (let v = 0; v <= 18; v++) {
+    const b = document.createElement('button');
+    b.className = 'sujibtn'; b.type = 'button'; b.dataset.val = v; b.textContent = v; b.disabled = true;
+    b.onclick = () => answerStep1(q, v);
+    grid.appendChild(b);
+  }
+  const s2 = document.createElement('div');
+  s2.className = 'qstep locked'; s2.id = 'step2';
+  s2.innerHTML = `<div class="qhead"><span class="stepnum">2</span> ${t('quiz.step2')}</div><div class="qtext">${t('quiz.step2.text').replace('{cat}', catLabel(q.category))}</div><div class="optrow rate-grid" id="rateOpts"></div><div class="fb" id="fb2"></div>`;
+  card.appendChild(s2);
+  const s3 = document.createElement('div');
+  s3.className = 'qstep locked'; s3.id = 'step3';
+  s3.innerHTML = `<div class="qhead"><span class="stepnum">3</span> ${t('quiz.step3')}</div><div class="qtext">${t('quiz.step3.text')}</div><div class="optrow" id="decisionOpts"><button class="opt" data-dec="PUSH" type="button">${t('quiz.push')}</button><button class="opt" data-dec="FOLD" type="button">${t('quiz.fold')}</button></div><div class="fb" id="fb3"></div>`;
+  card.appendChild(s3);
+  const nxt = document.createElement('div');
+  nxt.className = 'qstep locked'; nxt.id = 'nextWrap';
+  nxt.innerHTML = `<button class="btn primary" id="nextBtn" style="width:100%">${t('quiz.next')}</button>`;
+  card.appendChild(nxt);
+  const rateOpts = $('rateOpts');
+  RATE_BUCKETS.forEach(bucket => {
+    const b = document.createElement('button');
+    b.className = 'opt'; b.type = 'button'; b.dataset.bucket = bucket.label; b.textContent = bucket.label;
+    b.onclick = () => answerStep2(q, bucket.label, b);
+    rateOpts.appendChild(b);
+  });
+  document.querySelectorAll('#decisionOpts .opt').forEach(b => { b.onclick = () => answerStep3(q, b.dataset.dec, b); });
+  $('nextBtn').onclick = nextQuestion;
+}
+
+function answerStep1(q, val) {
+  if (q.answered.s1) return;
+  q.answered.s1 = true;
+  showYourTurn(false);
+  val = Math.max(0, Math.min(18, val | 0));
+  const isTA = isTimeAttack();
+  const doScoring = scoringEnabled();
+  const diff = Math.abs(val - q.passedSuji);
+  const isCorrect = diff === 0;
+  State.stats.s1Total++;
+  if (isCorrect) State.stats.s1Correct++;
+  let basePts = 0, baseSecs = 0, fbClass = '', resultLabel = '';
+  if (diff === 0)      { basePts = 300; baseSecs = 5; fbClass = 'ok'; resultLabel = t('fb.correct'); }
+  else if (diff === 1) { basePts = 100; baseSecs = 2; fbClass = 'part'; resultLabel = t('fb.close'); }
+  else                 { basePts = 0; baseSecs = 0; fbClass = 'bad'; resultLabel = t('fb.bad'); }
+  const mult = getComboMultiplier(State.combo);
+  const actualPts = Math.round(basePts * mult);
+  if (doScoring) { State.score += actualPts; updateScorePill(); }
+  if (isTA && baseSecs > 0) { addTimeAttackTime(baseSecs); showSecDelta(baseSecs); }
+  if (isTA) updateTimeAttackDisplay();
+  const fb = $('fb1');
+  fb.classList.add('show', fbClass);
+  const parts = [];
+  if (q.sujiResult.fromDeclarer > 0) parts.push(tf('fb.suji.declarer', { n: q.sujiResult.fromDeclarer }));
+  if (q.sujiResult.fromOthersAdded > 0) parts.push(tf('fb.suji.postRiichi', { n: q.sujiResult.fromOthersAdded }));
+  if (q.sujiResult.fromNoChance > 0) parts.push(tf('fb.suji.noChance', { n: q.sujiResult.fromNoChance }));
+  const sujiBreakdown = parts.length > 1 ? ` <span style="opacity:.8">(${parts.join(' + ')})</span>` : '';
+  let msg = `<b>${resultLabel}</b> `;
+  if (diff === 0) msg += tf('fb.step1.ok', { n: q.passedSuji, breakdown: sujiBreakdown });
+  else msg += tf('fb.step1.wrong', { v: val, n: q.passedSuji, breakdown: sujiBreakdown });
+  if (q.sujiResult.list && q.sujiResult.list.length) {
+    const fmt = q.sujiResult.list.map(k => { const n = parseInt(k[0], 10); return SUJI_DISPLAY[n] + k[1]; }).join(', ');
+    msg += `<span class="suji-list">${tf('fb.passedSujis', { list: fmt })}</span>`;
+  }
+  if (isTA) msg += taSuffix(actualPts, mult, baseSecs);
+  fb.innerHTML = msg;
+  document.querySelectorAll('#sujiGrid .sujibtn').forEach(b => {
+    b.disabled = true;
+    b.classList.remove('kbd-focus');
+    const v = parseInt(b.dataset.val, 10);
+    if (v === q.passedSuji) b.classList.add('correct');
+    else if (v === val) b.classList.add('wrong');
+  });
+  $('step2').classList.remove('locked');
+  State.step = 2;
+  State.kbdIdx = 0;
+  paintKbd('#rateOpts');
+  updateLogStep(q, 's1', actualPts, isCorrect);
+}
+
+function answerStep2(q, bucketLabel, btn) {
+  if (q.answered.s2) return;
+  q.answered.s2 = true;
+  const isTA = isTimeAttack();
+  const doScoring = scoringEnabled();
+  const correctBucket = q.rateBucket;
+  const ok = bucketLabel === correctBucket;
+  State.stats.s2Total++;
+  if (ok) State.stats.s2Correct++;
+  const basePts = ok ? 300 : 0;
+  const baseSecs = ok ? 5 : 0;
+  const mult = getComboMultiplier(State.combo);
+  const actualPts = Math.round(basePts * mult);
+  if (doScoring) { State.score += actualPts; updateScorePill(); }
+  if (isTA && baseSecs > 0) { addTimeAttackTime(baseSecs); showSecDelta(baseSecs); }
+  if (isTA) updateTimeAttackDisplay();
+  document.querySelectorAll('#rateOpts .opt').forEach(b => {
+    b.disabled = true;
+    if (b.dataset.bucket === correctBucket) b.classList.add('correct');
+    else if (b === btn && !ok) b.classList.add('wrong');
+  });
+  const fb = $('fb2');
+  fb.classList.add('show', ok ? 'ok' : 'bad');
+  const exactRate = formatRate(q.rate);
+  let msg = ok ? tf('fb.step2.ok', { b: correctBucket, exact: exactRate }) : tf('fb.step2.bad', { b: correctBucket, exact: exactRate });
+  if (isTA) msg += taSuffix(actualPts, mult, baseSecs);
+  fb.innerHTML = msg;
+  $('step3').classList.remove('locked');
+  State.step = 3;
+  State.kbdIdx = 0;
+  paintKbd('#decisionOpts');
+  updateLogStep(q, 's2', actualPts, ok);
+}
+
+function answerStep3(q, dec, btn) {
+  if (q.answered.s3) return;
+  q.answered.s3 = true;
+  const isTA = isTimeAttack();
+  const doScoring = scoringEnabled();
+  const inRegular = isRegular();
+  if (!isTA) {
+    q.elapsed = (performance.now() - State.timerStart) / 1000;
+    State.timerStopped = true;
+    if (State.raf) cancelAnimationFrame(State.raf);
+  }
+  const threshStr = q.threshold >= 1 ? t('fb.step3.all') : pct(q.threshold);
+  const qVerdict = getVerdictLevel(q.rate, q.threshold);
+  const qBorderline = isBorderlineVerdict(qVerdict);
+  const correctDec = q.decision;
+  const ok = dec === correctDec;
+  let basePts = 0, baseSecs = 0, comboAction = 'none', fbClass = '';
+  if (qBorderline) {
+    basePts = 200; comboAction = 'inc'; fbClass = 'borderline';
+    if ((qVerdict === 'borderlineFavorsPush' && dec === 'PUSH') || (qVerdict === 'borderlineFavorsPull' && dec === 'FOLD')) baseSecs = 20;
+    else baseSecs = 10;
+  } else if (ok) { basePts = 400; baseSecs = 10; comboAction = 'inc'; fbClass = 'ok'; }
+  else { basePts = 0; baseSecs = dec === 'PUSH' ? -15 : -10; comboAction = 'reset'; fbClass = 'bad'; }
+  State.stats.s3Total++;
+  if (comboAction === 'inc') State.stats.s3Correct++;
+  if (comboAction === 'inc') { State.combo++; State.maxCombo = Math.max(State.maxCombo, State.combo); }
+  else if (comboAction === 'reset') State.combo = 0;
+  updateComboDisplay();
+  const mult = getComboMultiplier(State.combo);
+  const actualPts = Math.round(basePts * mult);
+  if (doScoring) { State.score += actualPts; updateScorePill(); }
+  if (isTA && baseSecs !== 0) { addTimeAttackTime(baseSecs); showSecDelta(baseSecs); updateTimeAttackDisplay(); }
+  if (qBorderline) {
+    let pushClass = 'borderline-yellow', foldClass = 'borderline-yellow';
+    if (qVerdict === 'borderlineFavorsPush') pushClass = 'borderline-green';
+    else if (qVerdict === 'borderlineFavorsPull') foldClass = 'borderline-green';
+    document.querySelectorAll('#decisionOpts .opt').forEach(b => { b.disabled = true; b.classList.add(b.dataset.dec === 'PUSH' ? pushClass : foldClass); });
+  } else {
+    document.querySelectorAll('#decisionOpts .opt').forEach(b => {
+      b.disabled = true;
+      if (b.dataset.dec === correctDec) b.classList.add('correct');
+      else if (b === btn) b.classList.add('wrong');
+    });
+  }
+  const exactRate = formatRate(q.rate);
+  const fb = $('fb3');
+  let msg = '';
+  if (qBorderline) {
+    const leanText = qVerdict === 'borderlineFavorsPush' ? t('fb.lean.push') : qVerdict === 'borderlineFavorsPull' ? t('fb.lean.fold') : t('fb.lean.both');
+    msg = `<b>${t('fb.borderlineLabel')}</b> ${leanText}`;
+    if (isTA) msg += taSuffix(actualPts, mult, baseSecs);
+    msg += '<br><span style="opacity:.85">' + tf('fb.step3.borderlineDetail', { n: q.passedSuji, b: q.rateBucket, exact: exactRate, tier: q.tier, role: roleLabel(q.roleKey), t: threshStr }) + '</span>';
+  } else {
+    const answerLabel = correctDec === 'PUSH' ? t('quiz.push') : t('quiz.fold');
+    msg = (ok ? t('fb.step3.ok') : t('fb.step3.bad')) + ' ' + tf('fb.step3.answerIs', { d: answerLabel });
+    if (isTA) msg += taSuffix(actualPts, mult, baseSecs);
+    msg += '<br><span style="opacity:.85">' + tf('fb.step3.detail', { n: q.passedSuji, b: q.rateBucket, exact: exactRate, tier: q.tier, role: roleLabel(q.roleKey), t: threshStr }) + '<br>' + (q.rate <= q.threshold ? t('fb.step3.comparePush') : t('fb.step3.compareFold')) + '</span>';
+  }
+  const notes = [];
+  if (q.ippatsuCase === 'ndND') notes.push(t('fb.ippatsuNd'));
+  else if (q.ippatsuCase === 'asDealerND') notes.push(t('fb.ippatsuAsDealer'));
+  else if (q.ippatsuCase === 'ndD') notes.push(t('fb.ippatsuNdD'));
+  if (q.hasPinfu && q.tier2 !== null) notes.push(t('fb.pinfuApplied'));
+  if (q.canCall) notes.push(t('fb.callableApplied'));
+  if (notes.length) msg += `<span class="special-notes">${notes.join(' · ')}</span>`;
+  if (inRegular) {
+    const bonus = Math.max(0, Math.round(200 - q.elapsed * 10));
+    q.timeBonus = bonus;
+    State.score += bonus;
+    $('timerPill').textContent = q.elapsed.toFixed(1) + 's';
+    updateScorePill();
+  }
+  fb.classList.add('show', fbClass);
+  fb.innerHTML = msg;
+  updateLogStep(q, 's3', actualPts, comboAction === 'inc', inRegular ? (q.timeBonus || 0) : 0);
+  $('nextWrap').classList.remove('locked');
+  State.step = 4;
+  $('nextBtn').focus();
+}
+
+function updateLogStep(q, key, pts, correct, bonus) {
+  if (!q._log) q._log = { steps: 0, correct: 0, pts: 0, timeBonus: 0 };
+  q._log.steps++;
+  if (correct) q._log.correct++;
+  q._log.pts += pts;
+  if (bonus) q._log.timeBonus += bonus;
+}
+function startTimer() {
+  State.timerStart = performance.now();
+  State.timerStopped = false;
+  const pill = $('timerPill');
+  const loop = () => {
+    if (State.timerStopped) return;
+    const s = (performance.now() - State.timerStart) / 1000;
+    pill.textContent = s.toFixed(1) + 's';
+    State.raf = requestAnimationFrame(loop);
+  };
+  loop();
+}
+
+async function loadQuestion() {
+  try {
+    const mySession = ++State.session;
+    State.timerStopped = true;
+    if (State.raf) { cancelAnimationFrame(State.raf); State.raf = null; }
+    State.q = makeQuestion();
+    const q = State.q;
+    if (isTimeAttack()) {
+      if (!TimeAttackState.active) return;
+      pauseTimeAttack();
+      TimeAttackState.questionsAnswered++;
+    }
+    if (State.thresholdAuto) State.thresholdIndex = getCorrectThresholdIndex(q);
+    if (State.shapeTierAuto) State.shapeTierIndex = getCorrectShapeTierIndex(q);
+    renderThresholdPanel();
+    renderShapeTierPanel();
+    $('modePill').textContent = t('mode.' + State.mode);
+    if (isRegular() || isCustom()) $('qCounter').textContent = `Q ${State.index + 1} / ${State.total}`;
+    else if (isTimeAttack()) $('qCounter').textContent = `Q ${TimeAttackState.questionsAnswered}`;
+    else $('qCounter').textContent = `Q ${State.index + 1}`;
+    const show = isRegular() || isTimeAttack();
+    $('scorePill').style.display = show ? '' : 'none';
+    $('comboPill').style.display = show ? '' : 'none';
+    $('timerPill').style.display = show ? '' : 'none';
+    if (isRegular()) $('timerPill').textContent = '0.0s';
+    else if (isTimeAttack()) updateTimeAttackDisplay();
+    renderScenario(q);
+    buildQuiz(q);
+    showYourTurn(false);
+    await renderBoard(q);
+    if (State.session !== mySession) return;
+    if (isTimeAttack() && !TimeAttackState.active) return;
+    fitBoard();
+    setQuizStep1Loading(false);
+    showYourTurn(true);
+    if (isRegular()) startTimer();
+    if (isTimeAttack()) resumeTimeAttack();
+  } finally { State.transitioning = false; }
+}
+function nextQuestion() {
+  if (State.transitioning) return;
+  State.transitioning = true;
+  $('quizCard').innerHTML = '';
+  showYourTurn(false);
+  window.scrollTo(0, 0);
+  if (isTimeAttack()) { if (!TimeAttackState.active) { State.transitioning = false; return; } State.index++; loadQuestion(); return; }
+  if (isZen()) { State.index++; loadQuestion(); return; }
+  if (isCustom()) {
+    if (State.q && State.q._log) State.log.push(State.q._log);
+    State.index++;
+    if (State.index >= State.total) { State.transitioning = false; showCustomResults(); return; }
+    loadQuestion(); return;
+  }
+  if (State.q && State.q._log) State.log.push(State.q._log);
+  State.index++;
+  if (State.index >= State.total) { State.transitioning = false; showRegularResults(); return; }
+  loadQuestion();
+}
+function exitToMenu() {
+  State.session++; State.boardToken++;
+  State.timerStopped = true; State.transitioning = false;
+  if (State.raf) cancelAnimationFrame(State.raf);
+  if (TimeAttackState.active) {
+    TimeAttackState.active = false;
+    if (TimeAttackState.rafId) { cancelAnimationFrame(TimeAttackState.rafId); TimeAttackState.rafId = null; }
+  }
+  State.q = null;
+  resetSecDelta();
+  showYourTurn(false);
+  closeDealInModal(); closeShapesModal(); closeHelpModal(); closeAboutModal();
+  $('game').classList.remove('active');
+  $('results').classList.remove('active');
+  $('settings').classList.remove('active');
+  $('home').classList.add('active');
+  renderHomeHighScores();
+}
+function openCustomConfig() {
+  syncConfigToUI(State.customConfig);
+  $('home').classList.remove('active');
+  $('game').classList.remove('active');
+  $('results').classList.remove('active');
+  $('settings').classList.add('active');
+  window.scrollTo(0, 0);
+}
+function closeCustomConfig() { $('settings').classList.remove('active'); $('home').classList.add('active'); }
+function startCustomPractice() { saveCustomConfig(); $('settings').classList.remove('active'); beginGame(); }
+
+function paintKbd(sel, cls = 'opt') {
+  document.querySelectorAll(sel + ' .' + cls).forEach((b, i) => b.classList.toggle('kbd-focus', i === State.kbdIdx));
+}
+document.addEventListener('keydown', e => {
+  if ($('helpModal').classList.contains('active')) { if (e.key === 'Escape' || e.key === 'Enter') { e.preventDefault(); closeHelpModal(); } return; }
+  if ($('aboutModal').classList.contains('active')) { if (e.key === 'Escape' || e.key === 'Enter') { e.preventDefault(); closeAboutModal(); } return; }
+  if ($('dealInModal').classList.contains('active')) { if (e.key === 'Escape' || e.key === 'Enter') { e.preventDefault(); closeDealInModal(); } return; }
+  if ($('shapesModal').classList.contains('active')) { if (e.key === 'Escape' || e.key === 'Enter') { e.preventDefault(); closeShapesModal(); } return; }
+  if ($('settings').classList.contains('active')) {
+    if (e.key === 'Escape') { e.preventDefault(); closeCustomConfig(); }
+    else if (e.key === 'Enter') { e.preventDefault(); startCustomPractice(); }
+    return;
+  }
+  if (e.key === 'Escape' && ($('game').classList.contains('active') || $('results').classList.contains('active'))) { e.preventDefault(); exitToMenu(); return; }
+  if ($('home').classList.contains('active')) {
+    const cards = [...document.querySelectorAll('.mode-card')];
+    let idx = cards.findIndex(c => c.classList.contains('selected'));
+    if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+      e.preventDefault();
+      idx = (idx + 1) % cards.length;
+      cards.forEach((c, i) => c.classList.toggle('selected', i === idx));
+      State.mode = cards[idx].dataset.mode;
+    } else if (e.key === 'Enter') { e.preventDefault(); startGame(); }
+    return;
+  }
+  if ($('results').classList.contains('active')) { if (e.key === 'Enter') { e.preventDefault(); startGame(); } return; }
+  if (!$('game').classList.contains('active')) return;
+  const q = State.q;
+  if (!q) return;
+  if (State.step === 1) {
+    const btns = [...document.querySelectorAll('#sujiGrid .sujibtn')];
+    const cols = 7;
+    if (e.key === 'ArrowRight') { e.preventDefault(); State.kbdIdx = Math.min(btns.length - 1, State.kbdIdx + 1); paintKbd('#sujiGrid', 'sujibtn'); }
+    else if (e.key === 'ArrowLeft') { e.preventDefault(); State.kbdIdx = Math.max(0, State.kbdIdx - 1); paintKbd('#sujiGrid', 'sujibtn'); }
+    else if (e.key === 'ArrowDown') { e.preventDefault(); State.kbdIdx = Math.min(btns.length - 1, State.kbdIdx + cols); paintKbd('#sujiGrid', 'sujibtn'); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); State.kbdIdx = Math.max(0, State.kbdIdx - cols); paintKbd('#sujiGrid', 'sujibtn'); }
+    else if (e.key === 'Enter') { e.preventDefault(); if (btns[State.kbdIdx]) btns[State.kbdIdx].click(); }
+  } else if (State.step === 2) {
+    const opts = [...document.querySelectorAll('#rateOpts .opt')];
+    const cols = 2;
+    if (e.key === 'ArrowRight') { e.preventDefault(); State.kbdIdx = Math.min(opts.length - 1, State.kbdIdx + 1); paintKbd('#rateOpts'); }
+    else if (e.key === 'ArrowLeft') { e.preventDefault(); State.kbdIdx = Math.max(0, State.kbdIdx - 1); paintKbd('#rateOpts'); }
+    else if (e.key === 'ArrowDown') { e.preventDefault(); State.kbdIdx = Math.min(opts.length - 1, State.kbdIdx + cols); paintKbd('#rateOpts'); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); State.kbdIdx = Math.max(0, State.kbdIdx - cols); paintKbd('#rateOpts'); }
+    else if (e.key === 'Enter') { e.preventDefault(); if (opts[State.kbdIdx]) opts[State.kbdIdx].click(); }
+  } else if (State.step === 3) {
+    const opts = [...document.querySelectorAll('#decisionOpts .opt')];
+    if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { e.preventDefault(); State.kbdIdx = (State.kbdIdx + 1) % opts.length; paintKbd('#decisionOpts'); }
+    else if (e.key === 'Enter') { e.preventDefault(); if (opts[State.kbdIdx]) opts[State.kbdIdx].click(); }
+  } else if (State.step === 4) {
+    if (e.key === 'Enter') { e.preventDefault(); nextQuestion(); }
+  }
+});
+
+function startGame() { if (isCustom()) { openCustomConfig(); return; } beginGame(); }
+function beginGame() {
+  State.session++; State.boardToken++;
+  State.timerStopped = true; State.transitioning = false;
+  State.stats = { s1Total: 0, s1Correct: 0, s2Total: 0, s2Correct: 0, s3Total: 0, s3Correct: 0 };
+  if (State.raf) cancelAnimationFrame(State.raf);
+  if (TimeAttackState.active) {
+    TimeAttackState.active = false;
+    if (TimeAttackState.rafId) { cancelAnimationFrame(TimeAttackState.rafId); TimeAttackState.rafId = null; }
+  }
+  resetSecDelta();
+  State.thresholdAuto = false; State.shapeTierAuto = false;
+  State.thresholdIndex = 0; State.shapeTierIndex = 0;
+  State.index = 0; State.score = 0; State.combo = 0; State.maxCombo = 0;
+  State.log = []; State.q = null; State.step = 0; State.lastResult = null;
+  showYourTurn(false);
+  updateScorePill();
+  updateComboDisplay();
+  $('timerPill').textContent = isTimeAttack() ? '45.0s' : '0.0s';
+  if (isCustom()) State.total = State.customConfig.questionCount || 10;
+  else State.total = MODE_CONFIG[State.mode].total;
+  if (isTimeAttack()) startTimeAttack();
+  $('home').classList.remove('active');
+  $('settings').classList.remove('active');
+  $('results').classList.remove('active');
+  $('game').classList.add('active');
+  window.scrollTo(0, 0);
+  requestAnimationFrame(() => { fitBoard(); loadQuestion(); });
+}
+
+function validateCustomSection(checkboxSelector, noteId, defaultMsgKey) {
+  const boxes = [...document.querySelectorAll(checkboxSelector)];
+  const checked = boxes.filter(c => c.checked);
+  const note = $(noteId);
+  if (!note) return;
+  if (!checked.length) {
+    boxes[0].checked = true;
+    note.classList.add('bad');
+    note.textContent = t('settings.note.required');
+    clearTimeout(validateCustomSection._t);
+    validateCustomSection._t = setTimeout(() => {
+      note.classList.remove('bad');
+      note.textContent = t(defaultMsgKey);
+    }, 1600);
+    return;
+  }
+  note.classList.remove('bad');
+  note.textContent = checked.length === boxes.length ? t('settings.note.all') : tf('settings.note.some', { n: checked.length, m: boxes.length });
+}
+
+const NOTE_KEY_MAP = {
+  '#catSettings': ['settingsNote', 'settings.note.cat'],
+  '#turnSettings': ['turnsNote', 'settings.note.turn'],
+  '#ippatsuSettings': ['ippatsuNote', 'settings.note.ippatsu'],
+  '#shapeSettings': ['shapesNote', 'settings.note.shape'],
+  '#handSettings': ['handsNote', 'settings.note.hand'],
+  '#declarerSettings': ['declarersNote', 'settings.note.declarer'],
+  '#playerRoleSettings': ['playerRolesNote', 'settings.note.playerrole'],
+  '#oppRoleSettings': ['oppRolesNote', 'settings.note.opprole']
+};
+Object.keys(NOTE_KEY_MAP).forEach(sel => {
+  document.querySelectorAll(sel + ' input[type=checkbox]').forEach(chk => {
+    chk.addEventListener('change', () => {
+      const [noteId, msgKey] = NOTE_KEY_MAP[sel];
+      validateCustomSection(sel + ' input[type=checkbox]', noteId, msgKey);
+    });
+  });
+});
+const qcountBoxes = [...document.querySelectorAll('#questionCountSettings input[type=checkbox]')];
+qcountBoxes.forEach(chk => {
+  chk.addEventListener('change', () => {
+    if (!chk.checked) { chk.checked = true; return; }
+    qcountBoxes.forEach(c => { if (c !== chk) c.checked = false; });
+  });
+});
+$('customBack').addEventListener('click', closeCustomConfig);
+$('customStart').addEventListener('click', startCustomPractice);
+document.querySelectorAll('.mode-card').forEach(card => {
+  card.addEventListener('click', () => {
+    document.querySelectorAll('.mode-card').forEach(c => c.classList.remove('selected'));
+    card.classList.add('selected');
+    State.mode = card.dataset.mode;
+  });
+});
+$('threshPrev').addEventListener('click', () => { State.thresholdAuto = false; State.thresholdIndex = (State.thresholdIndex - 1 + 7) % 7; renderThresholdPanel(); });
+$('threshNext').addEventListener('click', () => { State.thresholdAuto = false; State.thresholdIndex = (State.thresholdIndex + 1) % 7; renderThresholdPanel(); });
+$('shapeTierPrev').addEventListener('click', () => { State.shapeTierAuto = false; State.shapeTierIndex = (State.shapeTierIndex - 1 + 7) % 7; renderShapeTierPanel(); });
+$('shapeTierNext').addEventListener('click', () => { State.shapeTierAuto = false; State.shapeTierIndex = (State.shapeTierIndex + 1) % 7; renderShapeTierPanel(); });
+$('threshIndicator').addEventListener('click', () => {
+  if (State.thresholdIndex === 0) { State.thresholdAuto = true; const q = State.q; State.thresholdIndex = q ? getCorrectThresholdIndex(q) : 1; renderThresholdPanel(); }
+  else { State.thresholdAuto = false; State.thresholdIndex = 0; renderThresholdPanel(); }
+});
+$('shapeTierIndicator').addEventListener('click', () => {
+  if (State.shapeTierIndex === 0) { State.shapeTierAuto = true; const q = State.q; State.shapeTierIndex = q ? getCorrectShapeTierIndex(q) : 1; renderShapeTierPanel(); }
+  else { State.shapeTierAuto = false; State.shapeTierIndex = 0; renderShapeTierPanel(); }
+});
+$('helpBtn').addEventListener('click', openHelpModal);
+$('closeHelp').addEventListener('click', closeHelpModal);
+$('helpModal').addEventListener('click', e => { if (e.target.id === 'helpModal') closeHelpModal(); });
+$('aboutBtn').addEventListener('click', openAboutModal);
+$('closeAbout').addEventListener('click', closeAboutModal);
+$('aboutModal').addEventListener('click', e => { if (e.target.id === 'aboutModal') closeAboutModal(); });
+$('dealInBtn').addEventListener('click', openDealInModal);
+$('closeDealIn').addEventListener('click', closeDealInModal);
+$('dealInModal').addEventListener('click', e => { if (e.target.id === 'dealInModal') closeDealInModal(); });
+$('shapesBtn').addEventListener('click', openShapesModal);
+$('closeShapes').addEventListener('click', closeShapesModal);
+$('shapesModal').addEventListener('click', e => { if (e.target.id === 'shapesModal') closeShapesModal(); });
+$('startBtn').onclick = startGame;
+$('playAgain').onclick = startGame;
+$('backToMenu').onclick = exitToMenu;
+$('exitBtn').onclick = exitToMenu;
+$('shareBtn').onclick = shareResult;
+$('langBtn').addEventListener('click', () => { applyLanguage(State.lang === 'ja' ? 'en' : 'ja'); });
+buildDirectNav('shapeTierDirectNav', SHAPE_TIER_BTN_CONFIG, s => { State.shapeTierAuto = false; State.shapeTierIndex = s; renderShapeTierPanel(); });
+buildDirectNav('thresholdDirectNav', THRESHOLD_BTN_CONFIG, s => { State.thresholdAuto = false; State.thresholdIndex = s; renderThresholdPanel(); });
+
+function applyLanguage(lang) {
+  if (!I18N[lang]) lang = 'en';
+  State.lang = lang;
+  try { localStorage.setItem(LANG_KEY, lang); } catch (e) {}
+  document.documentElement.lang = lang;
+  document.title = t('page.title');
+  document.querySelectorAll('[data-i18n]').forEach(el => { el.innerHTML = t(el.dataset.i18n); });
+  const lb = $('langBtn');
+  if (lb) lb.textContent = lang === 'ja' ? 'English' : '日本語';
+  renderHomeHighScores();
+  renderThresholdPanel();
+  renderShapeTierPanel();
+  renderHelpBody();
+  document.querySelectorAll('#shapeTierDirectNav .btn').forEach((btn, i) => { if (SHAPE_TIER_BTN_CONFIG[i]) btn.textContent = t(SHAPE_TIER_BTN_CONFIG[i].labelKey); });
+  document.querySelectorAll('#thresholdDirectNav .btn').forEach((btn, i) => { if (THRESHOLD_BTN_CONFIG[i]) btn.textContent = t(THRESHOLD_BTN_CONFIG[i].labelKey); });
+  if ($('shapesModal').classList.contains('active')) buildShapesContent();
+  if ($('dealInModal').classList.contains('active')) $('dealInChartWrap').innerHTML = buildDealInChartHTML();
+  if ($('shareBtn')) $('shareBtn').innerHTML = t('results.share');
+  const ind = $('yourTurn');
+  if (ind) ind.textContent = t('board.yourTurn');
+  const loadingEl = $('sujiLoading');
+  if (loadingEl) loadingEl.textContent = t('quiz.waiting');
+  if (State.q && $('game').classList.contains('active')) {
+    renderScenario(State.q);
+    $('modePill').textContent = t('mode.' + State.mode);
+    updateScorePill();
+    updateComboDisplay();
+  }
+}
+
+(function initLang() {
+  let saved = 'en';
+  try { saved = localStorage.getItem(LANG_KEY) || 'en'; } catch (e) {}
+  if (!I18N[saved]) saved = 'en';
+  State.lang = saved;
+})();
+syncConfigToUI(State.customConfig);
+applyLanguage(State.lang);
+window.addEventListener('load', fitBoard);
+</script>
 </body>
 </html>

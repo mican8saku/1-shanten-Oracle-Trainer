@@ -935,6 +935,56 @@
       }
     }
 
+    /* =========================================================
+       DESKTOP TWO-COLUMN LAYOUT (≥1024px)
+       ========================================================= */
+    @media (min-width: 1024px) {
+      .topbar-inner {
+        max-width: 1280px;
+      }
+
+      .app {
+        max-width: 1280px;
+        padding: 84px 20px 40px;
+      }
+
+      .app-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(380px, 440px);
+        grid-template-areas:
+          "conds    results"
+          "hand     results"
+          "turn     results"
+          "dealin   results"
+          "newtile  results"
+          "reset    results"
+          "appendix results";
+        gap: 12px;
+        align-items: start;
+      }
+
+      .app-grid > * {
+        margin: 0;
+      }
+
+      #condsSection  { grid-area: conds; }
+      #handSection   { grid-area: hand; }
+      #turnSection   { grid-area: turn; }
+      #dealinSection { grid-area: dealin; }
+      #nextTileBtn   { grid-area: newtile; }
+      #resetBtn      { grid-area: reset; }
+      .appendix      { grid-area: appendix; }
+
+      #resultSection {
+        grid-area: results;
+        align-self: start;
+        position: sticky;
+        top: 84px;
+        max-height: calc(100vh - 100px);
+        overflow-y: auto;
+      }
+    }
+
     .modal-body {
       font-size: 13px;
       line-height: 1.65;
@@ -1087,9 +1137,9 @@
   </header>
 
   <div class="app">
-    <main>
+    <main class="app-grid">
 
-      <section class="section">
+      <section class="section" id="condsSection">
         <div class="section-title" data-i18n="label.conditions">Your Conditions</div>
         <div class="cond-row">
           <div class="cond-label" data-i18n="label.you">You</div>
@@ -1120,9 +1170,10 @@
             <button class="btn" data-ippatsu="no" data-i18n="ippatsu.no">No Ippatsu</button>
             <button class="btn" data-ippatsu="yes" data-i18n="ippatsu.yes">Ippatsu</button>
           </div>
+        </div>
       </section>
 
-      <section class="section">
+      <section class="section" id="handSection">
         <div class="section-title" data-i18n="label.hand">Your Hand</div>
         <div class="cond-row">
           <div class="cond-label" data-i18n="label.handState">Hand State</div>
@@ -1166,7 +1217,7 @@
         </div>
       </section>
 
-      <section class="section">
+      <section class="section" id="turnSection">
         <div class="section-title" data-i18n="label.turn">Turn</div>
         <div class="btn-row" id="turnRow">
           <button class="btn" data-turn="5" data-i18n="turn.early">Early · 5</button>
@@ -1221,22 +1272,24 @@
 
       <button class="btn-reset" id="resetBtn" data-i18n="action.reset">Reset</button>
 
-      <details>
-        <summary data-i18n="ref.dealin">Deal-in Rate Reference</summary>
-        <div class="ref-body" id="dealinRef"></div>
-      </details>
-      <details>
-        <summary data-i18n="ref.shapes">Shape Reference</summary>
-        <div class="ref-body" id="shapeRef"></div>
-      </details>
-      <details>
-        <summary data-i18n="ref.shapeTier">Shape Tier Tables</summary>
-        <div class="ref-body" id="shapeTierRef"></div>
-      </details>
-      <details>
-        <summary data-i18n="ref.threshold">Threshold Tables</summary>
-        <div class="ref-body" id="threshRef"></div>
-      </details>
+      <div class="appendix">
+        <details>
+          <summary data-i18n="ref.dealin">Deal-in Rate Reference</summary>
+          <div class="ref-body" id="dealinRef"></div>
+        </details>
+        <details>
+          <summary data-i18n="ref.shapes">Shape Reference</summary>
+          <div class="ref-body" id="shapeRef"></div>
+        </details>
+        <details>
+          <summary data-i18n="ref.shapeTier">Shape Tier Tables</summary>
+          <div class="ref-body" id="shapeTierRef"></div>
+        </details>
+        <details>
+          <summary data-i18n="ref.threshold">Threshold Tables</summary>
+          <div class="ref-body" id="threshRef"></div>
+        </details>
+      </div>
 
     </main>
 
@@ -1490,10 +1543,10 @@
        ========================================================= */
     const I18N = {
       en: {
-        'home.link': 'Return <i class="fa-solid fa-door-open"></i>',
-        'home.about': 'About <i class="fa-solid fa-circle-info"></i>',
+        'home.link': '<i class="fa-solid fa-right-to-bracket"></i> Exit',
+        'home.about': '<i class="fa-solid fa-circle-info"></i> About',
         'app.title': '1-shanten Oracle',
-        'app.title-icon': '<i class="fa-solid fa-hamsa"></i> 1-shanten Oracle',
+        'app.title-icon': '<i class="fa-solid fa-hamsa"></i> The 1-shanten Oracle',
         'app.titleSub': 'Push-pull Lookup Table',
         'app.fullTitle': '1-shanten Oracle',
         'label.turn': 'Turn',
@@ -1533,10 +1586,14 @@
         'ippatsu.no': 'No Ippatsu',
         'ippatsu.yes': 'Ippatsu',
         'ref.ippatsu': 'Ippatsu',
-        'result.ippatsuDealerNote': 'Ippatsu: dealer riichi — hand treated 2 tiers weaker',
         'result.ippatsuNdNote': 'Ippatsu: non-dealer riichi — VS Dealer threshold chart applied',
+        'result.ippatsuDealerNote': 'Ippatsu: dealer riichi — hand treated 2 tiers weaker',
+        'result.ippatsuAsDealerNote': 'Ippatsu: non-dealer riichi (as dealer) — hand treated 1 tier weaker',
+        'result.pinfuNote': 'Pinfu value or Tenpane (50 fu) — threshold is averaged between the two adjacent tiers',
+        'result.tenpaneNote': 'Assumed tenpane (40 fu) — threshold weighted slightly toward the higher tier',
+        'result.callableNote': 'Closed hand with yaku when opened — evaluated on the open-hand chart, one tier better',
         'label.hand': 'Your Hand', 'label.shape': 'Shape',
-        'label.score': 'Ron value',
+        'label.score': 'Ron value (including Riichi)',
         'shapeA': '[A] Perfect', 'shapeB': '[B] Ryanmen×2', 'shapeC': '[C] Ryanmen+Ryankan',
         'shapeD': '[D] Ryanmen+Kanchan', 'shapeE': '[E] Kanchan+Ryankan', 'shapeF': '[F] Chiitoi',
         'shape.other': 'Other Shapes',
@@ -1597,15 +1654,15 @@
         'about.overview': 'Overview',
         'about.p1': 'A portable reference tool for push-pull decisions in 1-shanten situations. Set your conditions, hand shape, ron value, and turn to look up the <b>threshold deal-in rate</b> for your hand. This threshold represents the maximum estimated deal-in rate at which pushing is considered worthwhile. Optionally, expand <b>Estimate Deal-in Rate</b> to select a tile category, apply deal-in modifiers, and enter the number of passed suji to obtain a PUSH/PULL verdict. <b>The tool is primarily intended for push-pull decisions in flat point standing.<b>',
         'about.howToUse': 'How to Use',
-        'about.p2': 'Work from top to bottom: set your conditions, hand shape, ron value, and turn to view the corresponding threshold table. To get a more specific PUSH/PULL verdict, expand <i>Estimate Deal-in Rate</i> and enter the tile category, applicable modifiers, and number of passed suji. Tap a turn column header to switch between turns.<h4>How the Tables Work</h4>The app first uses the <b>Shape Tier Table</b> to determine the tier corresponding to your hand shape and ron value. The assigned tier depends on whether you are the dealer or non-dealer, whether your hand is closed or open, and, for open hands, whether Kamicha has declared riichi. Each shape is assigned tiers according to its relative value: [A] Perfect generally receives the most favorable tiers, followed by shapes [B] through [F]. The tier also depends on the hand\'s ron value; for example, a 4-han [A] menzen hand is assigned Tier 1, while a 4-han menzen [B] Ryanmen*2 hand is assigned Tier 2, equivalent to a 3-han [A] Perfect hand.<h4>Additional Details</h4>The following rules explain some of the adjustments applied in less straightforward cases, and may also be useful if you want to consult the tables manually:<ul><li><b>Open hands against a Kamicha riichi:</b> A separate table is used when Kamicha has declared riichi, accounting for the increased opportunity to call chii from their discards.</li><li><b>Closed hands with an available yaku when opened:</b> If a closed hand has a valid yaku when opened, it is evaluated using the open-hand table. Its value is classified according to its open-hand ron value, then moved up one tier to reflect the more favorable push conditions.</li><li><b>Non-standard 1-shanten shapes:</b> The Kuttsuki and Headless shapes classified as [S] tier use [A] Perfect as their base tier, adjusted upward by one tier.</li><li><b>Intermediate hand values:</b> Hands capable of scoring pinfu are assigned an interpolated value between two adjacent tiers. For open hands, <i>tenpane</i> (テンパネ)—score increases resulting from additional fu, such as value triplets or quads—is also accounted for by interpolating between adjacent tiers, with slightly less than 50% weight toward the higher tier.</li></ul>',
+        'about.p2': 'Work from top to bottom: set your conditions, hand shape, ron value, and turn to view the corresponding threshold table. To get a more specific PUSH/PULL verdict, expand <i>Estimate Deal-in Rate</i> and enter the tile category, applicable modifiers, and number of passed suji. Tap a turn column header to switch between turns.<h4>How the Tables Work</h4>The app first uses the <b>Shape Tier Table</b> to determine the tier corresponding to your hand shape and ron value. The assigned tier depends on whether you are the dealer or non-dealer, whether your hand is closed or open, and, for open hands, whether Kamicha has declared riichi. Each shape is assigned tiers according to its relative value: [A] Perfect generally receives the most favorable tiers, followed by shapes [B] through [F]. The tier also depends on the hand\'s ron value; for example, a 4-han [A] menzen hand is assigned Tier 1, while a 4-han menzen [B] Ryanmen×2 hand is assigned Tier 2, equivalent to a 3-han [A] Perfect hand.<h4>Additional Details</h4>The following rules explain some of the adjustments applied in less straightforward cases, and may also be useful if you want to consult the tables manually:<ul><li><b>Open hands against a Kamicha riichi:</b> A separate table is used when Kamicha has declared riichi, accounting for the increased opportunity to call chii from their discards.</li><li><b>Closed hands with an available yaku when opened:</b> If a closed hand has a valid yaku when opened, it is evaluated using the open-hand table. Its value is classified according to its open-hand ron value, then moved up one tier to reflect the more favorable push conditions.</li><li><b>Non-standard 1-shanten shapes:</b> The Kuttsuki and Headless shapes classified as [S] tier use [A] Perfect as their base tier, adjusted upward by one tier.</li><li><b>Intermediate hand values (pinfu / 50 fu):</b> Hands capable of scoring pinfu are shown with range values (e.g., 1300~2000), and closed hands at 50 fu are handled the same way. In both cases the threshold is calculated as the average of the two adjacent tiers. A warning appears in the result panel when this applies.</li><li><b>Intermediate hand values (tenpane):</b> Open hands at 40+ fu (テンパネ) are shown with their corresponding 40-fu point values (e.g., 1300, 2600, 5200). Their threshold is interpolated between the base and one-tier-better thresholds, with slightly less than 50% weight toward the higher tier. A warning appears in the result panel when this applies.</li><li><b>Ippatsu turn (一発巡):</b> The turn immediately following a riichi declaration, during which the opponent can score an additional ippatsu han. When the ippatsu option is enabled:<ul><li><b>Non-dealer riichi, non-dealer player:</b> The <b>VS Dealer</b> threshold chart is used at the same tier, reflecting the increased scoring threat.</li><li><b>Non-dealer riichi, dealer player:</b> The <b>As Dealer</b> threshold chart is used, with the hand treated as one tier weaker.</li><li><b>Dealer riichi (non-dealer player):</b> The <b>VS Dealer</b> threshold chart is used, with the hand treated as two tiers weaker.</li></ul></li></ul>',
         'about.sources': 'Sources and Methodology',
         'about.p4': 'The shape-tier and threshold tables are adapted primarily from Unimaru\'s book <i>Unimaru-shiki Winning Mahjong with Theory</i> (『うに丸式 セオリーで勝つ麻雀』), which draws on material from <i>Statistical Mahjong Strategy</i> (『統計学のマージャン戦術』) and <i>New: Scientific Mahjong</i> (『新・科学する麻雀』). <br> <br> The [D] Ryanmen + Kanchan shape was not included in the original data and has been interpolated by me. The original [D] and [E] shape classifications have been renamed [E] and [F], respectively. Other shapes are mapped to their base tiers according to their prefixes. Fu-adjusted thresholds are calculated by averaging the values of adjacent tiers. Deal-in rate estimates are adapted from <i>Statistical Mahjong Strategy</i> by Miinin. I have also made numerous estimates of my own when deciding how to handle certain edge cases. As a result, not every situation may be perfectly calibrated to an optimal push-pull decision. <b>Please treat the results as a reference rather than definitive advice.</b>',
         'about.credits': 'Credits',
         'about.p3': 'Designed and developed by kakino_tea. X: <a style="color:#738ad0" href="https://x.com/mican8saku" target="_blank" rel="noopener noreferrer">@mican8saku</a>',
       },
       ja: {
-        'home.link': '戻る <i class="fa-solid fa-door-open"></i>',
-        'home.about': 'このアプリについて <i class="fa-solid fa-circle-info"></i>',
+        'home.link': '<i class="fa-solid fa-right-to-bracket"></i> 戻る',
+        'home.about': '<i class="fa-solid fa-circle-info"></i> このアプリについて',
         'app.title': 'イーシャンテン オラクル',
         'app.title-icon': '<i class="fa-solid fa-hamsa"></i> イーシャンテン オラクル',
         'app.titleSub': '押し引き早見表',
@@ -1638,8 +1695,12 @@
         'ippatsu.no': '非一発巡',
         'ippatsu.yes': '一発巡',
         'ref.ippatsu': '一発巡',
-        'result.ippatsuDealerNote': '一発巡：親リーチ ー 手牌を2段階弱く評価',
         'result.ippatsuNdNote': '一発巡：子リーチ — 親相手のボーダー表を適用',
+        'result.ippatsuDealerNote': '一発巡：親リーチ — 手牌を2段階弱く評価',
+        'result.ippatsuAsDealerNote': '一発巡：子リーチ（親として）— 手牌を1段階弱く評価',
+        'result.pinfuNote': 'ピンフ または テンパネ（50符）— 隣接する2ティアの中間値で計算',
+        'result.callableNote': '門前・鳴き役あり — 副露表の1段階上で評価',
+        'result.tenpaneNote': 'テンパネ想定（40符）— 上位ティア寄りに若干重み付け',
         'yaku.noyaku': '役なし',
         'yaku.callable': '役あり',
         'hand.menzen': '門前', 'hand.fuuro': '副露',
@@ -1649,7 +1710,7 @@
         'label.riichiSeat': 'リーチ者の座席',
         'seat.kamicha': '上家', 'seat.toimen': '対面', 'seat.shimocha': '下家',
         'label.hand': '手牌', 'label.shape': '形',
-        'label.score': '打点（出上がり）',
+        'label.score': '打点（リーチ込み）',
         'shapeA': '[A] 完全形', 'shapeB': '[B] 両面×2', 'shapeC': '[C] 両面＋リャンカン',
         'shapeD': '[D] 両面＋カンチャン', 'shapeE': '[E] カンチャン＋リャンカン', 'shapeF': '[F] 七対子',
         'shape.other': 'その他の形',
@@ -1709,9 +1770,9 @@
         'about.title': 'このアプリについて',
         'about.overview': '概要',
         'about.overview': '概要',
-        'about.p1': '1シャンテン時の押し引き判断に使う早見表です。自分の状況・手牌の形・ロン打点・巡目を設定すると、手牌に対応する<b>ボーダー放銃率</b>を確認できます。これは、押す価値があると判断される放銃率の目安となる上限値です。さらに「放銃率を推定」を開き、牌のカテゴリ・放銃率の補正要素・通ったスジの数を入力すると、PUSH/PULLの判定を確認できます。<b>主に平場での押し引き判断を想定しています。</b>',
+        'about.p1': '1シャンテン時の押し引き判断に使う早見表です。自分の状況・手牌の形・ロン打点・巡目を設定すると、手牌に対応する<b>ボーダー放銃率</b>を確認できます。これは、押す価値があると判断される放銃率の目安となる上限値です。さらに「放銃率を推定」を開き、牌のカテゴリ・放銃率の補正要素・通ったスジの数を入力すると、『押し』 / 『引き』の判定を確認できます。<b>主に平場での押し引き判断を想定しています。</b>',
         'about.howToUse': '使い方',
-        'about.p2': '上から順に、自分の状況・手牌の形・ロン打点・巡目を設定してください。条件に応じてボーダー放銃率の表が更新されます。具体的な押し引き判定を確認したい場合は、「放銃率を推定」を開き、牌のカテゴリ・補正要素・通ったスジの数を入力してください。巡目の列ヘッダーをタップすると、表示する巡目を切り替えられます。<h4>表の見方</h4>まず、<b>形のティア表</b>から、手牌の形とロン打点に対応するティアを決定します。使用する表は、親・子の別、門前・副露の別によって異なり、副露手については上家がリーチしているかどうかでも表が分かれます。各形には、形の相対的な価値に応じてティアが設定されています。基本的には[A] Perfectが最も有利なティアに割り当てられ、[B]から[F]にかけて形に応じたティアが設定されています。また、同じ形でもロン打点によってティアは変わります。例えば、[A]の4翻はTier 1、[B]の4翻はTier 2となり、[A]の3翻と同じティアになります。ティアが決まったら、次に<b>ボーダー放銃率表</b>を参照します。この表は縦軸がティア、横軸が巡目（5巡目・9巡目・14巡目）になっています。該当するティアと巡目が交差する値が、その状況でのボーダー放銃率です。<h4>補足事項</h4>以下は、通常の表の選択・参照に加えて、少し特殊なケースで適用される補正ルールです。手作業で表を参照する場合にも参考になります。<ul><li><b>上家がリーチしている場合の副露手：</b>上家がリーチしている場合は、専用の副露手用の表を使用します。上家の捨て牌からチーできる機会が増えることを考慮しています。</li><li><b>鳴けば役がつく門前手：</b>鳴いた状態で役が成立する門前手は、副露手用の表を使用します。副露時のロン打点で分類したうえで、押しやすさを考慮してティアを1段階上げて評価します。</li><li><b>特殊な1シャンテン形：</b>[S]ティアに分類されるくっつき形・ヘッドレス形は、[A] Perfectを基準となるティアとし、そこからティアを1段階上げて評価します。</li><li><b>中間的な打点の扱い：</b>ピンフが成立する手牌は、隣接する2つのティアの中間値として扱います。また、副露手のテンパネ（暗刻・明刻や槓子などによる符の増加に伴う打点上昇）についても、隣接するティア間の補間値を使用します。ただし、上位ティア側の比重は50%よりやや低く設定しています。</li></ul>',
+        'about.p2': '上から順に、自分の状況・手牌の形・ロン打点・巡目を設定してください。条件に応じてボーダー放銃率の表が更新されます。具体的な押し引き判定を確認したい場合は、「放銃率を推定」を開き、牌のカテゴリ・補正要素・通ったスジの数を入力してください。巡目の列ヘッダーをタップすると、表示する巡目を切り替えられます。<h4>表の見方</h4>まず、<b>形のティア表</b>から、手牌の形とロン打点に対応するティアを決定します。使用する表は、親・子の別、門前・副露の別によって異なり、副露手については上家がリーチしているかどうかでも表が分かれます。各形には、形の相対的な価値に応じてティアが設定されています。基本的には[A] Perfectが最も有利なティアに割り当てられ、[B]から[F]にかけて形に応じたティアが設定されています。また、同じ形でもロン打点によってティアは変わります。例えば、[A]の4翻はTier 1、[B]の4翻はTier 2となり、[A]の3翻と同じティアになります。ティアが決まったら、次に<b>ボーダー放銃率表</b>を参照します。この表は縦軸がティア、横軸が巡目（5巡目・9巡目・14巡目）になっています。該当するティアと巡目が交差する値が、その状況でのボーダー放銃率です。<h4>補足事項</h4>以下は、通常の表の選択・参照に加えて、少し特殊なケースで適用される補正ルールです。手作業で表を参照する場合にも参考になります。<ul><li><b>上家がリーチしている場合の副露手：</b>上家がリーチしている場合は、専用の副露手用の表を使用します。上家の捨て牌からチーできる機会が増えることを考慮しています。</li><li><b>鳴けば役がつく門前手：</b>鳴いた状態で役が成立する門前手は、副露手用の表を使用します。副露時のロン打点で分類したうえで、押しやすさを考慮してティアを1段階上げて評価します。</li><li><b>特殊な1シャンテン形：</b>[S]ティアに分類されるくっつき形・ヘッドレス形は、[A] Perfectを基準となるティアとし、そこからティアを1段階上げて評価します。</li><li><b>中間的な打点の扱い（ピンフ／50符）：</b>ピンフが成立する手牌は「1300~2000」のようなレンジ表記となり、50符の手牌も同様に扱われます。いずれの場合も隣接する2つのティアの平均値として評価されます。該当する場合は結果パネルに警告が表示されます。</li><li><b>中間的な打点の扱い（テンパネ）：</b>副露手のテンパネ（40符以上）は、対応する40符の打点（例：1300・2600・5200）として表記され、基本ティアと1段階上のティアの間で補間されます。上位ティア側の比重は50%よりやや低く設定されており、該当する場合は結果パネルに警告が表示されます。</li><li><b>一発巡：</b>リーチ宣言直後の一巡は、相手に一発の1翻が加算される可能性があります。ippatsuオプションを有効にすると、以下の補正が適用されます。<ul><li><b>子のリーチ・自分が子：</b>同じティアのまま<b>親相手（VS Dealer）</b>のボーダー表を使用します。</li><li><b>子のリーチ・自分が親：</b><b>親として（As Dealer）</b>のボーダー表を使用し、手牌を1段階弱く評価します。</li><li><b>親のリーチ（自分が子）：</b><b>親相手（VS Dealer）</b>のボーダー表を使用し、手牌を2段階弱く評価します。</li></ul></li></ul>',
         'about.sources': '参考文献・算出方法',
         'about.p4': '形のティア表およびボーダー放銃率表は、主にうに丸氏の著書『うに丸式 セオリーで勝つ麻雀』を参考にしています。同書で参考にされている『統計学のマージャン戦術』および『新・科学する麻雀』のデータも基になっています。<br> <br> [D] 両面＋カンチャンの形は元データに含まれていなかったため、独自に補間しています。また、元データの[D]・[E]は、それぞれ[E]・[F]に名称を変更しています。その他の形は、形の名称の接頭辞に応じて基本ティアに割り当てています。符による補正値は、隣接するティアの値を平均して算出しています。放銃率の推定値は、みーにん氏の『統計学のマージャン戦術』を参考にしています。なお、特殊なケースの扱いについては、独自の推定や調整も多く含まれています。そのため、すべての状況で最適な押し引き判断と完全に一致するとは限りません。<b>あくまで判断の参考としてご利用ください。</b>',
         'about.credits': 'クレジット',
@@ -1779,23 +1840,33 @@
       else if (State.playerDealer) tierMap = isKamicha ? OPEN_TIER_MAP_D_C : OPEN_TIER_MAP_D_NC;
       else tierMap = isKamicha ? OPEN_TIER_MAP_ND_C : OPEN_TIER_MAP_ND_NC;
 
-      // Base role
+      // Base role (before ippatsu adjustments)
       let roleKey = State.playerDealer
         ? 'As Dealer'
         : (State.riichiCallerDealer ? 'VS Dealer' : 'VS Non-Dealer');
 
-      // ----- Ippatsu adjustment -----
-      // Non-dealer riichi + ippatsu → use VS Dealer chart (same tier).
-      // Dealer riichi + ippatsu     → use VS Dealer chart with tier +2 (worse).
+      // ----- Ippatsu adjustments -----
       let tierAdjust = 0;
       let ippatsuApplied = false;
+      let ippatsuCase = null;
       if (State.ippatsu) {
         ippatsuApplied = true;
-        if (!State.riichiCallerDealer) {
-          roleKey = 'VS Dealer';   // treat ND riichi as dealer-strength
-        } else {
+        if (State.playerDealer && !State.riichiCallerDealer) {
+          // As Dealer, facing non-dealer riichi on ippatsu:
+          // keep As Dealer chart, treat the hand as 1 tier weaker.
+          ippatsuCase = 'asDealerND';
+          tierAdjust = 1;
+        } else if (!State.riichiCallerDealer) {
+          // Non-dealer player, non-dealer riichi:
+          // swap to VS Dealer chart at the same tier.
+          ippatsuCase = 'ndND';
           roleKey = 'VS Dealer';
-          tierAdjust = 2;          // treat dealer riichi as 2 tiers weaker for us
+        } else {
+          // Non-dealer player, dealer riichi:
+          // VS Dealer chart, treat the hand as 2 tiers weaker.
+          ippatsuCase = 'ndD';
+          roleKey = 'VS Dealer';
+          tierAdjust = 2;
         }
       }
 
@@ -1807,9 +1878,10 @@
 
       return {
         isFuuroHand, is7Pairs, callable, effectiveOpen,
+        playerDealer: State.playerDealer,
         tierMap, threshTable, roleKey, isKamicha,
         baseShape, shapeOffset,
-        tierAdjust, ippatsuApplied,
+        tierAdjust, ippatsuApplied, ippatsuCase,
         maxTier: maxTierForMap(tierMap)
       };
     }
@@ -1821,9 +1893,9 @@
     }
 
     function getScoreList(cfg) {
-      if (cfg.is7Pairs) return State.playerDealer ? SCORE_MAP.chiitoiD : SCORE_MAP.chiitoiND;
-      if (cfg.isFuuroHand) return State.playerDealer ? SCORE_MAP.openD : SCORE_MAP.openND;
-      return State.playerDealer ? SCORE_MAP.closedD : SCORE_MAP.closedND;
+      if (cfg.is7Pairs) return cfg.playerDealer ? SCORE_MAP.chiitoiD : SCORE_MAP.chiitoiND;
+      if (cfg.isFuuroHand) return cfg.playerDealer ? SCORE_MAP.openD : SCORE_MAP.openND;
+      return cfg.playerDealer ? SCORE_MAP.closedD : SCORE_MAP.closedND;
     }
 
     function getDefaultScoreLabel(cfg) {
@@ -1863,7 +1935,6 @@
       const maxTier = cfg.maxTier;
       let cells;
 
-      // Chiitoi: direct tier lookup
       if (cfg.is7Pairs) {
         const tier = getShapeTier(cfg.tierMap, cfg.baseShape, han, cfg.shapeOffset) || maxTier;
         cells = [{ tier, visualOpacity: 1, calcWeight: 1 }];
@@ -1873,8 +1944,7 @@
         if (baseTier === null) {
           cells = [{ tier: maxTier, visualOpacity: 1, calcWeight: 1 }];
         } else {
-          const betterTier = Math.max(1, baseTier - 1);
-          cells = [{ tier: betterTier, visualOpacity: 1, calcWeight: 1 }];
+          cells = [{ tier: Math.max(1, baseTier - 1), visualOpacity: 1, calcWeight: 1 }];
         }
       } else if (cfg.isFuuroHand) {
         const baseTier = getShapeTier(cfg.tierMap, cfg.baseShape, han, cfg.shapeOffset);
@@ -1912,7 +1982,7 @@
         }
       }
 
-      // Ippatsu tier adjustment (dealer riichi → hand treated as 2 tiers weaker)
+      // Ippatsu tier adjustment
       if (cfg.tierAdjust) {
         cells = cells.map(c => ({
           ...c,
@@ -1940,7 +2010,7 @@
 
       return {
         ...cfg, cells, threshold, points: entry.label, turnKey,
-        baseTier: cells[0].tier
+        baseTier: cells[0].tier, entry
       };
     }
 
@@ -1971,27 +2041,17 @@
       return names;
     }
 
-    // Verdict zones based on direct |rate - threshold| gap (not the 5% bucket):
-    //   threshold ≥ 100%              → ironPush  (chart says always push)
-    //   threshold ≈ 0%                → ironPull  (chart says never push)
-    //   |gap| < 0.005                 → borderlineEither
-    //   0.005 ≤ |gap| < 0.025         → borderlineFavorsPush / borderlineFavorsPull
-    //   0.025 ≤ |gap| < 0.10          → push / pull
-    //   |gap| ≥ 0.10                  → ironPush / ironPull
     function getVerdictLevel(rate, threshold) {
       if (threshold >= 1.0) return 'ironPush';
       if (threshold <= 0.001) return 'ironPull';
 
-      // Strict pull whenever rate exceeds threshold
       if (rate > threshold) {
         const gap = rate - threshold;
         return gap >= 0.10 ? 'ironPull' : 'pull';
       }
 
-      // Exactly at threshold
       if (rate === threshold) return 'borderlineFavorsPull';
 
-      // Below threshold
       const gap = threshold - rate;
 
       if (gap < 0.005) return 'borderlineFavorsPull';
@@ -2033,22 +2093,18 @@
 
       $('playerRow').querySelectorAll('.btn').forEach(b => {
         const v = b.dataset.player;
-
-        b.classList.toggle(
-          'selected',
-          v === (State.playerDealer ? 'dealer' : 'nondealer')
-        );
+        b.classList.toggle('selected', v === (State.playerDealer ? 'dealer' : 'nondealer'));
       });
       $('riichiRoleRow').querySelectorAll('.btn').forEach(b => {
         const v = b.dataset.riichiRole;
-
-        b.classList.toggle(
-          'selected',
-          v === (State.riichiCallerDealer ? 'dealer' : 'nondealer')
-        );
+        b.classList.toggle('selected', v === (State.riichiCallerDealer ? 'dealer' : 'nondealer'));
       });
       $('riichiSeatRow').querySelectorAll('.btn').forEach(b => {
         b.classList.toggle('selected', b.dataset.riichiSeat === State.riichiCallerSeat);
+      });
+      $('ippatsuRow').querySelectorAll('.btn').forEach(b => {
+        const isYes = b.dataset.ippatsu === 'yes';
+        b.classList.toggle('selected', isYes === State.ippatsu);
       });
       document.querySelectorAll('#shapeRow .btn, #otherShapesRow .btn').forEach(b => {
         b.classList.toggle('selected', b.dataset.shape === State.shape);
@@ -2067,10 +2123,6 @@
         b.classList.toggle('selected', !!State.modifiers[b.dataset.mod]);
       });
       $('catDesc').textContent = State.category ? catDesc(State.category) : t('label.pickCat');
-      $('ippatsuRow').querySelectorAll('.btn').forEach(b => {
-      const isYes = b.dataset.ippatsu === 'yes';
-      b.classList.toggle('selected', isYes === State.ippatsu);
-      });
     }
 
     /* =========================================================
@@ -2098,24 +2150,35 @@
       });
     }
 
+    function remapScorePreserveIndex(oldCfg, newCfg, oldLabel) {
+      const oldList = getScoreList(oldCfg);
+      const newList = getScoreList(newCfg);
+      const oldIdx = oldList.findIndex(s => s.label === oldLabel);
+      if (oldIdx === -1) return getDefaultScoreLabel(newCfg);
+      const newIdx = Math.max(0, Math.min(oldIdx, newList.length - 1));
+      const candidate = newList[newIdx];
+      if (candidate.pinfu && !canPinfu(newCfg)) {
+        return getDefaultScoreLabel(newCfg);
+      }
+      return candidate.label;
+    }
+
     /* =========================================================
        RENDER: RESULT
        ========================================================= */
     function getTableTitle() {
-  const cfg = getEffectiveConfig();
-  let base;
-  if (!cfg.effectiveOpen) {
-    base = State.playerDealer ? t('ref.menzenD') : t('ref.menzenND');
-  } else if (State.playerDealer) {
-    base = State.riichiCallerSeat === 'kamicha' ? t('ref.dC') : t('ref.dNC');
-  } else {
-    base = State.riichiCallerSeat === 'kamicha' ? t('ref.ndC') : t('ref.ndNC');
-  }
-  if (cfg.ippatsuApplied) {
-    base += ' · ' + t('ref.ippatsu');
-  }
-  return base;
-}
+      const cfg = getEffectiveConfig();
+      let base;
+      if (!cfg.effectiveOpen) {
+        base = State.playerDealer ? t('ref.menzenD') : t('ref.menzenND');
+      } else if (State.playerDealer) {
+        base = State.riichiCallerSeat === 'kamicha' ? t('ref.dC') : t('ref.dNC');
+      } else {
+        base = State.riichiCallerSeat === 'kamicha' ? t('ref.ndC') : t('ref.ndNC');
+      }
+      if (cfg.ippatsuApplied) base += ' · ' + t('ref.ippatsu');
+      return base;
+    }
 
     function renderThresholdTable(r) {
       const turns = [5, 9, 14];
@@ -2177,10 +2240,29 @@
       const tiers = r.cells.map(c => c.tier).sort((a, b) => a - b);
       const tierStr = tiers.length > 1 ? `${Math.min(...tiers)}–${Math.max(...tiers)}` : String(r.baseTier);
       const shapeId = OTHER_SHAPES[State.shape]?.id || SHAPE_IDS[State.shape] || '';
+
+      // ----- Warning banners -----
+      const entry = r.entry;
       let ippatsuNote = '';
-      if (r.ippatsuApplied) {
-        const noteKey = r.tierAdjust ? 'result.ippatsuDealerNote' : 'result.ippatsuNdNote';
+      if (r.ippatsuCase) {
+        const noteKey = {
+          ndND: 'result.ippatsuNdNote',
+          ndD: 'result.ippatsuDealerNote',
+          asDealerND: 'result.ippatsuAsDealerNote'
+        }[r.ippatsuCase];
         ippatsuNote = `<div class="modifier-indicator">⚠ ${t(noteKey)}</div>`;
+      }
+
+      let pinfuNote = '';
+      let tenpaneNote = '';
+      let callableNote = '';
+      if (entry && entry.pinfu) {
+        pinfuNote = `<div class="modifier-indicator">⚠ ${t('result.pinfuNote')}</div>`;
+      } else if (entry && entry.fu === 40 && r.isFuuroHand) {
+        tenpaneNote = `<div class="modifier-indicator">⚠ ${t('result.tenpaneNote')}</div>`;
+      }
+      if (r.callable) {
+        callableNote = `<div class="modifier-indicator">⚠ ${t('result.callableNote')}</div>`;
       }
 
       // Defaults (collapsed or no category)
@@ -2260,7 +2342,10 @@
       $('resultSection').innerHTML = `
     ${verdictHtml}
     ${ippatsuNote}
+    ${callableNote}
     ${modIndicator}
+    ${pinfuNote}
+    ${tenpaneNote}
     <div class="stat-grid">
       <div class="stat">
         <div class="stat-label">${t('stat.tier')}</div>
@@ -2529,8 +2614,12 @@
     function wireEvents() {
       $('handRow').querySelectorAll('.btn').forEach(b => {
         b.onclick = () => {
+          const oldCfg = getEffectiveConfig();
+          const oldLabel = State.score;
           State.hand = b.dataset.hand;
           if (State.hand === 'fuuro' && State.shape === 'Chiitoi') State.shape = 'Perfect';
+          const newCfg = getEffectiveConfig();
+          State.score = remapScorePreserveIndex(oldCfg, newCfg, oldLabel);
           renderAll();
         };
       });
@@ -2543,36 +2632,37 @@
       });
       $('playerRow').querySelectorAll('.btn').forEach(b => {
         b.onclick = () => {
+          const oldCfg = getEffectiveConfig();
+          const oldLabel = State.score;
           State.playerDealer = (b.dataset.player === 'dealer');
-
-          if (State.playerDealer) {
-            State.riichiCallerDealer = false;
-          }
-
+          if (State.playerDealer) State.riichiCallerDealer = false;
+          const newCfg = getEffectiveConfig();
+          State.score = remapScorePreserveIndex(oldCfg, newCfg, oldLabel);
           renderAll();
         };
       });
       $('riichiRoleRow').querySelectorAll('.btn').forEach(b => {
         b.onclick = () => {
+          const oldCfg = getEffectiveConfig();
+          const oldLabel = State.score;
           State.riichiCallerDealer = (b.dataset.riichiRole === 'dealer');
-
           if (State.riichiCallerDealer) {
             State.playerDealer = false;
           }
-
+          const newCfg = getEffectiveConfig();
+          State.score = remapScorePreserveIndex(oldCfg, newCfg, oldLabel);
           renderAll();
         };
       });
       $('riichiSeatRow').querySelectorAll('.btn').forEach(b => {
         b.onclick = () => { State.riichiCallerSeat = b.dataset.riichiSeat; renderAll(); };
       });
-
       $('ippatsuRow').querySelectorAll('.btn').forEach(b => {
-          b.onclick = () => {
-            State.ippatsu = (b.dataset.ippatsu === 'yes');
-            renderAll();
-          };
-        });
+        b.onclick = () => {
+          State.ippatsu = (b.dataset.ippatsu === 'yes');
+          renderAll();
+        };
+      });
       document.querySelectorAll('#shapeRow .btn, #otherShapesRow .btn').forEach(b => {
         b.onclick = () => {
           State.shape = b.dataset.shape;
