@@ -1891,6 +1891,22 @@
       text-decoration: underline;
     }
 
+    /* Callable tag — light blue to signal "open-chart evaluation" */
+    .svalue .callable-tag {
+      color: #7dd3fc;
+      font-weight: 800;
+    }
+
+    /* Navbar divider between pills and buttons */
+    .hdr-sep {
+      width: 1px;
+      height: 24px;
+      background: var(--border);
+      align-self: center;
+      flex-shrink: 0;
+      margin: 0 2px;
+    }
+
     @media (max-width:1280px) {
       #game {
         grid-template-columns: 270px minmax(0, 1fr) 250px 300px;
@@ -1954,7 +1970,14 @@
       }
 
       .hdr-left {
+        flex-direction: column;
+        align-items: center;
         justify-content: center;
+        gap: 6px;
+      }
+
+      .hdr-sep {
+        display: none;
       }
 
       .hdr-right {
@@ -2431,6 +2454,7 @@
           <span class="pill combo" id="comboPill">Combo 0</span>
           <span class="pill" id="qCounter">Q 1 / 10</span>
           <span class="pill score" id="scorePill">Score 0</span>
+          <span class="hdr-sep"></span>
           <button class="btn" id="langBtnGame" style="padding:6px 12px;font-size:12px;">日本語</button>
           <button class="btn" id="helpBtn" style="padding:6px 12px;font-size:12px;" data-i18n="game.howto">How to
             Play</button>
@@ -2730,7 +2754,7 @@
       en: {
         'page.title': '1-shanten Oracle — Push-Pull Trainer',
         'home.link': '<i class="fa-solid fa-hamsa"></i> The Oracle',
-        'home.about': '<i class="fa-solid fa-circle-info"></i> About this app',
+        'home.about': '<i class="fa-solid fa-circle-info"></i> About',
         'home.heading': '<i class="fa-solid fa-hamsa"></i> 1-shanten Oracle',
         'home.sub': 'Push-pull trainer',
         'home.start': 'Start',
@@ -2814,9 +2838,9 @@
         'help.title': 'How to Play',
         'help.overview.title': 'Overview', 'help.overview.body': "Each question gives you a 1-shanten hand facing an opponent's riichi. Answer three questions in sequence to build up to a push/pull decision.",
         'help.step1.title': 'Step 1 — Count Passed Sujis', 'help.step1.body': "Unique sujis blocked by the riichi player's pond. Post-riichi discards count. No-chance applies when all four copies of a tile are visible.",
-        'help.step2.title': 'Step 2 — Estimate Deal-in Rate', 'help.step2.body': 'One of six buckets: <code>&lt;5%</code>, <code>5–10%</code>, <code>10–15%</code>, <code>15–20%</code>, <code>20–25%</code>, <code>&gt;25%</code>.',
+        'help.step2.title': 'Step 2 — Estimate Deal-in Rate', 'help.step2.body': 'Estimate the deal-in rate of the tile you should push with based on the number of passed suji. Answer by placing it in one of the six buckets: <code>&lt;5%</code>, <code>5–10%</code>, <code>10–15%</code>, <code>15–20%</code>, <code>20–25%</code>, <code>&gt;25%</code>. Use the "Deal-in Rates" reference table to get an approximation. The result will give you the exact deal-in rate after answering which you can make use of to determine the push-fold decision making in the following step.',
         'help.step3.title': 'Step 3 — Push or Fold', 'help.step3.body': "Look up your hand's <b>threshold value</b> (T) from the tables, based on your role (dealer / non-dealer), hand state (closed / open), turn, and hand <b>tier</b>. Tier comes from your hand's shape, yaku, and dora count.",
-        'help.step3.list': '<li>If the tile\'s deal-in rate (R) is <b>≤ T</b>: <b>PUSH</b>.</li><li>If R is <b>&gt; T</b>: <b>FOLD</b>.</li><li>If T falls <b>inside the bucket range</b>: <b>BORDERLINE</b> — both answers score 200, and the buttons glow green (slightly favored) or yellow (ambiguous).</li>',
+        'help.step3.list': '<li>If the tile\'s deal-in rate (R) is <b>≤ T</b>: <b>PUSH</b>. If R is <b>&gt; T</b>: <b>FOLD</b>.</li><li>If T falls <b>inside the bucket range</b>: <b>BORDERLINE</b> — both answers score 200, and the buttons glow yellow (ambiguous).</li> <br>If you want to make use of the system that the program is based on check the "About" page for more details. ',
         'help.pinfu.title': 'Pinfu and Iipeikou', 'help.pinfu.body': 'Closed hands can pick up extra yaku. <b>Pinfu</b> (only [A] Perfect and [B] Ryanmen×2) is worth 1 han, and its threshold is interpolated between the two adjacent tiers because pinfu lowers fu compared to a standard hand at the same han count. <b>Iipeikou</b> adds 1 han (any closed non-chiitoi shape). Both disappear if the hand is called.',
         'help.ippatsu.title': 'Ippatsu vs No Ippatsu', 'help.ippatsu.body': '<b>Ippatsu</b>: opponent just declared riichi and their ippatsu is still live, so you\'re forced to discard a dangerous tile while the +1 han bonus is a threat. Tier and/or role chart is adjusted to reflect lower push thresholds. <b>No Ippatsu</b>: riichi was declared a turn earlier, you safely discarded a genbutsu earlier, and the ippatsu window has closed — you now have to choose whether to push the same dangerous tile under normal conditions.',
         'help.callable.title': 'Callable Closed Hands', 'help.callable.body': 'If your closed hand has a Tanyao or Yakuhai Ankou, it could be opened for tenpai. The tier is evaluated on the open chart using only the surviving yaku + dora (riichi, pinfu, ippeikou all drop), then bumped up one tier to reflect the flexibility.',
@@ -2860,7 +2884,7 @@
         'about.title': 'About', 'about.overview': 'Overview',
         'about.p1': 'A training tool for push/pull decisions in 1-shanten situations facing an opponent\'s riichi. Each question walks you through the same three steps: count the passed sujis, estimate the deal-in rate, then compare it against your hand\'s <b>threshold deal-in rate</b> to reach a PUSH/FOLD decision. The trainer is intended for flat point standing practice.',
         'about.howToUse': 'How to Use',
-        'about.p2': 'Each question shows a 1-shanten hand, the opponent\'s riichi pond, the tile category you might discard, and the shape/threshold reference tables. Answer the three quiz steps in order. Both side panels can be auto-selected via the <i>Auto</i> button, or you can jump to a specific table with the direct-nav buttons.<h4>Hand State &amp; Yaku</h4>Closed hands automatically include <b>riichi</b> (+1 han). Closed hands can also pick up <b>pinfu</b> (only [A] Perfect and [B] Ryanmen×2 — worth 1 han but threshold is interpolated between the two adjacent tiers) and <b>iipeikou</b> (any closed non-chiitoi shape, 1 han). A closed hand with a Tanyao or Yakuhai Ankou can be <b>opened for tenpai</b> — evaluated using the open-hand chart with only the surviving yaku + dora, then moved up one tier to reflect the flexibility.<h4>Ippatsu vs No Ippatsu</h4><b>Ippatsu</b>: opponent\'s riichi is still live. If you\'re non-dealer against a non-dealer riichi, the VS Dealer chart is used at the same tier. If you\'re the dealer against a non-dealer riichi, the As Dealer chart is used and your hand is treated one tier weaker. If you\'re non-dealer against a dealer riichi, the VS Dealer chart is used and your hand is treated two tiers weaker. <b>No Ippatsu</b>: riichi was declared a turn earlier — you safely discarded a genbutsu on the turn after, and the ippatsu window has closed. The full chart applies.<h4>Additional Details</h4><ul><li><b>Open hands against a Kamicha riichi:</b> A separate table is used when Kamicha has declared riichi, accounting for the increased opportunity to call chii from their discards.</li><li><b>Non-standard 1-shanten shapes:</b> The Kuttsuki and Headless shapes classified as [S] tier use [A] Perfect as their base tier, adjusted upward by one tier.</li></ul>',
+        'about.p2': 'Work from top to bottom: set your conditions, hand shape, ron value, and turn to view the corresponding threshold table. To get a more specific PUSH/PULL verdict, expand <i>Estimate Deal-in Rate</i> and enter the tile category, applicable modifiers, and number of passed suji. Tap a turn column header to switch between turns.<h4>How the Tables Work</h4>The app first uses the <b>Shape Tier Table</b> to determine the tier corresponding to your hand shape and ron value. The assigned tier depends on whether you are the dealer or non-dealer, whether your hand is closed or open, and, for open hands, whether Kamicha was the one who declared riichi. Each shape is assigned tiers according to its ron value: [A] Perfect generally receives the most favorable tiers, followed by shapes [B] through [F]. The tier also depends on the hand\'s ron value; for example, a 4-han [A] menzen hand is assigned Tier 1, while a 4-han menzen [B] Ryanmen×2 hand is assigned Tier 2, equivalent to a 3-han [A] Perfect hand.<h4>Additional Details</h4>The following rules explain some of the adjustments applied in less straightforward cases, and may also be useful if you want to consult the tables manually:<ul><li><b>Open hands against a Kamicha riichi:</b> A separate tier table is used when Kamicha has declared riichi, accounting for the increased opportunity to call chii from their discards.</li><li><b>Closed hands with an available yaku when opened:</b> If a closed hand has a valid yaku when opened, it is evaluated using the open-hand table. Its value is classified according to its open-hand ron value, then moved up one tier to reflect the more favorable push conditions.</li><li><b>Non-standard 1-shanten shapes:</b> The Kuttsuki and Headless shapes classified as [S] tier use [A] Perfect as their base tier, adjusted upward by one tier.</li><li><b>Intermediate hand values (pinfu / 50 fu tenpane):</b> Hands capable of scoring pinfu are shown with range values (e.g., 1300~2000), and closed hands at 50 fu are handled the same way. In both cases the threshold is calculated as the average of the two adjacent tiers.</li><li><b>Intermediate hand values (40 fu tenpane):</b> Open hands at 40 fu are shown with their corresponding 40-fu point values (e.g., 1300, 2600, 5200). Their threshold is interpolated between the base and one-tier-better thresholds, with slightly less than 50% weight toward the higher tier. </li><li><b>Ippatsu turn (一発巡):</b> When the ippatsu option is enabled:<ul><li><b>Non-dealer riichi vs non-dealer player:</b> The <b>VS Dealer</b> threshold chart is used at the same tier, reflecting the increased scoring threat.</li><li><b>Non-dealer riichi VS dealer player:</b> The <b>As Dealer</b> threshold chart is used, with the hand treated as two tier weaker.</li><li><b>Dealer riichi VS non-dealer:</b> The <b>As Dealer</b> threshold chart is used, with the hand treated as one tier weaker.</li></ul></li></ul>',
         'about.sources': 'Sources and Methodology',
         'about.p4': 'The shape-tier and threshold tables are adapted primarily from Unimaru\'s book <i>Unimaru-shiki Winning Mahjong with Theory</i> (『うに丸式 セオリーで勝つ麻雀』), which draws on material from <i>Statistical Mahjong Strategy</i> (『統計学のマージャン戦術』) and <i>New: Scientific Mahjong</i> (『新・科学する麻雀』). <br> <br> The [D] Ryanmen + Kanchan shape was not included in the original data and has been interpolated. The original [D] and [E] shape classifications have been renamed [E] and [F]. Pinfu thresholds are calculated by averaging the two adjacent tiers. Deal-in rate estimates are adapted from <i>Statistical Mahjong Strategy</i> by Miinin. <b>Please treat the results as a reference rather than definitive advice.</b>',
         'about.credits': 'Credits',
@@ -3816,14 +3840,11 @@
     <h3>${t('help.step1.title')}</h3><p>${t('help.step1.body')}</p>
     <h3>${t('help.step2.title')}</h3><p>${t('help.step2.body')}</p>
     <h3>${t('help.step3.title')}</h3><p>${t('help.step3.body')}</p><ul>${t('help.step3.list')}</ul>
-    <h3>${t('help.pinfu.title')}</h3><p>${t('help.pinfu.body')}</p>
-    <h3>${t('help.ippatsu.title')}</h3><p>${t('help.ippatsu.body')}</p>
-    <h3>${t('help.callable.title')}</h3><p>${t('help.callable.body')}</p>
     <h3>${t('help.scoring.title')}</h3><ul>${t('help.scoring.list')}</ul>
     <h3>${t('help.tables.title')}</h3><ul>${t('help.tables.list')}</ul>
-    <h3>${t('help.grades.title')}</h3><p>${t('help.grades.body')}</p>
     <h3>${t('help.combo.title')}</h3><p>${t('help.combo.body')}</p>
     <h3>${t('help.ta.title')}</h3><ul>${t('help.ta.list')}</ul>
+    <h3>${t('help.grades.title')}</h3><p>${t('help.grades.body')}</p>
     <h3>${t('help.controls.title')}</h3><p>${t('help.controls.body')}</p>
   `;
     }
@@ -4076,17 +4097,16 @@
           };
 
           // ---------- Phase 3: one-by-one slow discards in turn order ----------
+                    // ---------- Phase 3: one-by-one slow discards in turn order ----------
           const doSlowPhase = () => {
             if (token !== State.boardToken) return;
 
             const remaining = [];
-            // Same turn (riichiIndex) for players after declarer
             for (let p = declarerPos + 1; p < 4; p++) {
               const player = turnOrder[p];
               const tile = pondEls[player].children[riichiIndex];
               if (tile) remaining.push(tile);
             }
-            // Later turns
             for (let idx = riichiIndex + 1; idx < maxLen; idx++) {
               for (let p = 0; p < 4; p++) {
                 const player = turnOrder[p];
@@ -4095,8 +4115,27 @@
               }
             }
 
+            // Final snap: lock pond heights and re-apply the anchor-based
+            // position. This corrects any sub-pixel drift caused by the
+            // drop-animation transforms, so the board doesn't "settle"
+            // visibly once the last 14th tile has landed.
+            const finish = () => {
+              if (token !== State.boardToken) return;
+              for (const key of keys) {
+                const el = pondEls[key];
+                const a = ANCHORS[key];
+                const w = el.offsetWidth, h = el.offsetHeight;
+                el.style.minHeight = h + 'px';
+                const posX = a.x - w / 2;
+                const posY = key === 'player' ? PLAYER_POND_TOP : (a.y - h / 2);
+                el.style.left = posX + 'px';
+                el.style.top  = posY + 'px';
+              }
+              resolve();
+            };
+
             if (remaining.length === 0) {
-              setTimeout(() => { if (token === State.boardToken) resolve(); }, 300);
+              setTimeout(finish, 300);
               return;
             }
 
@@ -4105,7 +4144,7 @@
             const dropNext = () => {
               if (token !== State.boardToken) return;
               if (idx >= remaining.length) {
-                setTimeout(() => { if (token === State.boardToken) resolve(); }, 300);
+                setTimeout(finish, 300);
                 return;
               }
               remaining[idx].classList.add('riichi-drop');
@@ -4130,25 +4169,29 @@
     }
 
     function renderScenario(q) {
-      $('scRole').textContent = q.playerIsDealer ? t('settings.role.dealer') : t('settings.role.nondealer');
-      const parts = [];
-      q.yaku.forEach(y => parts.push(t('yaku.' + y.name, y.name)));
-      let yakuText = parts.length ? parts.join(' + ') : '—';
-      if (q.doraCount > 0) {
-        const doraLabel = `${t('yaku.Dora')} (${q.doraCount})`;
-        yakuText = yakuText === '—' ? doraLabel : `${yakuText} + ${doraLabel}`;
-      }
-      $('scYaku').textContent = yakuText;
-      const handLabel = q.isOpen ? t('settings.hand.fuuro') : t('settings.hand.menzen');
-      let extra = '';
-      if (q.effectiveOpen && !q.isOpen) extra = ` · ${t('sc.callable')}`;
-      $('scShape').textContent = `${shapeLabel(q.shape)} · ${handLabel}${extra}`;
-      $('scShape').className = 'svalue ' + (q.isOpen ? 'open-hand' : 'closed-hand');
-      const declRole = q.declarerIsDealer ? t('settings.role.dealer') : t('settings.role.nondealer');
-      $('scDecl').textContent = q.ippatsu ? `${declRole} · ${t('sc.ippatsu')}` : declRole;
-      $('discardCat').textContent = catLabel(q.category);
-      $('discardDesc').textContent = catDesc(q.category);
-    }
+  $('scRole').textContent = q.playerIsDealer ? t('settings.role.dealer') : t('settings.role.nondealer');
+
+  const parts = [];
+  q.yaku.forEach(y => parts.push(t('yaku.' + y.name, y.name)));
+  let yakuText = parts.length ? parts.join(' + ') : '—';
+  if (q.doraCount > 0) {
+    const doraLabel = `${t('yaku.Dora')} (${q.doraCount})`;
+    yakuText = yakuText === '—' ? doraLabel : `${yakuText} + ${doraLabel}`;
+  }
+  $('scYaku').textContent = yakuText;
+
+  const handLabel = q.isOpen ? t('settings.hand.fuuro') : t('settings.hand.menzen');
+  const callableHtml = (q.effectiveOpen && !q.isOpen)
+    ? ` · <span class="callable-tag">${t('sc.callable')}</span>`
+    : '';
+  $('scShape').innerHTML = `${shapeLabel(q.shape)} · ${handLabel}${callableHtml}`;
+  $('scShape').className = 'svalue ' + (q.isOpen ? 'open-hand' : 'closed-hand');
+
+  const declRole = q.declarerIsDealer ? t('settings.role.dealer') : t('settings.role.nondealer');
+  $('scDecl').textContent = q.ippatsu ? `${declRole} · ${t('sc.ippatsu')}` : declRole;
+  $('discardCat').textContent = catLabel(q.category);
+  $('discardDesc').textContent = catDesc(q.category);
+}
 
     function buildQuiz(q) {
       const card = $('quizCard');
@@ -4236,6 +4279,13 @@
       State.step = 2;
       State.kbdIdx = 0;
       paintKbd('#rateOpts');
+        // Bring Step 2 into view when it becomes active
+  setTimeout(() => {
+    const s2 = $('step2');
+    if (s2 && !s2.classList.contains('locked')) {
+      s2.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, 60);
       updateLogStep(q, 's1', actualPts, isCorrect);
     }
 
@@ -4270,6 +4320,13 @@
       State.step = 3;
       State.kbdIdx = 0;
       paintKbd('#decisionOpts');
+        // Bring Step 3 into view when it becomes active
+  setTimeout(() => {
+    const s3 = $('step3');
+    if (s3 && !s3.classList.contains('locked')) {
+      s3.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, 60);
       updateLogStep(q, 's2', actualPts, ok);
     }
 
@@ -4487,6 +4544,35 @@
       }
       if ($('results').classList.contains('active')) { if (e.key === 'Enter') { e.preventDefault(); startGame(); } return; }
       if (!$('game').classList.contains('active')) return;
+            // ── Navbar & panel shortcuts ──────────────────────────────
+      // Skip when any modifier is held so we don't eat Cmd/Ctrl combos.
+      if (!e.ctrlKey && !e.metaKey && !e.altKey && !e.shiftKey) {
+        const k = e.key.toLowerCase();
+
+        // Navbar: Help / Deal-in / Shapes  (Language is intentionally skipped)
+        if (k === 'h') { e.preventDefault(); openHelpModal();   return; }
+        if (k === 'd') { e.preventDefault(); openDealInModal(); return; }
+        if (k === 's') { e.preventDefault(); openShapesModal(); return; }
+
+        // Shape Tier tables: 1–6  (indices 1–6; hidden is index 0)
+        if (k >= '1' && k <= '6' && k.length === 1) {
+          e.preventDefault();
+          State.shapeTierAuto  = false;
+          State.shapeTierIndex = parseInt(k, 10);
+          renderShapeTierPanel();
+          return;
+        }
+
+        // Threshold tables: Q W E R T Y  (indices 1–6; hidden is index 0)
+        const THRESH_KEYS = { q: 1, w: 2, e: 3, r: 4, t: 5, y: 6 };
+        if (THRESH_KEYS[k] !== undefined) {
+          e.preventDefault();
+          State.thresholdAuto  = false;
+          State.thresholdIndex = THRESH_KEYS[k];
+          renderThresholdPanel();
+          return;
+        }
+      }
       const q = State.q;
       if (!q) return;
       if (State.step === 1) {
