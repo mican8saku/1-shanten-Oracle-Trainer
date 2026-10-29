@@ -807,6 +807,30 @@
       white-space: nowrap;
     }
 
+    /* Deal-in reference table: swap between full (desktop) and split (mobile) */
+    .deal-in-split {
+      display: none;
+    }
+
+    @media (max-width: 480px) {
+      .deal-in-full {
+        display: none;
+      }
+
+      .deal-in-split {
+        display: block;
+      }
+
+      .deal-in-split .deal-in-table+.deal-in-table {
+        margin-top: 12px;
+      }
+
+      .deal-in-table th,
+      .deal-in-table td {
+        padding: 6px 4px;
+      }
+    }
+
     .thresh-ref-table {
       width: 100%;
       border-collapse: collapse;
@@ -881,36 +905,77 @@
       font-style: italic;
     }
 
+    /* Shape Tier table — reduce min-width on mobile so the F column fits */
+    @media (max-width: 480px) {
+      .thresh-ref-table.flipped td {
+        min-width: 34px;
+        padding: 4px 1px;
+        font-size: 9.5px;
+      }
+
+      .thresh-ref-table.flipped th {
+        padding: 3px 1px;
+        font-size: 8px;
+        letter-spacing: 0;
+      }
+
+      .shape-legend {
+        font-size: 9px;
+        gap: 3px 8px;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .thresh-ref-table.flipped td {
+        min-width: 28px;
+        padding: 3px 1px;
+        font-size: 9px;
+      }
+
+      .thresh-ref-table.flipped th {
+        padding: 2px 1px;
+        font-size: 7.5px;
+      }
+
+      #scoreRow .btn {
+       font-size:10px; 
+      }
+
+      #shapeRow .btn {
+        font-size: 10px;
+      }
+    }
+
     /* =========================================================
    NARROW NAVBAR (≤ 530px)
    - Hide the inline subtitle so the title never truncates
    - Slightly tighten buttons / padding to buy more room
    ========================================================= */
-@media (max-width: 530px) {
-  .topbar-inner {
-    padding: 8px 10px;
-    gap: 6px;
-  }
+    @media (max-width: 530px) {
+      .topbar-inner {
+        padding: 8px 10px;
+        gap: 6px;
+      }
 
-  .app-title {
-    font-size: 13px;
-    letter-spacing: -.2px;
-  }
+      .app-title {
+        font-size: 13px;
+        letter-spacing: -.2px;
+      }
 
-  .app-sub-title {
-    display: none;
-  }
+      .app-sub-title {
+        display: none;
+      }
 
-  .topbar-actions {
-    gap: 4px;
-  }
+      .topbar-actions {
+        gap: 4px;
+      }
 
-  .lang-btn {
-    padding: 7px 9px;
-    font-size: 11px;
-    border-width: 2px;
-  }
-}
+      .lang-btn {
+        padding: 7px 9px;
+        font-size: 11px;
+        border-width: 2px;
+      }
+    }
 
     @media (min-width:720px) {
       .topbar-inner {
@@ -964,7 +1029,20 @@
       #scoreRow .btn {
         font-size: 13px;
       }
+
+      
     }
+
+    /* Match index.html: compact modal padding on mobile only */
+@media (max-width: 980px) {
+  .modal-overlay {
+    padding: 12px;
+  }
+  .modal-content {
+    padding: 16px 16px;
+    max-height: 90vh;
+  }
+}
 
     /* =========================================================
        DESKTOP TWO-COLUMN LAYOUT (≥1024px)
@@ -1267,8 +1345,8 @@
             <button class="btn" data-shape="BadHeadless" data-i18n="shape.o1">[C−] Bad Headless</button>
             <button class="btn" data-shape="MediocreHeadless" data-i18n="shape.o2">[C+] Mediocre Headless</button>
             <button class="btn" data-shape="BadKuttsuki" data-i18n="shape.o3">[C] Bad Kuttsuki</button>
-            <button class="btn" data-shape="StandardHeadless" data-i18n="shape.o4">[A−] Std Headless</button>
-            <button class="btn" data-shape="StandardKuttsuki" data-i18n="shape.o5">[A] Std Kuttsuki</button>
+            <button class="btn" data-shape="StandardHeadless" data-i18n="shape.o4">[A−] Standard Headless</button>
+            <button class="btn" data-shape="StandardKuttsuki" data-i18n="shape.o5">[A] Standard Kuttsuki</button>
             <button class="btn" data-shape="GoodHeadless1" data-i18n="shape.o6">[S] Good Conjoined Headless</button>
             <button class="btn" data-shape="GoodHeadless2" data-i18n="shape.o7">[S] Ankou Headless</button>
             <button class="btn" data-shape="GoodKuttsuki" data-i18n="shape.o8">[S+] Good Kuttsuki</button>
@@ -1301,7 +1379,7 @@
               <button class="btn" data-cat="Double musuji 4/5/6" data-i18n="cat.double">Double Musuji 4/5/6</button>
               <button class="btn" data-cat="Musuji 3/7" data-i18n="cat.m37">Musuji 3/7</button>
               <button class="btn" data-cat="Musuji 2/8" data-i18n="cat.m28">Musuji 2/8</button>
-              <button class="btn" data-cat="Katamusuji 4/5/6" data-i18n="cat.km">Katamusuji 4/5/6</button>
+              <button class="btn" data-cat="Kata-musuji 4/5/6" data-i18n="cat.km">Kata-musuji 4/5/6</button>
               <button class="btn" data-cat="Musuji 1/9" data-i18n="cat.m19">Musuji 1/9</button>
               <button class="btn" data-cat="Suji 3/7" data-i18n="cat.s37">Suji 3/7</button>
               <button class="btn" data-cat="Suji 2/8" data-i18n="cat.s28">Suji 2/8</button>
@@ -1372,10 +1450,11 @@
           <div class="modal-prose" data-i18n="about.p2">…</div>
           <h3 data-i18n="about.sources">Sources and Methodology</h3>
           <p data-i18n="about.p4">…</p>
+          <hr>
           <h3 data-i18n="about.credits">Credits</h3>
           <p data-i18n="about.p3">…</p>
         </div>
-        <img src="birb.png" alt="birb" style="max-width: 75px;">
+        <img src="birb.png" alt="birb" style="max-width: 75px; margin-top: 12px;">
       </div>
     </div>
   </div>
@@ -1478,7 +1557,7 @@
       "Double musuji 4/5/6": { 0: 0.06, 1: 0.06, 2: 0.07, 3: 0.08, 4: 0.09, 5: 0.10, 6: 0.12, 7: 0.13, 8: 0.14, 9: 0.16, 10: 0.18, 11: 0.20, 12: 0.22, 13: 0.26 },
       "Musuji 3/7": { 0: 0.06, 1: 0.06, 2: 0.06, 3: 0.070, 4: 0.08, 5: 0.08, 6: 0.09, 7: 0.09, 8: 0.10, 9: 0.11, 10: 0.13, 11: 0.14, 12: 0.16, 13: 0.19, 14: 0.23 },
       "Musuji 2/8": { 0: 0.05, 1: 0.05, 2: 0.05, 3: 0.06, 4: 0.07, 5: 0.07, 6: 0.08, 7: 0.09, 8: 0.09, 9: 0.10, 10: 0.12, 11: 0.13, 12: 0.15, 13: 0.18, 14: 0.22 },
-      "Katamusuji 4/5/6": { 0: 0.03, 1: 0.03, 2: 0.04, 3: 0.05, 4: 0.05, 5: 0.06, 6: 0.07, 7: 0.07, 8: 0.08, 9: 0.09, 10: 0.10, 11: 0.12, 12: 0.14, 13: 0.15 },
+      "Kata-musuji 4/5/6": { 0: 0.03, 1: 0.03, 2: 0.04, 3: 0.05, 4: 0.05, 5: 0.06, 6: 0.07, 7: 0.07, 8: 0.08, 9: 0.09, 10: 0.10, 11: 0.12, 12: 0.14, 13: 0.15 },
       "Musuji 1/9": { 0: 0.03, 1: 0.03, 2: 0.04, 3: 0.05, 4: 0.06, 5: 0.06, 6: 0.07, 7: 0.07, 8: 0.08, 9: 0.09, 10: 0.10, 11: 0.12, 12: 0.14, 13: 0.15 },
       "Suji 3/7": { 0: 0.06, 1: 0.06, 2: 0.05, 3: 0.05, 4: 0.05, 5: 0.05, 6: 0.05, 7: 0.05, 8: 0.06, 9: 0.06, 10: 0.06, 11: 0.07, 12: 0.08, 13: 0.09 },
       "Suji 2/8": { 0: 0.04, 1: 0.04, 2: 0.04, 3: 0.04, 4: 0.04, 5: 0.04, 6: 0.04, 7: 0.04, 8: 0.04, 9: 0.04, 10: 0.05, 11: 0.05, 12: 0.06, 13: 0.07 },
@@ -1620,7 +1699,7 @@
         'label.category': 'Tile Category',
         'label.pickCat': 'Pick a category to compute the deal-in verdict.',
         'cat.double': 'Double Musuji 4/5/6', 'cat.m37': 'Musuji 3/7', 'cat.m28': 'Musuji 2/8',
-        'cat.km': 'Katamusuji 4/5/6', 'cat.m19': 'Musuji 1/9',
+        'cat.km': 'Kata-musuji 4/5/6', 'cat.m19': 'Musuji 1/9',
         'cat.s37': 'Suji 3/7', 'cat.s28': 'Suji 2/8', 'cat.s19': 'Suji 1/9',
         'cat.naka': 'Naka-suji 4/5/6',
         'catdesc.double': '4, 5, or 6 — double non-suji',
@@ -1667,7 +1746,7 @@
         'shape.other': 'Other Shapes',
         'shape.o1': '[C−] Bad Headless', 'shape.o2': '[C+] Mediocre Headless',
         'shape.o3': '[C] Bad Kuttsuki',
-        'shape.o4': '[A−] Std Headless', 'shape.o5': '[A] Std Kuttsuki',
+        'shape.o4': '[A−] Standard Headless', 'shape.o5': '[A] Standard Kuttsuki',
         'shape.o6': '[S] Good Conjoined Headless', 'shape.o7': '[S] Ankou Headless',
         'shape.o8': '[S+] Good Kuttsuki',
         'action.reset': 'Reset',
@@ -1722,13 +1801,14 @@
         'lang': '日本語',
         'about.title': 'About',
         'about.overview': 'Overview',
-        'about.p1': 'A portable reference tool for push-pull decisions in 1-shanten situations. Set your conditions, hand shape, ron value, and turn to look up the <b>threshold deal-in rate</b> for your hand. This threshold represents the maximum estimated deal-in rate at which pushing is considered worthwhile. Optionally, expand <b>Estimate Deal-in Rate</b> to select a tile category, apply deal-in modifiers, and enter the number of passed suji to obtain a PUSH/PULL verdict. <b>The tool is primarily intended for push-pull decisions in flat point standing.<b>',
-        'about.howToUse': 'How to Use',
-        'about.p2': 'Work from top to bottom: set your conditions, hand shape, ron value, and turn to view the corresponding threshold table. To get a more specific PUSH/PULL verdict, expand <i>Estimate Deal-in Rate</i> and enter the tile category, applicable modifiers, and number of passed suji. Tap a turn column header to switch between turns.<h4>How the Tables Work</h4>The app first uses the <b>Shape Tier Table</b> to determine the tier corresponding to your hand shape and ron value. The assigned tier depends on whether you are the dealer or non-dealer, whether your hand is closed or open, and, for open hands, whether Kamicha was the one who declared riichi. Each shape is assigned tiers according to its ron value: [A] Perfect generally receives the most favorable tiers, followed by shapes [B] through [F]. The tier also depends on the hand\'s ron value; for example, a 4-han [A] menzen hand is assigned Tier 1, while a 4-han menzen [B] Ryanmen×2 hand is assigned Tier 2, equivalent to a 3-han [A] Perfect hand.<h4>Additional Details</h4>The following rules explain some of the adjustments applied in less straightforward cases, and may also be useful if you want to consult the tables manually:<ul><li><b>Open hands against a Kamicha riichi:</b> A separate tier table is used when Kamicha has declared riichi, accounting for the increased opportunity to call chii from their discards.</li><li><b>Closed hands with an available yaku when opened:</b> If a closed hand has a valid yaku when opened, it is evaluated using the open-hand table. Its value is classified according to its open-hand ron value, then moved up one tier to reflect the more favorable push conditions.</li><li><b>Non-standard 1-shanten shapes:</b> The Kuttsuki and Headless shapes classified as [S] tier use [A] Perfect as their base tier, adjusted upward by one tier.</li><li><b>Intermediate hand values (pinfu / 50 fu tenpane):</b> Hands capable of scoring pinfu are shown with range values (e.g., 1300~2000), and closed hands at 50 fu are handled the same way. In both cases the threshold is calculated as the average of the two adjacent tiers.</li><li><b>Intermediate hand values (40 fu tenpane):</b> Open hands at 40 fu are shown with their corresponding 40-fu point values (e.g., 1300, 2600, 5200). Their threshold is interpolated between the base and one-tier-better thresholds, with slightly less than 50% weight toward the higher tier. </li><li><b>Ippatsu turn (一発巡):</b> When the ippatsu option is enabled:<ul><li><b>Non-dealer riichi vs non-dealer player:</b> The <b>VS Dealer</b> threshold chart is used at the same tier, reflecting the increased scoring threat.</li><li><b>Non-dealer riichi VS dealer player:</b> The <b>As Dealer</b> threshold chart is used, with the hand treated as two tier weaker.</li><li><b>Dealer riichi VS non-dealer:</b> The <b>As Dealer</b> threshold chart is used, with the hand treated as one tier weaker.</li></ul></li></ul>',
+        'about.p1': 'A portable reference tool for push/pull decisions with 1-shanten hands. Set your conditions, hand shape, ron value, and turn to look up the <b>threshold deal-in rate</b> for your hand. This threshold represents the maximum estimated deal-in rate at which pushing is considered worthwhile. You can also expand <b>Estimate Deal-in Rate</b> to select a tile category, apply deal-in modifiers, and enter the number of passed suji to get a PUSH/PULL recommendation. The tool is primarily intended for push/pull decisions in flat point standings.',
+        'about.howToUse': 'How the System Works',
+        'about.p2': 'The reference system uses two tables to establish a baseline for push/pull decisions.<h4>1. Determine the hand tier</h4>The <b>Shape Tier Table</b> assigns a tier according to the hand\'s shape and ron value. The appropriate table depends on whether you are the dealer or non-dealer and whether your hand is closed or open. For open hands, the table also depends on whether the player to your left (kamicha) has declared riichi, since this creates more opportunities to call chii and makes pushing slightly more favorable.<br><br>The tier reflects the hand\'s inherent value, including relevant yaku and dora.<h4>2. Find the threshold deal-in rate</h4>The <b>Threshold Table</b> maps the hand tier and the current turn to a threshold deal-in rate (<b>T</b>). This is the reference point for deciding whether pushing is worthwhile. Compare T with the estimated deal-in rate (<b>R</b>) of the tile you are considering discarding: pushing is favored when R is at or below T, while folding is favored when R is above T.<h4>Estimating Intermediate Turns</h4>The Threshold Table provides values for turns 5, 9, and 14. To estimate a threshold for an intermediate turn, you can interpolate between the values for the two nearest listed turns. For example, turn 7 is halfway between turns 5 and 9, so you can use the average of their threshold values. For turns that fall elsewhere between the listed turns, adjust the estimate proportionally to the turn\'s position between them.<h4>Special cases</h4>Some situations require additional adjustments to the hand tier or threshold. These include hands that can be opened while retaining a valid yaku, non-standard 1-shanten shapes, intermediate hand values caused by pinfu or additional fu, and the ippatsu turn. <h4>Additional Details</h4>The following rules explain adjustments applied in less straightforward cases and may also be useful when consulting the tables manually:<ul><li><b>Open hands against a Kamicha riichi:</b> A separate Shape Tier Table is used when Kamicha has declared riichi, accounting for the increased opportunity to call chii from their discards.</li><li><b>Closed hands with a valid yaku when opened:</b> If a closed hand has a valid yaku when opened, it is evaluated using the open-hand table. Its value is classified according to its open-hand ron value, then moved up one tier to reflect the more favorable push conditions.</li><li><b>Non-standard 1-shanten shapes:</b> The Kuttsuki and Headless shapes classified as [S] tier use [A] Perfect as their base tier, adjusted upward by one tier.</li><li><b>Intermediate hand values (pinfu and 50-fu closed hands):</b> Hands capable of scoring pinfu are displayed with a range of possible point values (e.g., 1300–2000). Closed hands at 50 fu are handled in the same way. In both cases, the threshold is calculated as the average of the thresholds for the two adjacent tiers.</li><li><b>Intermediate hand values (40-fu open hands):</b> Open hands at 40 fu are displayed with their corresponding point values (e.g., 1300, 2600, or 5200). Their thresholds are interpolated between the base tier and the next better tier, with just 30% weight toward the higher tier.</li><li><b>Ippatsu turn:</b> When the ippatsu option is enabled, the threshold is adjusted according to your role and the riichi opponent\'s role:<ul><li><b>Non-dealer riichi vs. non-dealer player:</b> The <b>VS Dealer</b> threshold chart is used at the same tier, reflecting the increased scoring threat.</li><li><b>Non-dealer riichi vs. dealer player:</b> The <b>VS Dealer</b> threshold chart is used, with the hand treated as one tier weaker.</li><li><b>Dealer riichi vs. non-dealer player:</b> The <b>As Dealer</b> threshold chart is used, with the hand treated as one tier weaker.</li></ul></li></ul>',
         'about.sources': 'Sources and Methodology',
-        'about.p4': 'The shape-tier and threshold tables are adapted primarily from Unimaru\'s book <i>Unimaru-shiki Winning Mahjong with Theory</i> (『うに丸式 セオリーで勝つ麻雀』), which draws on material from <i>Statistical Mahjong Strategy</i> (『統計学のマージャン戦術』) and <i>New: Scientific Mahjong</i> (『新・科学する麻雀』). <br> <br> The [D] Ryanmen + Kanchan shape was not included in the original data and has been interpolated by me. The original [D] and [E] shape classifications have been renamed [E] and [F], respectively. Other shapes are mapped to their base tiers according to their prefixes. Fu-adjusted thresholds are calculated by averaging the values of adjacent tiers. Deal-in rate estimates are adapted from <i>Statistical Mahjong Strategy</i> by Miinin. I have also made numerous estimates of my own when deciding how to handle certain edge cases. As a result, not every situation may be perfectly calibrated to an optimal push-pull decision. <b>Please treat the results as a reference rather than definitive advice.</b>',
+        'about.p4': 'The hand-shape tiers and threshold values are adapted from Unimaru\'s push/fold framework for 1-shanten hands, detailed in Chapters 22–24 of his book "<i>Unimaru-shiki Winning Mahjong with Theory</i>" 『うに丸式 セオリーで勝つ麻雀』 along with his YouTube videos on this subject. The framework draws on simulation data from "<i>New: Scientific Mahjong</i>"『新・科学する麻雀』  and references "<i>Statistical Mahjong Strategy</i>"『統計学のマージャン戦術』. The app\'s deal-in rate estimates are also adapted from Miinin\'s SMS book.<br><h4>Source-Based Rules and My Own Estimates</h4><ul><li><b>Pinfu interpolation:</b> The method of estimating thresholds between adjacent tiers for pinfu hands follows Unimaru\'s own explanation.</li><li><b>Ippatsu:</b> The adjustment against a non-dealer riichi follows Unimaru\'s explanation. The adjustments against a dealer riichi and in situations where you are the dealer are my own estimates.</li><li><b>Ryanmen + Kanchan:</b> This shape was not included in Unimaru\'s tables because the original dataset from "New: Scientific Mahjong" had no data regarding this shape. Its classification in this app is therefore an estimate.</li><li><b>Tenpane adjustments (40-fu open hands and 50-fu closed hands):</b> For 40-fu open hands, thresholds are interpolated between adjacent tiers, with 70% weight given to the base tier and 30% to the next-better tier. For 50-fu closed hands, the threshold is averaged between adjacent tiers, as with pinfu. Both methods are my own estimates, not derived from the original data.</li></ul><b>Please treat the results as reference guidance, not definitive advice.</b> The model is intended primarily for push/fold decisions in flat point standings and does not account for every factor that may matter in a real game.',
         'about.credits': 'Credits',
-        'about.p3': 'Designed and developed by kakino_tea. X: <a style="color:#738ad0" href="https://x.com/mican8saku" target="_blank" rel="noopener noreferrer">@mican8saku</a>',
+        'about.p3': 'App design and development: kakino_tea<br>X: <a style="color:#738ad0" href="https://x.com/mican8saku" target="_blank" rel="noopener noreferrer">@mican8saku</a>',
+
       },
       ja: {
         'home.link': '<i class="fa-solid fa-right-to-bracket"></i> 戻る',
@@ -1767,7 +1847,7 @@
         'ippatsu.yes': '一発巡',
         'ref.ippatsu': '一発巡',
         'result.ippatsuNdNote': '一発巡：子リーチ — 親相手のボーダー表を適用',
-        'result.ippatsuDealerNote': '一発巡：親リーチ — 手牌を2段階弱く評価',
+        'result.ippatsuDealerNote': '一発巡：親リーチ — 手牌を1段階弱く評価',
         'result.ippatsuAsDealerNote': '一発巡：子リーチ（親として）— 手牌を1段階弱く評価',
         'result.pinfuNote': 'ピンフ または テンパネ（50符）— 隣接する2ティアの中間値で計算',
         'result.callableNote': '門前・鳴き役あり — 副露表の1段階上で評価',
@@ -1843,14 +1923,13 @@
         'lang': 'English',
         'about.title': 'このアプリについて',
         'about.overview': '概要',
-        'about.overview': '概要',
-        'about.p1': '1シャンテン時の押し引き判断に使う早見表です。自分の状況・手牌の形・ロン打点・巡目を設定すると、手牌に対応する<b>ボーダー放銃率</b>を確認できます。これは、押す価値があると判断される放銃率の目安となる上限値です。さらに「放銃率を推定」を開き、牌のカテゴリ・放銃率の補正要素・通ったスジの数を入力すると、『押し』 / 『引き』の判定を確認できます。<b>主に平場での押し引き判断を想定しています。</b>',
-        'about.howToUse': '使い方',
-        'about.p2': '上から順に、自分の状況・手牌の形・ロン打点・巡目を設定してください。条件に応じてボーダー放銃率の表が更新されます。具体的な押し引き判定を確認したい場合は、「放銃率を推定」を開き、牌のカテゴリ・補正要素・通ったスジの数を入力してください。巡目の列ヘッダーをタップすると、表示する巡目を切り替えられます。<h4>表の見方</h4>まず、<b>形のティア表</b>から、手牌の形とロン打点に対応するティアを決定します。使用する表は、親・子の別、門前・副露の別によって異なり、副露手については上家がリーチしているかどうかでも表が分かれます。各形には、形の相対的な価値に応じてティアが設定されています。基本的には[A] Perfectが最も有利なティアに割り当てられ、[B]から[F]にかけて形に応じたティアが設定されています。また、同じ形でもロン打点によってティアは変わります。例えば、[A]の4翻はTier 1、[B]の4翻はTier 2となり、[A]の3翻と同じティアになります。ティアが決まったら、次に<b>ボーダー放銃率表</b>を参照します。この表は縦軸がティア、横軸が巡目（5巡目・9巡目・14巡目）になっています。該当するティアと巡目が交差する値が、その状況でのボーダー放銃率です。<h4>補足事項</h4>以下は、通常の表の選択・参照に加えて、少し特殊なケースで適用される補正ルールです。手作業で表を参照する場合にも参考になります。<ul><li><b>上家がリーチしている場合の副露手：</b>上家がリーチしている場合は、専用の副露手用の表を使用します。上家の捨て牌からチーできる機会が増えることを考慮しています。</li><li><b>鳴けば役がつく門前手：</b>鳴いた状態で役が成立する門前手は、副露手用の表を使用します。副露時のロン打点で分類したうえで、押しやすさを考慮してティアを1段階上げて評価します。</li><li><b>特殊な1シャンテン形：</b>[S]ティアに分類されるくっつき形・ヘッドレス形は、[A] Perfectを基準となるティアとし、そこからティアを1段階上げて評価します。</li><li><b>中間的な打点の扱い（ピンフ／50符）：</b>ピンフが成立する手牌は「1300~2000」のようなレンジ表記となり、50符の手牌も同様に扱われます。いずれの場合も隣接する2つのティアの平均値として評価されます。該当する場合は結果パネルに警告が表示されます。</li><li><b>中間的な打点の扱い（テンパネ）：</b>副露手のテンパネ（40符以上）は、対応する40符の打点（例：1300・2600・5200）として表記され、基本ティアと1段階上のティアの間で補間されます。上位ティア側の比重は50%よりやや低く設定されており、該当する場合は結果パネルに警告が表示されます。</li><li><b>一発巡：</b>リーチ宣言直後の一巡は、相手に一発の1翻が加算される可能性があります。ippatsuオプションを有効にすると、以下の補正が適用されます。<ul><li><b>子のリーチ・自分が子：</b>同じティアのまま<b>親相手（VS Dealer）</b>のボーダー表を使用します。</li><li><b>子のリーチ・自分が親：</b><b>親として（As Dealer）</b>のボーダー表を使用し、手牌を1段階弱く評価します。</li><li><b>親のリーチ（自分が子）：</b><b>親相手（VS Dealer）</b>のボーダー表を使用し、手牌を2段階弱く評価します。</li></ul></li></ul>',
+        'about.p1': '1シャンテン時の押し引き判断に使う早見表です。自分の状況・手牌の形・ロン打点・巡目を設定すると、手牌に対応する<b>ボーダー放銃率</b>を確認できます。これは、押す価値があると判断される放銃率の目安となる上限値です。また、「<b>放銃率を推定</b>」を開き、牌のカテゴリ・放銃率の補正要素・通ったスジの本数を入力すると、「押し」 / 「引き」の判定を確認できます。主に平場での押し引き判断を想定しています。',
+        'about.howToUse': 'システムの仕組み',
+        'about.p2': 'この参照システムでは、押し引き判断の基準を求めるために2つの表を使用します。<h4>1. 手牌のティアを決める</h4><b>形ティア表</b>では、手牌の形と出上がり打点に応じてティアを決定します。使用する表は、自分が親か子か、また門前か副露かによって異なります。副露手の場合は、上家がリーチしているかどうかによっても使用する表が異なります。上家の捨て牌からチーできる機会が増えるため、押しやすさが少し増すことを考慮しています。<br><br>ティアは、手牌の形・役・ドラなどを含めた手牌本来の価値を表します。<h4>2. ボーダー放銃率を確認する</h4><b>ボーダー放銃率表</b>では、手牌のティアと巡目に応じてボーダー放銃率（<b>T</b>）を求めます。これは、押す価値があるかどうかを判断するための基準値です。打牌候補の推定放銃率（<b>R</b>）と比較し、RがT以下なら押し、RがTを上回るなら降りが有利と判断します。両者の値が近い場合は、「微差」と判定されることがあります。<h4>中間の巡目の推定</h4>ボーダー放銃率表には、5巡目・9巡目・14巡目の値が掲載されています。これら以外の巡目のボーダー放銃率を推定する場合は、前後の巡目の値を使って補間できます。例えば、7巡目は5巡目と9巡目のちょうど中間にあたるため、両者のボーダー放銃率の平均値を使用します。それ以外の巡目については、前後の巡目との間隔に応じて比例配分することで、おおよその値を求められます。<h4>特殊なケース</h4>状況によっては、手牌のティアやボーダー放銃率に追加の補正が必要になります。これには、鳴いても有効な役が残る手牌、特殊な1シャンテン形、ピンフや符の増加による中間的な打点、一発巡などが含まれます。<h4>補足事項</h4>以下は、通常とは異なるケースで適用される補正ルールです。手作業で表を参照する場合にも参考になります。<ul><li><b>上家がリーチしている場合の副露手：</b>上家がリーチしている場合は、専用の形ティア表を使用します。上家の捨て牌からチーできる機会が増えることを考慮しています。</li><li><b>鳴いても役が成立する門前手：</b>門前手を鳴いた場合にも有効な役が残るときは、副露手用の表で評価します。副露時の出上がり打点に基づいて分類したうえで、押しやすさを考慮してティアを1段階上げます。</li><li><b>特殊な1シャンテン形：</b>[S]ティアに分類されるくっつき形・ヘッドレス形は、[A] 完全形を基準のティアとし、そこからティアを1段階上げて評価します。</li><li><b>中間的な打点（ピンフ・門前50符）：</b>ピンフが成立する手牌は、1300～2000点のように打点を範囲で表示します。門前の50符の手牌も同様に扱います。どちらの場合も、隣接する2つのティアのボーダー放銃率の平均値を使用します。</li><li><b>中間的な打点（副露40符）：</b>副露手の40符は、1300点・2600点・5200点など、対応する40符の打点で表示します。ボーダー放銃率は、基準となるティアと1段階上のティアの間で補間し、上位ティア側の比重を30%とします。</li><li><b>一発巡：</b>一発巡のオプションを有効にすると、自分とリーチ者の立場に応じてボーダー放銃率を補正します。<ul><li><b>子のリーチ vs. 自分も子の場合：</b>打点上昇の脅威を考慮し、同じティアのまま<b>親相手</b>のボーダー放銃率表を使用します。</li><li><b>子のリーチ vs. 自分が親の場合：</b><b>親相手</b>のボーダー放銃率表を使用し、手牌を1ティア弱く評価します。</li><li><b>親のリーチ vs. 自分が子の場合：</b><b>親として</b>のボーダー放銃率表を使用し、手牌を1ティア弱く評価します。</li></ul></li></ul>',
         'about.sources': '参考文献・算出方法',
-        'about.p4': '形のティア表およびボーダー放銃率表は、主にうに丸氏の著書『うに丸式 セオリーで勝つ麻雀』を参考にしています。同書で参考にされている『統計学のマージャン戦術』および『新・科学する麻雀』のデータも基になっています。<br> <br> [D] 両面＋カンチャンの形は元データに含まれていなかったため、独自に補間しています。また、元データの[D]・[E]は、それぞれ[E]・[F]に名称を変更しています。その他の形は、形の名称の接頭辞に応じて基本ティアに割り当てています。符による補正値は、隣接するティアの値を平均して算出しています。放銃率の推定値は、みーにん氏の『統計学のマージャン戦術』を参考にしています。なお、特殊なケースの扱いについては、独自の推定や調整も多く含まれています。そのため、すべての状況で最適な押し引き判断と完全に一致するとは限りません。<b>あくまで判断の参考としてご利用ください。</b>',
+        'about.p4': '手牌の形ティアとボーダー放銃率は、主にうに丸氏の1シャンテン時の押し引き理論を基にしています。この理論は、著書『うに丸式 セオリーで勝つ麻雀』の第22～24章と、このテーマに関するYouTube動画で詳しく解説されています。うに丸氏の理論は、『新・科学する麻雀』のシミュレーションデータを基礎とし、『統計学のマージャン戦術』も参考にしています。アプリで使用している放銃率の推定値も、みーにん氏の『統計学のマージャン戦術』を参考にしています。<br><h4>出典に基づくルールと独自の推定</h4><ul><li><b>ピンフの補間：</b>ピンフが成立する手牌について、隣接するティア間のボーダー放銃率を用いて推定する方法は、うに丸氏自身の解説に基づいています。</li><li><b>一発巡：</b>子のリーチに対する補正は、うに丸氏の解説に基づいています。親のリーチに対する補正、および自分が親の場合の補正は、独自に推定したものです。</li><li><b>両面＋カンチャン：</b>この形は『新・科学する麻雀』の元データに該当するデータがなかったため、うに丸氏の表には含まれていません。そのため、このアプリでは独自に補間して分類しています。</li><li><b>テンパネの補正（副露40符・門前50符）：</b>副露手の40符では、基準となるティアと1段階上のティアの間でボーダー放銃率を補間し、基準となるティアに70%、上位ティアに30%の比重を与えています。門前の50符では、ピンフと同様に隣接する2つのティアのボーダー放銃率の平均値を使用しています。どちらの補正方法も独自の推定であり、元データに裏付けられたものではありません。</li></ul><b>結果はあくまで判断の参考としてご利用ください。絶対的な正解を示すものではありません。</b>このモデルは主に平場での押し引き判断を想定しており、実戦で考慮すべきすべての要素を扱っているわけではありません。',
         'about.credits': 'クレジット',
-        'about.p3': '制作：kakino_tea<br>X：<a style="color:#738ad0" href="https://x.com/mican8saku" target="_blank" rel="noopener noreferrer">@mican8saku</a>',
+        'about.p3': 'アプリの企画・開発：kakino_tea<br>X：<a style="color:#738ad0" href="https://x.com/mican8saku" target="_blank" rel="noopener noreferrer">@mican8saku</a>',
       }
     };
 
@@ -1945,10 +2024,10 @@
           roleKey = 'VS Dealer';
         } else {
           // Non-dealer player, dealer riichi:
-          // VS Dealer chart, treat the hand as 2 tiers weaker.
+          // VS Dealer chart, treat the hand as 1 tier weaker.
           ippatsuCase = 'ndD';
           roleKey = 'VS Dealer';
-          tierAdjust = 2;
+          tierAdjust = 1;
         }
       }
 
@@ -2535,22 +2614,39 @@
     function renderDealinRef() {
       const wrap = $('dealinRef');
       const cats = Object.keys(DEAL_IN_RATES);
-      let html = `<div class="shape-ref-meta" style="margin-bottom:8px">${t('ref.minSuji')}</div>`;
-      html += '<table class="deal-in-table"><thead><tr><th>Rate</th>';
-      cats.forEach(c => { html += `<th>${catLabel(c)}</th>`; });
-      html += '</tr></thead><tbody>';
-      RATE_BUCKETS.forEach(b => {
-        html += `<tr><td>${b.label}</td>`;
-        cats.forEach(c => {
-          const tbl = DEAL_IN_RATES[c];
-          const keys = Object.keys(tbl).map(Number).sort((a, b) => a - b);
-          let minSuji = null;
-          for (const k of keys) if (rateToBucket(tbl[k]) === b.label) { minSuji = k; break; }
-          html += `<td>${minSuji !== null ? minSuji : '—'}</td>`;
+
+      // Build a single table for a given subset of categories
+      const buildTable = (catList) => {
+        let out = '<table class="deal-in-table"><thead><tr><th>Rate</th>';
+        catList.forEach(c => { out += `<th>${catLabel(c)}</th>`; });
+        out += '</tr></thead><tbody>';
+        RATE_BUCKETS.forEach(b => {
+          out += `<tr><td>${b.label}</td>`;
+          catList.forEach(c => {
+            const tbl = DEAL_IN_RATES[c];
+            const keys = Object.keys(tbl).map(Number).sort((a, b) => a - b);
+            let minSuji = null;
+            for (const k of keys) if (rateToBucket(tbl[k]) === b.label) { minSuji = k; break; }
+            out += `<td>${minSuji !== null ? minSuji : '—'}</td>`;
+          });
+          out += '</tr>';
         });
-        html += '</tr>';
-      });
-      html += '</tbody></table>';
+        out += '</tbody></table>';
+        return out;
+      };
+
+      let html = `<div class="shape-ref-meta" style="margin-bottom:8px">${t('ref.minSuji')}</div>`;
+
+      // Desktop: one full 6-column table
+      html += `<div class="deal-in-full">${buildTable(cats)}</div>`;
+
+      // Mobile: split 3 + 2
+      html += `<div class="deal-in-split">`;
+      html += buildTable(cats.slice(0, 3));
+      html += buildTable(cats.slice(3));
+      html += `</div>`;
+
+      // Modifiers table
       html += `<div class="ref-subtitle" style="margin-top:14px">${t('ref.modifiers')}</div>`;
       html += '<table class="deal-in-table"><thead><tr>';
       html += `<th>${t('ref.modifierName')}</th><th>${t('ref.modifierValue')}</th>`;

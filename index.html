@@ -1355,6 +1355,7 @@
       text-align: center;
       box-shadow: 0 24px 60px rgba(0, 0, 0, .55);
       position: relative;
+      height: 610px;
     }
 
     .results-app-title {
@@ -1369,7 +1370,7 @@
 
     .results-card h1 {
       margin: 0 0 4px;
-      font-size: 26px;
+      font-size: 29px;
       letter-spacing: -.5px;
     }
 
@@ -1448,7 +1449,7 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
-      margin: 22px 0 26px;
+      margin: 22px 0 15px;
     }
 
     .results-grid>div {
@@ -2163,6 +2164,7 @@
       .results-card {
         padding: 24px 18px;
         border-radius: 16px;
+        height: 565px;
       }
 
       .results-card h1 {
@@ -2215,6 +2217,20 @@
       .fb {
         font-size: 12px;
       }
+
+      .results-title {
+        font-size: 28px;
+        letter-spacing: -.5px;
+      }
+
+      .results-subtitle {
+        font-size: 14px;
+      }
+
+      .res-btn {
+        padding: 14px 20px;
+        font-size: 14px;
+      }
     }
 
     @media (max-width:420px) {
@@ -2240,6 +2256,107 @@
       .optrow.rate-grid {
         grid-template-columns: 1fr;
       }
+    }
+
+    /* --- results screen: match home vibe --- */
+    #results {
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    #results .cover-image,
+    #results .cover-image-flipped {
+      max-height: 85vh;
+    }
+
+    #results .home-content {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+
+    .results-title {
+      margin: 0 0 4px;
+      font-size: 40px;
+      letter-spacing: -1px;
+      font-weight: 800;
+      text-align: center;
+      background: linear-gradient(90deg, #f8fafc, #7dd3fc);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .results-title i {
+      color: #7dd3fc;
+      -webkit-text-fill-color: #7dd3fc;
+    }
+
+    /* keep the home-page icon visible too — cheap safety fix */
+    #home h1 i {
+      color: #ffffff;
+      -webkit-text-fill-color: #ffffff;
+    }
+
+    .results-subtitle {
+      margin: 0 0 4px;
+      font-size: 17px;
+      font-weight: 800;
+      letter-spacing: 1.6px;
+      color: var(--muted);
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    /* 3 stacked buttons — same visual language as .mode-card */
+    .res-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .res-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      padding: 16px 20px;
+      background: var(--panel);
+      border: 2px solid var(--border);
+      border-radius: 14px;
+      color: var(--text);
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: border-color .15s, transform .12s, background .15s;
+      letter-spacing: .3px;
+      font-family: inherit;
+    }
+
+    .res-btn:hover {
+      border-color: #475569;
+      background: var(--panel2);
+      transform: translateY(-2px);
+    }
+
+    .res-btn:active {
+      transform: translateY(0);
+    }
+
+    .res-btn:focus-visible {
+      outline: none;
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, .35);
+    }
+
+    .res-btn-share.copied {
+      border-color: #22c55e;
+      background: rgba(34, 197, 94, .12);
+      color: #86efac;
     }
   </style>
 </head>
@@ -2365,9 +2482,9 @@
               <label class="chk"><input type="checkbox" data-shape="BadKuttsuki"><span
                   data-i18n="settings.shape.badKuttsuki">[C] Bad Kuttsuki</span></label>
               <label class="chk"><input type="checkbox" data-shape="StandardHeadless"><span
-                  data-i18n="settings.shape.standardHeadless">[A−] Std Headless</span></label>
+                  data-i18n="settings.shape.standardHeadless">[A−] Standard Headless</span></label>
               <label class="chk"><input type="checkbox" data-shape="StandardKuttsuki"><span
-                  data-i18n="settings.shape.standardKuttsuki">[A] Std Kuttsuki</span></label>
+                  data-i18n="settings.shape.standardKuttsuki">[A] Standard Kuttsuki</span></label>
               <label class="chk"><input type="checkbox" data-shape="GoodHeadless1"><span
                   data-i18n="settings.shape.goodHeadless1">[S] Good Conjoined Headless</span></label>
               <label class="chk"><input type="checkbox" data-shape="GoodHeadless2"><span
@@ -2455,8 +2572,10 @@
           <span class="pill" id="qCounter">Q 1 / 10</span>
           <span class="pill score" id="scorePill">Score 0</span>
           <span class="hdr-sep"></span>
-          <button class="btn" id="langBtnGame" style="padding:6px 12px;font-size:12px;">日本語</button>
-          <button class="btn" id="helpBtn" style="padding:6px 12px;font-size:12px;" data-i18n="game.howto">How to
+          <button class="btn" id="aboutBtnGame" style="padding:6px 12px;font-size:12px;" data-i18n="home.about"><i
+              class="fa-solid fa-circle-info"></i> About</button> <!-- ← new -->
+          <button class="btn" id="helpBtn" style="padding:6px 12px;font-size:12px;" data-i18n="game.howto"><i
+              class="fa-solid fa-circle-question"></i> How to
             Play</button>
           <button class="btn" id="dealInBtn" style="padding:6px 14px;font-size:12px;" data-i18n="game.dealin"><i
               class="fa-solid fa-book"></i> Deal-in</button>
@@ -2527,16 +2646,20 @@
     </div>
 
     <div id="results" class="screen">
-      <div class="results-card">
-        <button class="btn-share-corner" id="shareBtn" data-i18n="results.share" title="Share result"><i
-            class="fa-solid fa-share-nodes"></i> Share</button>
-        <div class="results-app-title" data-i18n="home.heading">1-shanten Oracle</div>
-        <h1 id="resultsTitle">Run Complete</h1>
-        <div class="grade" id="gradeLetter">A</div>
-        <div class="results-grid" id="resultsGrid"></div>
-        <div class="res-actions">
-          <button class="btn primary big" id="playAgain" data-i18n="results.playAgain">Play Again</button>
-          <button class="btn big" id="backToMenu" data-i18n="results.menu">Back to Menu</button>
+      <img src="long.png" alt="" class="cover-image">
+      <img src="long.png" alt="" class="cover-image-flipped">
+      <div class="home-content">
+        <div class="results-card">
+          <h1 class="results-title" data-i18n="home.heading"><i class="fa-solid fa-hamsa"></i> 1-shanten Oracle</h1>
+          <p class="results-subtitle" id="resultsTitle">Run Complete</p>
+          <div class="grade" id="gradeLetter">A</div>
+          <div class="results-grid" id="resultsGrid"></div>
+          <div class="res-actions">
+            <button class="res-btn" id="playAgain" data-i18n="results.playAgain">Play Again</button>
+            <button class="res-btn" id="backToMenu" data-i18n="results.menu">Back to Menu</button>
+            <button class="res-btn res-btn-share" id="shareBtn" data-i18n="results.share"><i
+                class="fa-solid fa-share-from-square"></i> Share</button>
+          </div>
         </div>
       </div>
     </div>
@@ -2594,6 +2717,7 @@
           <div class="modal-prose" data-i18n="about.p2">…</div>
           <h3 data-i18n="about.sources">Sources and Methodology</h3>
           <p data-i18n="about.p4">…</p>
+          <hr>
           <h3 data-i18n="about.credits">Credits</h3>
           <p data-i18n="about.p3">…</p>
         </div>
@@ -2778,10 +2902,10 @@
         'settings.cat.doubleMusuji': 'Double Musuji 4/5/6', 'settings.cat.musuji37': 'Musuji 3/7', 'settings.cat.musuji28': 'Musuji 2/8', 'settings.cat.katamusuji': 'Katamusuji 4/5/6', 'settings.cat.musuji19': 'Musuji 1/9',
         'settings.turn.5': 'Turn 5', 'settings.turn.9': 'Turn 9', 'settings.turn.14': 'Turn 14',
         'settings.ippatsu.yes': 'Ippatsu', 'settings.ippatsu.no': 'No Ippatsu',
-        'settings.shape.perfect': '1-shanten [A] · Perfect', 'settings.shape.good2': '1-shanten · [B] Ryanmen ×2', 'settings.shape.goodRyankan': '1-shanten · [C] Ryanmen + Ryankan', 'settings.shape.goodKanchan': '1-shanten · [D] Ryanmen + Kanchan', 'settings.shape.badRyankan': '1-shanten · [E] Kanchan + Ryankan', 'settings.shape.pairs': '1-shanten · [F] Chiitoi',
-        'settings.shape.badHeadless': '1-shanten · [C−] Bad Headless', 'settings.shape.mediocreHeadless': '1-shanten · [C+] Mediocre Headless', 'settings.shape.badKuttsuki': '1-shanten · [C] Bad Kuttsuki',
-        'settings.shape.standardHeadless': '1-shanten · [A−] Std Headless', 'settings.shape.standardKuttsuki': '1-shanten · [A] Std Kuttsuki',
-        'settings.shape.goodHeadless1': '1-shanten · [S] Good Conjoined Headless', 'settings.shape.goodHeadless2': '1-shanten · [S] Ankou Headless', 'settings.shape.goodKuttsuki': '1-shanten · [S+] Good Kuttsuki',
+        'settings.shape.perfect': '1-shanten [A] · Perfect', 'settings.shape.good2': '[B] Ryanmen ×2', 'settings.shape.goodRyankan': '[C] Ryanmen + Ryankan', 'settings.shape.goodKanchan': '[D] Ryanmen + Kanchan', 'settings.shape.badRyankan': '[E] Kanchan + Ryankan', 'settings.shape.pairs': '[F] Chiitoi',
+        'settings.shape.badHeadless': '[C−] Bad Headless', 'settings.shape.mediocreHeadless': '[C+] Mediocre Headless', 'settings.shape.badKuttsuki': '[C] Bad Kuttsuki',
+        'settings.shape.standardHeadless': '[A−] Standard Headless', 'settings.shape.standardKuttsuki': '[A] Standard Kuttsuki',
+        'settings.shape.goodHeadless1': '[S] Good Conjoined Headless', 'settings.shape.goodHeadless2': '[S] Ankou Headless', 'settings.shape.goodKuttsuki': '[S+] Good Kuttsuki',
         'settings.hand.menzen': 'Closed', 'settings.hand.fuuro': 'Open',
         'settings.declarer.kamicha': 'Kamicha', 'settings.declarer.toimen': 'Toimen', 'settings.declarer.shimocha': 'Shimocha',
         'settings.role.dealer': 'Dealer', 'settings.role.nondealer': 'Non-Dealer',
@@ -2793,14 +2917,14 @@
         'settings.note.required': 'At least one option must remain enabled.', 'settings.note.all': 'All options enabled.', 'settings.note.some': '{n} of {m} options enabled.',
         'settings.back': 'Back', 'settings.start': 'Start Practice',
         'game.logo': '<i class="fa-solid fa-hamsa"></i> 1-shanten Oracle', 'game.score': 'Score', 'game.combo': 'Combo',
-        'game.dealin': '<i class="fa-solid fa-book"></i> Deal-in Rates', 'game.howto': 'How to Play', 'game.shapes': '<i class="fa-solid fa-scroll"></i> Shapes', 'game.exit': '<i class="fa-solid fa-right-to-bracket"></i> Exit',
+        'game.dealin': '<i class="fa-solid fa-book"></i> Deal-in Rates', 'game.howto': '<i class="fa-solid fa-circle-question"></i> How to Play', 'game.shapes': '<i class="fa-solid fa-scroll"></i> 1-shanten Shapes', 'game.exit': '<i class="fa-solid fa-right-to-bracket"></i> Exit',
         'game.panel.shapeTiers': 'Shape Tiers', 'game.panel.thresholds': 'Deal-in Thresholds',
         'game.panel.hidden': 'Hidden', 'game.panel.auto': 'Auto', 'game.panel.hide': 'Hide',
         'game.panel.autoTip': 'Click to auto-select the matching table', 'game.panel.hideTip': 'Hide (turn off auto mode)',
         'game.panel.autoOnTip': 'Auto mode is on but no table selected yet',
         'game.panel.emptyHint': 'Click <b>Auto</b> to auto-select the matching table, or jump with the buttons below.',
         'game.panel.tier': 'Tier', 'game.quiz.title': 'Quiz',
-        'game.sc.shape': 'Shape & Status', 'game.sc.yaku': 'Yaku & Dora', 'game.sc.role': 'Role', 'game.sc.declarer': 'Riichi Declarer',
+        'game.sc.shape': '1-shanten Shape & Status', 'game.sc.yaku': 'Yaku & Dora', 'game.sc.role': 'Role', 'game.sc.declarer': 'Riichi Declarer',
         'game.discard.title': 'Your Discard — Tile Category',
         'board.toimen': 'Toimen', 'board.kamicha': 'Kamicha', 'board.shimocha': 'Shimocha', 'board.you': 'You', 'board.turn': 'Turn',
         'board.yourTurn': 'Your Turn',
@@ -2824,7 +2948,7 @@
         'dealin.rateHeader': 'Deal-in Rate', 'dealin.modTitle': 'Common modifiers (not in table):',
         'dealin.modBody': 'Dora: +2% · Sotogawa: −5% · 1-chance: −3% · Anko/Anko-suji: +2%',
         'dealin.modWarn': 'These modifiers are not accounted for when determining the estimated deal-in rates.',
-        'shapes.title': 'Shape Reference', 'shapes.desc': 'Overview of the hand shape categories with example 13-tile hands.',
+        'shapes.title': '1-shanten Shape Reference', 'shapes.desc': 'Overview of the hand shape categories with example 13-tile hands.',
         'shapes.acceptance': 'Tile acceptance:', 'shapes.goodRate': 'Good wait rate:', 'shapes.tilesUnit': '{n} tiles',
         'panel.shapeTier.hidden': 'Hidden', 'panel.shapeTier.menzenND': 'Closed · Non-Dealer', 'panel.shapeTier.menzenD': 'Closed · Dealer',
         'panel.shapeTier.fuuroNDC': 'Open · Non-Dealer · Kamicha Riichi', 'panel.shapeTier.fuuroNDNC': 'Open · Non-Dealer · Not Kamicha Riichi',
@@ -2836,21 +2960,28 @@
         'btn.thresh.menzenVsND': 'Closed vs ND', 'btn.thresh.menzenVsD': 'Closed vs D', 'btn.thresh.menzenAsD': 'Closed as D',
         'btn.thresh.fuuroVsND': 'Open vs ND', 'btn.thresh.fuuroVsD': 'Open vs D', 'btn.thresh.fuuroAsD': 'Open as D',
         'help.title': 'How to Play',
-        'help.overview.title': 'Overview', 'help.overview.body': "Each question gives you a 1-shanten hand facing an opponent's riichi. Answer three questions in sequence to build up to a push/pull decision.",
-        'help.step1.title': 'Step 1 — Count Passed Sujis', 'help.step1.body': "Unique sujis blocked by the riichi player's pond. Post-riichi discards count. No-chance applies when all four copies of a tile are visible.",
-        'help.step2.title': 'Step 2 — Estimate Deal-in Rate', 'help.step2.body': 'Estimate the deal-in rate of the tile you should push with based on the number of passed suji. Answer by placing it in one of the six buckets: <code>&lt;5%</code>, <code>5–10%</code>, <code>10–15%</code>, <code>15–20%</code>, <code>20–25%</code>, <code>&gt;25%</code>. Use the "Deal-in Rates" reference table to get an approximation. The result will give you the exact deal-in rate after answering which you can make use of to determine the push-fold decision making in the following step.',
-        'help.step3.title': 'Step 3 — Push or Fold', 'help.step3.body': "Look up your hand's <b>threshold value</b> (T) from the tables, based on your role (dealer / non-dealer), hand state (closed / open), turn, and hand <b>tier</b>. Tier comes from your hand's shape, yaku, and dora count.",
-        'help.step3.list': '<li>If the tile\'s deal-in rate (R) is <b>≤ T</b>: <b>PUSH</b>. If R is <b>&gt; T</b>: <b>FOLD</b>.</li><li>If T falls <b>inside the bucket range</b>: <b>BORDERLINE</b> — both answers score 200, and the buttons glow yellow (ambiguous).</li> <br>If you want to make use of the system that the program is based on check the "About" page for more details. ',
-        'help.pinfu.title': 'Pinfu and Iipeikou', 'help.pinfu.body': 'Closed hands can pick up extra yaku. <b>Pinfu</b> (only [A] Perfect and [B] Ryanmen×2) is worth 1 han, and its threshold is interpolated between the two adjacent tiers because pinfu lowers fu compared to a standard hand at the same han count. <b>Iipeikou</b> adds 1 han (any closed non-chiitoi shape). Both disappear if the hand is called.',
-        'help.ippatsu.title': 'Ippatsu vs No Ippatsu', 'help.ippatsu.body': '<b>Ippatsu</b>: opponent just declared riichi and their ippatsu is still live, so you\'re forced to discard a dangerous tile while the +1 han bonus is a threat. Tier and/or role chart is adjusted to reflect lower push thresholds. <b>No Ippatsu</b>: riichi was declared a turn earlier, you safely discarded a genbutsu earlier, and the ippatsu window has closed — you now have to choose whether to push the same dangerous tile under normal conditions.',
-        'help.callable.title': 'Callable Closed Hands', 'help.callable.body': 'If your closed hand has a Tanyao or Yakuhai Ankou, it could be opened for tenpai. The tier is evaluated on the open chart using only the surviving yaku + dora (riichi, pinfu, ippeikou all drop), then bumped up one tier to reflect the flexibility.',
+        'help.overview.title': 'Overview',
+        'help.overview.body': 'Each question presents a 1-shanten hand facing an opponent\'s riichi. Answer three questions in sequence: count the passed sujis, estimate the deal-in rate of the tile you are considering discarding, and decide whether to push or fold.',
+        'help.step1.title': 'Step 1 — Count Passed Sujis',
+        'help.step1.body': 'Count the unique suji lines made safe by the riichi player\'s discards. Include discards made after riichi. Also account for no-chance situations, where all four copies of a tile are visible.',
+        'help.step2.title': 'Step 2 — Estimate Deal-in Rate',
+        'help.step2.body': 'Estimate how likely your candidate discard is to deal in. Consider its tile category and the number of passed sujis. You can use the Deal-in Rates reference panel to help make your estimate. Choose the closest range:<br><code>&lt;5%</code>, <code>5–10%</code>, <code>10–15%</code>, <code>15–20%</code>, <code>20–25%</code>, or <code>&gt;25%</code>.<br>After you answer, the trainer reveals its reference deal-in rate. Use that information when making your push/fold decision in Step 3.',
+        'help.step3.title': 'Step 3 — Push or Fold',
+        'help.step3.body': 'Decide whether pushing is worth the risk in the current situation. Weigh the danger of the tile against the value and shape of your hand, the current turn, whether you are the dealer, whether the opponent is the dealer or non-dealer, and whether it is the ippatsu turn. In a real game, the score situation and other circumstances may also affect your decision. All quiz scenarios assume East 1, 0 honba, with every player starting at 25,000 points.<br><br>If you want a consistent, table-based approach, use the <b>Shape Tier</b> panel to find your hand\'s tier, then use the <b>Threshold</b> panel to look up the threshold deal-in rate (<b>T</b>) for your role, hand state, tier, and turn. Compare T with the estimated deal-in rate (<b>R</b>). You do not need to consult these tables manually to play the quiz, but the trainer scores your decision against its reference threshold.',
+        'help.step3.list': '<li>If the deal-in rate (<b>R</b>) is <b>≤ T</b>, the reference recommendation is <b>PUSH</b>.</li><li>If <b>R &gt; T</b>, the reference recommendation is <b>FOLD</b>.</li><li><b>BORDERLINE:</b> If the threshold falls within the deal-in-rate range you selected in Step 2, either answer earns 200 points. The question is marked as ambiguous, and the relevant buttons glow yellow.</li>',
+        'help.scoring.title': 'Scoring',
+        'help.scoring.list': '<li>Step 1: <b>300</b> for an exact answer, <b>100</b> if off by one, otherwise 0.</li><li>Step 2: <b>300</b> for the correct range, otherwise 0.</li><li>Step 3: <b>400</b> for the correct decision, <b>200</b> for a borderline question, otherwise 0.</li><li>Time bonus: <b>max(0, 200 − seconds × 10)</b>.</li>',
+        'help.tables.title': 'Reference Tables',
+        'help.tables.list': '<li><b>Deal-in Rates</b> — reference rates by tile category and suji information to help estimate the risk of a discard.</li><li><b>Shapes</b> — examples of different 1-shanten hand shapes.</li><li><b>Shape Tier panel</b> — compare hand shapes and tiers. Toggle <b>Auto</b> to select the relevant table automatically for each question.</li><li><b>Threshold panel</b> — look up the threshold deal-in rate for a given tier and turn. Toggle <b>Auto</b> to select the relevant table automatically.</li>',
+        'help.combo.title': 'Combo',
+        'help.combo.body': 'Consecutive correct push/fold answers build a combo multiplier. The multiplier is ×1.0 at combo 0–1, then increases by ×0.1 per combo, reaching the ×10 cap at combo 91. An incorrect push/fold answer resets the streak.',
+        'help.ta.title': 'Time Attack',
+        'help.ta.list': '<li>Correctly counting the passed sujis adds <b>5 seconds</b>. An answer that is off by one adds <b>3 seconds</b>. An incorrect answer adds 0 seconds.</li><li>A correct Step 2 deal-in rate estimate adds <b>5 seconds</b>; an incorrect answer adds 0 seconds.</li><li>A correct push/fold answer adds <b>10 seconds</b>. On borderline questions, matching PUSH awards twice the normal time bonus, while matching FOLD awards 1.5 times the normal time bonus.</li><li>Wrong push: <b>−15 seconds</b>. Wrong fold: <b>−10 seconds</b>.</li>',
         'help.grades.title': 'Grades',
-        'help.grades.body': `<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 4px 16px; font-size: 13px;padding-left:20px;"><div><b>S+</b> &gt; 95%</div><div><b>B+</b> 65–70%</div><div><b>S</b> 90–95%</div><div><b>B</b> 60–65%</div><div><b>S-</b> 85–90%</div><div><b>B-</b> 55–60%</div><div><b>A+</b> 80–85%</div><div><b>C</b> 45–55%</div><div><b>A</b> 75–80%</div><div><b>D</b> 30–45%</div><div><b>A-</b> 70–75%</div><div><b>E</b> &lt; 30%</div></div>`,
-        'help.combo.title': 'Combo', 'help.combo.body': 'Consecutive correct push/pulls build a multiplier: ×1.0 at 0–1, +0.1 per combo past 2, capped at ×10 at combo 91. A wrong push/pull resets the streak.',
-        'help.ta.title': 'Time Attack Timing', 'help.ta.list': '<li>Correct push/pull: <b>+10s</b> (borderline ×2 on matching push, ×1.5 on matching fold).</li><li>Wrong push: <b>−15s</b> · Wrong fold: <b>−10s</b>.</li>',
-        'help.controls.title': 'Controls', 'help.controls.body': 'Arrow keys navigate, Enter confirms, Escape closes modals / exits to menu.',
-        'help.scoring.title': 'Scoring', 'help.scoring.list': '<li>Step 1: <b>300</b> exact, <b>100</b> off by 1, else 0</li><li>Step 2: <b>300</b> correct, else 0</li><li>Step 3: <b>400</b> correct, <b>200</b> borderline, else 0</li><li>Time bonus: <b>max(0, 200 − seconds × 10)</b></li>',
-        'help.tables.title': 'Reference Tables', 'help.tables.list': '<li><b>Deal-in Rates</b> — the full rate chart per category / bucket.</li><li><b>Shapes</b> — examples of the hand shapes.</li><li><b>Shape Tiers panel</b> — toggle <b>Auto</b> to auto-select the matching table each question.</li><li><b>Threshold panel</b> — threshold values. Same auto behavior.</li>',
+        'help.grades.body': '<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 4px 16px; font-size: 13px; padding-left: 20px;"><div><b>S+</b> &gt; 95%</div><div><b>B+</b> 65–70%</div><div><b>S</b> 90–95%</div><div><b>B</b> 60–65%</div><div><b>S−</b> 85–90%</div><div><b>B−</b> 55–60%</div><div><b>A+</b> 80–85%</div><div><b>C</b> 45–55%</div><div><b>A</b> 75–80%</div><div><b>D</b> 30–45%</div><div><b>A−</b> 70–75%</div><div><b>E</b> &lt; 30%</div></div>',
+        'help.controls.title': 'Controls',
+        'help.controls.body': '<code>Enter</code> — Submit your answer.<br><code>´Esc´</code> — Go back; close modals or return to the menu where applicable.<br><code>A</code> — Open About.<br><code>S</code> — Open the 1-Shanten Shapes list.<br><code>D</code> — Open the Estimate Deal-in Rate reference.<br><code>1–6</code> — Switch between Shape Tier tables.<br><code>Q–Y</code> — Switch between Threshold tables.<br><code>7</code> — Set the Shape Tier table to Auto.<br><code>U</code> — Set the Threshold table to Auto.',
+
         'fb.correct': 'Correct!', 'fb.close': 'Close!', 'fb.bad': 'Not quite.',
         'fb.step1.ok': '{n} unique passed sujis{breakdown}.',
         'fb.step1.wrong': 'You said {v}. The pond holds <b>{n}</b> unique passed sujis{breakdown}.',
@@ -2873,22 +3004,25 @@
         'fb.borderlineLabel': 'Borderline!', 'fb.verdict.ironPush': 'Iron push', 'fb.verdict.ironPull': 'Iron pull',
         'fb.ippatsuNd': 'Ippatsu: switch to VS Dealer chart (same tier)',
         'fb.ippatsuAsDealer': 'Ippatsu: As Dealer chart, hand treated 1 tier weaker',
-        'fb.ippatsuNdD': 'Ippatsu: VS Dealer chart, hand treated 2 tiers weaker',
+        'fb.ippatsuNdD': 'Ippatsu: VS Dealer chart, hand treated 1 tier weaker',
         'fb.pinfuApplied': 'Pinfu threshold: interpolated between the two adjacent tiers',
         'fb.callableApplied': 'Callable: evaluated on open chart with surviving yaku, one tier better',
         'results.runComplete': 'Run Complete', 'results.practiceComplete': 'Practice Complete', 'results.timesUp': "Time's Up!",
-        'results.totalScore': 'Total Score', 'results.timeBonus': 'Time Bonus', 'results.suji': 'Suji Counting Accuracy', 'results.dealin': 'Deal-in Estimate Accuracy', 'results.pushfold': 'Push/Pull Accuracy', 'results.maxCombo': 'Max Combo',
+        'results.totalScore': 'Total Score', 'results.timeBonus': 'Time Bonus', 'results.suji': 'Suji Counting Accuracy', 'results.dealin': 'Deal-in Estimate Accuracy', 'results.pushfold': 'Push/Fold Accuracy', 'results.maxCombo': 'Max Combo',
         'results.playAgain': 'Play Again', 'results.menu': 'Back to Menu',
-        'results.share': '<i class="fa-solid fa-share-nodes"></i> Share', 'results.shared': '<i class="fa-solid fa-check"></i> Copied!',
+        'results.share': '<i class="fa-solid fa-share-from-square"></i> Share', 'results.shared': '<i class="fa-solid fa-check"></i> Copied!',
+        'results.qs': 'questions',
         'results.highScoreRegular': 'A NEW HIGH SCORE WAS JUST MADE!', 'results.highScoreTimeAttack': 'A NEW HIGH SCORE WAS JUST MADE!',
-        'about.title': 'About', 'about.overview': 'Overview',
-        'about.p1': 'A training tool for push/pull decisions in 1-shanten situations facing an opponent\'s riichi. Each question walks you through the same three steps: count the passed sujis, estimate the deal-in rate, then compare it against your hand\'s <b>threshold deal-in rate</b> to reach a PUSH/FOLD decision. The trainer is intended for flat point standing practice.',
-        'about.howToUse': 'How to Use',
-        'about.p2': 'Work from top to bottom: set your conditions, hand shape, ron value, and turn to view the corresponding threshold table. To get a more specific PUSH/PULL verdict, expand <i>Estimate Deal-in Rate</i> and enter the tile category, applicable modifiers, and number of passed suji. Tap a turn column header to switch between turns.<h4>How the Tables Work</h4>The app first uses the <b>Shape Tier Table</b> to determine the tier corresponding to your hand shape and ron value. The assigned tier depends on whether you are the dealer or non-dealer, whether your hand is closed or open, and, for open hands, whether Kamicha was the one who declared riichi. Each shape is assigned tiers according to its ron value: [A] Perfect generally receives the most favorable tiers, followed by shapes [B] through [F]. The tier also depends on the hand\'s ron value; for example, a 4-han [A] menzen hand is assigned Tier 1, while a 4-han menzen [B] Ryanmen×2 hand is assigned Tier 2, equivalent to a 3-han [A] Perfect hand.<h4>Additional Details</h4>The following rules explain some of the adjustments applied in less straightforward cases, and may also be useful if you want to consult the tables manually:<ul><li><b>Open hands against a Kamicha riichi:</b> A separate tier table is used when Kamicha has declared riichi, accounting for the increased opportunity to call chii from their discards.</li><li><b>Closed hands with an available yaku when opened:</b> If a closed hand has a valid yaku when opened, it is evaluated using the open-hand table. Its value is classified according to its open-hand ron value, then moved up one tier to reflect the more favorable push conditions.</li><li><b>Non-standard 1-shanten shapes:</b> The Kuttsuki and Headless shapes classified as [S] tier use [A] Perfect as their base tier, adjusted upward by one tier.</li><li><b>Intermediate hand values (pinfu / 50 fu tenpane):</b> Hands capable of scoring pinfu are shown with range values (e.g., 1300~2000), and closed hands at 50 fu are handled the same way. In both cases the threshold is calculated as the average of the two adjacent tiers.</li><li><b>Intermediate hand values (40 fu tenpane):</b> Open hands at 40 fu are shown with their corresponding 40-fu point values (e.g., 1300, 2600, 5200). Their threshold is interpolated between the base and one-tier-better thresholds, with slightly less than 50% weight toward the higher tier. </li><li><b>Ippatsu turn (一発巡):</b> When the ippatsu option is enabled:<ul><li><b>Non-dealer riichi vs non-dealer player:</b> The <b>VS Dealer</b> threshold chart is used at the same tier, reflecting the increased scoring threat.</li><li><b>Non-dealer riichi VS dealer player:</b> The <b>As Dealer</b> threshold chart is used, with the hand treated as two tier weaker.</li><li><b>Dealer riichi VS non-dealer:</b> The <b>As Dealer</b> threshold chart is used, with the hand treated as one tier weaker.</li></ul></li></ul>',
+        'about.title': 'About',
+        'about.overview': 'Overview',
+        'about.p1': 'This trainer helps you practise push-pull decisions with 1-shanten hands against an opponent\'s riichi. It is built around a threshold-based reference system for evaluating the danger of a tile you are considering pushing with: estimate its deal-in rate, then compare it with the threshold deal-in rate to determine whether pushing is considered worthwhile. You can play the quiz using your own judgment without manually consulting the reference tables, but the trainer uses its reference thresholds to evaluate your answers.',
+        'about.howToUse': 'How the System Works',
+        'about.p2': 'The reference system uses two tables to establish a baseline for push/fold decisions.<h4>1. Determine the hand tier</h4>The <b>Shape Tier Table</b> assigns a tier according to the hand\'s shape and ron value. The appropriate table depends on whether you are the dealer or non-dealer and whether your hand is closed or open. For open hands, the table also depends on whether the player to your left (kamicha) has declared riichi, since this creates more opportunities to call chii and makes pushing slightly more favorable.<br><br>The tier reflects the hand\'s inherent value, including relevant yaku and dora.<h4>2. Find the threshold deal-in rate</h4>The <b>Threshold Table</b> maps the hand tier and the current turn to a threshold deal-in rate (<b>T</b>). This represents the model\'s reference point for deciding whether pushing is worthwhile. Compare it with the estimated deal-in rate (<b>R</b>) of the tile you are considering discarding: pushing is favored when R is at or below T, while folding is favored when R is above T. When the two values are close, the system may classify the decision as borderline.<h4>Special cases</h4>The trainer also accounts for situations that can change a hand\'s effective value. These include additional yaku in closed hands, hands that can be opened while retaining a valid yaku, pinfu, and certain non-standard 1-shanten shapes. Some adjustments follow Unimaru\'s explanations, while others are estimates made specifically for this app.<h4>Additional Details</h4>The following rules explain adjustments applied in less straightforward cases and may also be useful when consulting the tables manually:<ul><li><b>Open hands against a Kamicha riichi:</b> A separate Shape Tier Table is used when Kamicha has declared riichi, accounting for the increased opportunity to call chii from their discards.</li><li><b>Closed hands with a valid yaku when opened:</b> If a closed hand retains a valid yaku when opened, it is evaluated using the open-hand table. Its value is classified according to its open-hand ron value, then moved up one tier to reflect the more favorable push conditions.</li><li><b>Non-standard 1-shanten shapes:</b> The Kuttsuki and Headless shapes classified as [S] tier use [A] Perfect as their base tier, adjusted upward by one tier.</li><li><b>Intermediate hand values (pinfu):</b> For hands capable of scoring pinfu, the threshold is calculated as the average of the thresholds for the two adjacent tiers.</li><li><b>Ippatsu turn:</b> The threshold is adjusted according to the roles of you and the riichi opponent:<ul><li><b>Non-dealer riichi vs. non-dealer player:</b> The <b>VS Dealer</b> threshold chart is used at the same tier, reflecting the increased scoring threat.</li><li><b>Non-dealer riichi vs. dealer player:</b> The <b>VS Dealer</b> threshold chart is used, with the hand treated as one tier weaker.</li><li><b>Dealer riichi vs. non-dealer player:</b> The <b>As Dealer</b> threshold chart is used, with the hand treated as one tier weaker.</li></ul></li></ul>',
         'about.sources': 'Sources and Methodology',
-        'about.p4': 'The shape-tier and threshold tables are adapted primarily from Unimaru\'s book <i>Unimaru-shiki Winning Mahjong with Theory</i> (『うに丸式 セオリーで勝つ麻雀』), which draws on material from <i>Statistical Mahjong Strategy</i> (『統計学のマージャン戦術』) and <i>New: Scientific Mahjong</i> (『新・科学する麻雀』). <br> <br> The [D] Ryanmen + Kanchan shape was not included in the original data and has been interpolated. The original [D] and [E] shape classifications have been renamed [E] and [F]. Pinfu thresholds are calculated by averaging the two adjacent tiers. Deal-in rate estimates are adapted from <i>Statistical Mahjong Strategy</i> by Miinin. <b>Please treat the results as a reference rather than definitive advice.</b>',
+        'about.p4': 'The hand-shape tiers and threshold values are adapted from Unimaru\'s push/fold framework for 1-shanten hands, detailed in Chapters 22–24 of his book "<i>Unimaru-shiki Winning Mahjong with Theory</i>" 『うに丸式 セオリーで勝つ麻雀』 along with his YouTube videos on this subject. The framework draws on simulation data from "<i>New: Scientific Mahjong</i>"『新・科学する麻雀』  and references "<i>Statistical Mahjong Strategy</i>"『統計学のマージャン戦術』. The app\'s deal-in rate estimates are also adapted from Miinin\'s SMS book.<br><h4>Source-Based Rules and My Own Estimates</h4><ul><li><b>Pinfu interpolation:</b> The method of estimating thresholds between adjacent tiers for pinfu hands follows Unimaru\'s own explanation.</li><li><b>Ippatsu:</b> The adjustment against a non-dealer riichi follows Unimaru\'s explanation. The adjustments against a dealer riichi and in situations where you are the dealer are my own estimates.</li><li><b>Ryanmen + Kanchan:</b> This shape was not included in Unimaru\'s tables because the original dataset from "New: Scientific Mahjong" had no data regarding this shape. Its classification in this app is therefore an estimate.</li></ul><b>Please treat the results as reference guidance, not definitive advice.</b> The model is intended primarily for push/fold decisions in flat point standings and does not account for every factor that may matter in a real game.',
         'about.credits': 'Credits',
-        'about.p3': 'Designed and developed by kakino_tea.<br>X: <a style="color:#738ad0" href="https://x.com/mican8saku" target="_blank" rel="noopener noreferrer">@mican8saku</a>'
+        'about.p3': 'App design and development: kakino_tea<br>X: <a style="color:#738ad0" href="https://x.com/mican8saku" target="_blank" rel="noopener noreferrer">@mican8saku</a>',
+
       },
       ja: {
         'page.title': 'イーシャンテン オラクル 押し引きトレーナー',
@@ -2912,9 +3046,9 @@
         'settings.cat.doubleMusuji': 'ダブル無スジ 4/5/6', 'settings.cat.musuji37': '無スジ 3/7', 'settings.cat.musuji28': '無スジ 2/8', 'settings.cat.katamusuji': '片無スジ 4/5/6', 'settings.cat.musuji19': '無スジ 1/9',
         'settings.turn.5': '5巡目', 'settings.turn.9': '9巡目', 'settings.turn.14': '14巡目',
         'settings.ippatsu.yes': '一発巡', 'settings.ippatsu.no': '非一発巡',
-        'settings.shape.perfect': '一向聴 · [A] 完全形', 'settings.shape.good2': '一向聴 · [B] 両面×2', 'settings.shape.goodRyankan': '一向聴 · [C] 両面＋リャンカン', 'settings.shape.goodKanchan': '一向聴 · [D] 両面＋カンチャン', 'settings.shape.badRyankan': '一向聴 · [E] カンチャン＋リャンカン', 'settings.shape.pairs': '一向聴 · [F] 七対子',
-        'settings.shape.badHeadless': '一向聴 · [C−] 悪いヘッドレス', 'settings.shape.mediocreHeadless': '一向聴 · [C+] やや悪いヘッドレス', 'settings.shape.badKuttsuki': '一向聴 · [C] 悪いくっつき',
-        'settings.shape.standardHeadless': '一向聴 · [A−] 標準ヘッドレス', 'settings.shape.standardKuttsuki': '一向聴 · [A] 標準くっつき',
+        'settings.shape.perfect': '[A] 完全形', 'settings.shape.good2': '[B] 両面×2', 'settings.shape.goodRyankan': '[C] 両面＋リャンカン', 'settings.shape.goodKanchan': '[D] 両面＋カンチャン', 'settings.shape.badRyankan': '[E] カンチャン＋リャンカン', 'settings.shape.pairs': '[F] 七対子',
+        'settings.shape.badHeadless': '[C−] 悪いヘッドレス', 'settings.shape.mediocreHeadless': '[C+] やや悪いヘッドレス', 'settings.shape.badKuttsuki': '[C] 悪いくっつき',
+        'settings.shape.standardHeadless': '[A−] 標準ヘッドレス', 'settings.shape.standardKuttsuki': '[A] 標準くっつき',
         'settings.shape.goodHeadless1': '[S] 連続形ヘッドレス', 'settings.shape.goodHeadless2': '[S] 暗刻ヘッドレス', 'settings.shape.goodKuttsuki': '[S+] 良いくっつき',
         'settings.hand.menzen': '門前', 'settings.hand.fuuro': '副露',
         'settings.declarer.kamicha': '上家', 'settings.declarer.toimen': '対面', 'settings.declarer.shimocha': '下家',
@@ -2927,14 +3061,14 @@
         'settings.note.required': '最低1つは選択してください。', 'settings.note.all': 'すべて選択されています。', 'settings.note.some': '{m}個中{n}個を選択中。',
         'settings.back': '戻る', 'settings.start': '練習開始',
         'game.logo': '<i class="fa-solid fa-hamsa"></i> イーシャンテン オラクル', 'game.score': 'スコア', 'game.combo': 'コンボ',
-        'game.dealin': '<i class="fa-solid fa-book"></i> 放銃率の目安', 'game.howto': '遊び方', 'game.shapes': '<i class="fa-solid fa-scroll"></i> 形', 'game.exit': '<i class="fa-solid fa-right-to-bracket"></i> 終了',
+        'game.dealin': '<i class="fa-solid fa-book"></i> 放銃率の目安', 'game.howto': '<i class="fa-solid fa-circle-question"></i> 遊び方', 'game.shapes': '<i class="fa-solid fa-scroll"></i> 一向聴形', 'game.exit': '<i class="fa-solid fa-right-to-bracket"></i> 終了',
         'game.panel.shapeTiers': '形ティア', 'game.panel.thresholds': '押し引きボーダー放銃率',
         'game.panel.hidden': '非表示', 'game.panel.auto': '自動', 'game.panel.hide': '隠す',
         'game.panel.autoTip': 'クリックで該当する表を自動選択', 'game.panel.hideTip': '隠す（自動モード解除）',
         'game.panel.autoOnTip': '自動モードが有効ですが、まだ表が選択されていません',
         'game.panel.emptyHint': '<b>自動</b>をクリックすると該当する表を自動選択します。下のボタンで直接移動もできます。',
         'game.panel.tier': 'ティア', 'game.quiz.title': 'クイズ',
-        'game.sc.shape': '形と状態', 'game.sc.yaku': '役とドラ', 'game.sc.role': '立場', 'game.sc.declarer': 'リーチ者',
+        'game.sc.shape': '一向聴形と状態', 'game.sc.yaku': '役とドラ', 'game.sc.role': '立場', 'game.sc.declarer': 'リーチ者',
         'game.discard.title': '打牌 — 牌カテゴリ',
         'board.toimen': '対面', 'board.kamicha': '上家', 'board.shimocha': '下家', 'board.you': '自分', 'board.turn': '巡目',
         'board.yourTurn': 'あなたの番',
@@ -2958,7 +3092,7 @@
         'dealin.rateHeader': '放銃率', 'dealin.modTitle': 'よくある補正（表外）:',
         'dealin.modBody': 'ドラ: +2% ・ 外側: −5% ・ 1チャンス: −3% ・ 暗刻/暗刻スジ: +2%',
         'dealin.modWarn': 'これらの補正は放銃率の推定には反映されていません。',
-        'shapes.title': '形のリファレンス', 'shapes.desc': '手牌形状カテゴリと、13枚の手牌例。',
+        'shapes.title': '一向聴形のリファレンス', 'shapes.desc': '手牌形状カテゴリと、13枚の手牌例。',
         'shapes.acceptance': '受け入れ:', 'shapes.goodRate': '良形率:', 'shapes.tilesUnit': '{n}枚',
         'panel.shapeTier.hidden': '非表示', 'panel.shapeTier.menzenND': '門前・子', 'panel.shapeTier.menzenD': '門前・親',
         'panel.shapeTier.fuuroNDC': '副露・子・上家リーチ', 'panel.shapeTier.fuuroNDNC': '副露・子・非上家リーチ',
@@ -2969,28 +3103,29 @@
         'btn.shape.fuuroND': '副露・子', 'btn.shape.fuuroDC': '副露・親・上', 'btn.shape.fuuroD': '副露・親',
         'btn.thresh.menzenVsND': '門前vs子', 'btn.thresh.menzenVsD': '門前vs親', 'btn.thresh.menzenAsD': '門前・親',
         'btn.thresh.fuuroVsND': '副露vs子', 'btn.thresh.fuuroVsD': '副露vs親', 'btn.thresh.fuuroAsD': '副露・親',
-        'help.title': '遊び方', 'help.overview.title': '概要',
-        'help.overview.body': '1シャンテンの手牌と相手のリーチが提示されます。3つのステップに順番に答えて押し引きを判断します。',
+        'help.title': '遊び方',
+        'help.overview.title': '概要',
+        'help.overview.body': '各問題では、相手がリーチしている状況で、イーシャンテンの手牌が提示されます。通ったスジを数え、打牌候補の放銃率を見積もり、押すか降りるかを判断する3つの質問に順番に答えてください。',
         'help.step1.title': 'ステップ1 — 通ったスジを数える',
-        'help.step1.body': 'リーチ者の捨て牌で止まっているスジの種類数。リーチ後の捨て牌も含みます。4枚全て見えている牌はノーチャンスとして扱います。',
-        'help.step2.title': 'ステップ2 — 放銃率の見積り',
-        'help.step2.body': '6つの区分: <code>&lt;5%</code>、<code>5–10%</code>、<code>10–15%</code>、<code>15–20%</code>、<code>20–25%</code>、<code>&gt;25%</code>。',
+        'help.step1.body': 'リーチ者の捨て牌によって通ったスジの種類数を数えてください。リーチ後の捨て牌も含みます。また、ある牌の4枚すべてが見えている場合に成立するノーチャンスも考慮してください。',
+        'help.step2.title': 'ステップ2 — 放銃率を見積もる',
+        'help.step2.body': '打牌候補の牌が放銃する可能性を見積もってください。牌のカテゴリと通ったスジの本数を考慮します。「放銃率の目安」パネルを使うと、見積もりの参考になります。最も近い範囲を選んでください。<br><code>&lt;5%</code>、<code>5–10%</code>、<code>10–15%</code>、<code>15–20%</code>、<code>20–25%</code>、<code>&gt;25%</code>。<br>回答後、トレーナーが基準となる放銃率を表示します。その情報を参考に、ステップ3で押し引きを判断してください。',
         'help.step3.title': 'ステップ3 — 押すか降りるか',
-        'help.step3.body': "役職（親・子）、手牌の状態（門前・鳴き）、巡目、および手牌の<b>ティア（段階）</b>に基づいて、表から手牌の<b>ボーダー放銃率（T）</b>を確認します。ティアは手牌の形、役、ドラの数によって決まります。",
-        'help.step3.list': '<li>牌の放銃率（R）が <b>≤ T</b> の場合：<b>押し</b>。</li><li>R が <b>&gt; T</b> の場合：<b>降り</b>。</li><li>T が<b>バケツ（範囲）内</b>に収まる場合：<b>微差</b> — どちらの回答も200点となり、ボタンが緑（わずかに有利）または黄色（曖昧）に光ります。</li>',
-        'help.pinfu.title': 'ピンフと一盃口',
-        'help.pinfu.body': '門前手は追加の役がつくことがあります。<b>ピンフ</b>（[A]完全形と[B]両面×2のみ、1翻）は、同じ翻数の標準手と比べて符が低いため、ボーダー放銃率は隣接する2つのティアの中間値として計算されます。<b>一盃口</b>は1翻追加（門前の七対子以外の形）。いずれも鳴くと消えます。',
-        'help.ippatsu.title': '一発巡 vs 非一発巡',
-        'help.ippatsu.body': '<b>一発巡</b>: 相手がリーチを宣言した直後で、一発がまだ生きているため、危険牌を切らされます。相手の+1翻の脅威を反映してティアや役割表が調整されます。<b>非一発巡</b>: リーチは1巡前に宣言され、あなたは前の巡目に安全な現物を切っており、一発の窓は閉じています。今、同じ危険牌を切るかどうかを通常の条件下で判断します。',
-        'help.callable.title': '鳴ける門前手',
-        'help.callable.body': '門前手にタンヤオまたは役牌暗刻があれば、鳴いてテンパイを取れます。副露表で生き残る役＋ドラのみで評価し、ティアを1段階上げます（リーチ・ピンフ・一盃口は消えます）。',
+        'help.step3.body': '現在の状況で押す価値があるかどうかを判断してください。打牌の危険度と、自分の手牌の価値や形、巡目、自分が親か子か、相手が親か子か、一発巡かどうかを考慮します。実戦では、点棒状況など、ほかの要素も判断に影響します。このトレーナーの問題はすべて東1局・0本場を想定し、全員の持ち点は25,000点でスタートします。<br><br>表に基づいた一貫性のある判断方法を使いたい場合は、まず<b>形ティア</b>パネルで手牌のティアを確認し、次に<b>ボーダー放銃率</b>パネルで、自分の立場・手牌の状態・ティア・巡目に対応するボーダー放銃率（<b>T</b>）を調べてください。Tと、見積もった放銃率（<b>R</b>）を比較します。クイズに答える際、これらの表を自分で参照する必要はありませんが、トレーナーは基準となるボーダー放銃率に基づいて押し引きの回答を採点します。',
+        'help.step3.list': '<li>放銃率（<b>R</b>）がボーダー放銃率（<b>T</b>）以下の場合、基準上の判断は<b>押し</b>です。</li><li><b>R &gt; T</b>の場合、基準上の判断は<b>降り</b>です。</li><li><b>ボーダーライン（微差）</b>：Tがステップ2で選択した放銃率の範囲内にある場合、どちらを選んでも200点を獲得できます。この問題は曖昧な判断として扱われ、該当するボタンが黄色に光ります。</li>',
+        'help.scoring.title': '得点システム',
+        'help.scoring.list': '<li>ステップ1：正解で<b>300点</b>、1本のズレで<b>100点</b>、それ以外は0点。</li><li>ステップ2：正解で<b>300点</b>、不正解は0点。</li><li>ステップ3：正解で<b>400点</b>、ボーダーラインの問題では<b>200点</b>、それ以外は0点。</li><li>タイムボーナス：<b>max(0, 200 − 秒数 × 10)</b>。</li>',
+        'help.tables.title': '参考テーブル',
+        'help.tables.list': '<li><b>放銃率の目安</b> — 牌カテゴリと通ったスジの情報に基づき、打牌の危険度を見積もるための参考表。</li><li><b>一向聴形</b> — さまざまな1シャンテン形の例。</li><li><b>形ティアパネル</b> — 手牌の形とティアを確認できます。<b>Auto</b>を有効にすると、問題に対応する表が自動的に選択されます。</li><li><b>ボーダー放銃率パネル</b> — ティアと巡目に対応するボーダー放銃率を確認できます。こちらも<b>Auto</b>を有効にすると、対応する表が自動的に選択されます。</li>',
+        'help.combo.title': 'コンボ',
+        'help.combo.body': '押し引きの正解が連続すると、コンボ倍率が上がります。コンボ0～1では倍率は×1.0で、2以降は1コンボごとに×0.1ずつ上昇し、コンボ91で最大の×10に達します。押し引きを間違えると連続正解数はリセットされます。',
+        'help.ta.title': 'タイムアタック',
+        'help.ta.list': '<li>通ったスジの本数を正解すると<b>5秒</b>追加されます。1本ズレている場合は<b>3秒</b>、不正解の場合は0秒です。</li><li>ステップ2の放銃率の見積もりは、正解すると<b>5秒</b>追加され、不正解の場合は0秒です。</li><li>押し引きを正解すると<b>10秒</b>追加されます。ボーダーラインの問題では、押しを選んで正解すると通常の2倍、降りを選んで正解すると通常の1.5倍の時間が追加されます。</li><li>押しの不正解：<b>−15秒</b>。降りの不正解：<b>−10秒</b>。</li>',
         'help.grades.title': 'ランク',
-        'help.grades.body': `<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 4px 16px; font-size: 13px;padding-left:20px;"><div><b>S+</b> &gt; 95%</div><div><b>B+</b> 65–70%</div><div><b>S</b> 90–95%</div><div><b>B</b> 60–65%</div><div><b>S-</b> 85–90%</div><div><b>B-</b> 55–60%</div><div><b>A+</b> 80–85%</div><div><b>C</b> 45–55%</div><div><b>A</b> 75–80%</div><div><b>D</b> 30–45%</div><div><b>A-</b> 70–75%</div><div><b>E</b> &lt; 30%</div></div>`,
-        'help.combo.title': 'コンボ', 'help.combo.body': '押し引きを連続で正解すると倍率が上がります：0〜1で×1.0、2以降は1コンボごとに+0.1、91コンボで×10が上限。間違えるとリセット。',
-        'help.ta.title': 'タイムアタックの時間', 'help.ta.list': '<li>押し引き正解: <b>+10秒</b>（境界線は正解側で×2、×1.5）</li><li>押し間違い: <b>−15秒</b> ・ 降り間違い: <b>−10秒</b></li>',
-        'help.controls.title': '操作', 'help.controls.body': '矢印キーで移動、Enterで決定、Escでモーダルを閉じる／メニューへ戻る。',
-        'help.scoring.title': '得点システム', 'help.scoring.list': '<li>ステップ1：正解で <b>300</b>、±1のズレで <b>100</b>、その他 0</li><li>ステップ2：正解で <b>300</b>、その他 0</li><li>ステップ3：正解で <b>400</b>、微差で <b>200</b>、その他 0</li><li>タイムボーナス：<b>max(0, 200 − 秒数 × 10)</b></li>',
-        'help.tables.title': '参考テーブル', 'help.tables.list': '<li><b>放銃率</b> — カテゴ/バケツごとの全体レート表。</li><li><b>形</b> — 手牌の形の例。</li><li><b>形ティアパネル</b> — <b>Auto</b>をオンにすると、問題ごとに一致する表が自動選択されます。</li><li><b>ボーダーパネル</b> — ボーダー放銃率。同様に自動選択されます。</li>',
+        'help.grades.body': '<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 4px 16px; font-size: 13px; padding-left: 20px;"><div><b>S+</b> &gt; 95%</div><div><b>B+</b> 65–70%</div><div><b>S</b> 90–95%</div><div><b>B</b> 60–65%</div><div><b>S-</b> 85–90%</div><div><b>B-</b> 55–60%</div><div><b>A+</b> 80–85%</div><div><b>C</b> 45–55%</div><div><b>A</b> 75–80%</div><div><b>D</b> 30–45%</div><div><b>A-</b> 70–75%</div><div><b>E</b> &lt; 30%</div></div>',
+        'help.controls.title': '操作',
+        'help.controls.body': '<code>Enter</code> — 回答を確定する。<br><code>Esc</code> — 戻る。モーダルを閉じる、またはメニューに戻る。<br><code>A</code> — 「このアプリについて」を開く。<br><code>S</code> — 1シャンテン形の一覧を開く。<br><code>D</code> — 放銃率の目安を開く。<br><code>1–6</code> — 形ティア表を切り替える。<br><code>Q–Y</code> — ボーダー放銃率表を切り替える。<br><code>7</code> — 形ティア表を自動選択（Auto）にする。<br><code>U</code> — ボーダー放銃率表を自動選択（Auto）にする。',
+
         'fb.correct': '正解！', 'fb.close': 'おしい！', 'fb.bad': '残念。',
         'fb.step1.ok': '通ったスジは {n} 本{breakdown}。',
         'fb.step1.wrong': '{v} と答えました。実際は <b>{n}</b> 本の通ったスジ{breakdown}。',
@@ -3000,7 +3135,7 @@
         'fb.step2.bad': '<b>不正解。</b> 正しい区分は <b>{b}</b>（実測: <b>{exact}</b>）。',
         'fb.step3.ok': '<b>正解！</b>', 'fb.step3.bad': '<b>不正解。</b>',
         'fb.step3.answerIs': '正解は <b>{d}</b> です。',
-        'fb.step3.borderline': '<b>境界線！</b> {d} を選択。{lean}',
+        'fb.step3.borderline': '<b>微差！</b> {d} を選択。{lean}',
         'fb.step3.borderlineDetail': '通ったスジ: <b>{n}本</b> ・ 放銃率: <b>{b}</b>（実測: <b>{exact}</b>） ・ 手牌ボーダー放銃率（ティア {tier}, {role}）: <b>{t}</b>',
         'fb.step3.detail': '通ったスジ: <b>{n}本</b> ・ 放銃率: <b>{b}</b>（実測: <b>{exact}</b>） ・ 手牌ボーダー放銃率（ティア {tier}, {role}）: <b>{t}</b>',
         'fb.step3.comparePush': '放銃率 ≤ ボーダー放銃率 → 押し',
@@ -3019,16 +3154,19 @@
         'results.runComplete': '完了', 'results.practiceComplete': '練習完了', 'results.timesUp': 'タイムアップ！',
         'results.totalScore': '合計スコア', 'results.timeBonus': 'タイムボーナス', 'results.suji': 'スジカウント精度', 'results.dealin': '放銃率見積精度', 'results.pushfold': '押し引き精度', 'results.maxCombo': '最大コンボ',
         'results.playAgain': 'もう一度', 'results.menu': 'メニューへ',
-        'results.share': '<i class="fa-solid fa-share-nodes"></i> 共有', 'results.shared': '<i class="fa-solid fa-check"></i> コピー済み',
+        'results.share': '<i class="fa-solid fa-share-from-square"></i> 共有', 'results.shared': '<i class="fa-solid fa-check"></i> コピー済み',
+        'results.qs': '問',
         'results.highScoreRegular': 'ハイスコア更新！', 'results.highScoreTimeAttack': 'ハイスコア更新！',
-        'about.title': '<i class="fa-solid fa-circle-info"></i> このアプリについて', 'about.overview': '概要',
-        'about.p1': '1シャンテンの押し引き判断力を鍛えるトレーニングツールです。相手のリーチに対して、通ったスジの数を数え、放銃率を推定し、手牌の<b>ボーダー放銃率</b>と比較して押し引きを判断するという3ステップを繰り返し練習できます。主に平場での判断を想定しています。',
-        'about.howToUse': '使い方',
-        'about.p2': '各問題では、1シャンテンの手牌・相手のリーチ河・打牌候補の牌カテゴリ・形とボーダーの参照テーブルが表示されます。クイズの3ステップに順番に答えてください。左右のパネルは<i>Auto</i>で自動選択できます。<h4>手牌の状態と役</h4>門前手には自動的に<b>リーチ</b>（+1翻）が付きます。さらに門前手は<b>ピンフ</b>（[A]完全形と[B]両面×2のみ、1翻だがボーダー放銃率は隣接する2ティアの中間値）と<b>一盃口</b>（門前の七対子以外、1翻）が付くことがあります。タンヤオまたは役牌暗刻のある門前手は<b>鳴いてテンパイ</b>を取れると評価され、副露表で生き残る役＋ドラのみで計算し、1ティア上に調整されます。<h4>一発巡 vs 非一発巡</h4><b>一発巡</b>：相手のリーチ直後で一発が生きている状態。子が子のリーチ相手なら同じティアで親相手（VS Dealer）の表を使用。親が子のリーチ相手なら親として（As Dealer）の表で手牌を1段階弱く評価。子が親のリーチ相手なら親相手（VS Dealer）の表で2段階弱く評価。<b>非一発巡</b>：リーチは1巡前、前の巡目に現物を切り、一発の窓は閉じている状態。フルの表が適用されます。<h4>補足事項</h4><ul><li><b>上家がリーチしている場合の副露手：</b>専用の表を使用します。</li><li><b>特殊な1シャンテン形：</b>[S]ティアのくっつき形・ヘッドレス形は、[A] Perfectを基準に1ティア上乗せして評価します。</li></ul>',
+        'about.title': 'このアプリについて',
+        'about.overview': '概要',
+        'about.p1': 'このトレーナーは、相手のリーチに対するイーシャンテン時の押し引き判断を練習するためのツールです。押す際に切ろうとしている牌の危険度を、ボーダー放銃率に基づいて評価する参照システムを採用しています。まず打牌候補の放銃率を見積もり、それをボーダー放銃率と比較することで、押す価値があるかどうかを判断します。参照表を自分で確認せず、自分の判断だけでクイズに取り組むこともできますが、トレーナーは基準となるボーダー放銃率に基づいて回答を評価します。',
+        'about.howToUse': 'システムの仕組み',
+        'about.p2': 'この参照システムでは、2つの表を使って押し引き判断の基準を求めます。<h4>1. 手牌のティアを決める</h4><b>形ティア表</b>では、手牌の形と出上がり打点に応じてティアを決定します。使用する表は、自分が親か子か、また門前か副露かによって異なります。副露手の場合は、上家がリーチしているかどうかによっても使用する表が異なります。これは、上家の捨て牌からチーできる機会が増え、押しやすくなるためです。<br><br>ティアは、手牌の形・役・ドラなどを含めた手牌本来の価値を表します。<h4>2. ボーダー放銃率を確認する</h4><b>ボーダー放銃率表</b>では、手牌のティアと巡目に応じてボーダー放銃率（<b>T</b>）を求めます。これは、押す価値があるかどうかを判断するための基準値です。打牌候補の推定放銃率（<b>R</b>）と比較し、RがT以下なら押し、RがTを上回るなら降りが有利と判断します。2つの値が近い場合は、「微差」と判定されることがあります。<h4>特殊なケース</h4>トレーナーでは、手牌の実質的な価値に影響する状況も考慮しています。これには、門前手に付く追加の役、鳴いても有効な役が残る手牌、ピンフ、特殊な1シャンテン形などが含まれます。補正の一部はうに丸氏の解説に基づいていますが、このアプリ独自の推定によるものもあります。<h4>補足事項</h4>以下は、通常とは異なるケースで適用される補正ルールです。手作業で表を参照する場合にも参考になります。<ul><li><b>上家がリーチしている場合の副露手：</b>上家がリーチしている場合は、専用の形ティア表を使用します。上家の捨て牌からチーできる機会が増えることを考慮しています。</li><li><b>鳴いても役が成立する門前手：</b>鳴いた状態でも有効な役が残る門前手は、副露手用の表で評価します。副露時の出上がり打点に基づいて分類したうえで、押しやすさを考慮してティアを1段階上げます。</li><li><b>特殊な1シャンテン形：</b>[S]ティアに分類されるくっつき形・ヘッドレス形は、[A] 完全形を基準のティアとし、そこからティアを1段階上げて評価します。</li><li><b>中間的な打点（ピンフ）：</b>ピンフが成立する手牌は、隣接する2つのティアのボーダー放銃率の平均値を使用します。</li><li><b>一発巡：</b>一発巡では自分とリーチ者の立場に応じてボーダー放銃率を補正します。<ul><li><b>子のリーチ vs. 子のプレイヤー：</b>打点上昇の脅威を考慮し、同じティアのまま<b>親相手</b>のボーダー放銃率表を使用します。</li><li><b>子のリーチ vs. 親のプレイヤー：</b><b>親相手</b>のボーダー放銃率表を使用し、手牌を1ティア弱く評価します。</li><li><b>親のリーチ vs. 子のプレイヤー：</b><b>親として</b>のボーダー放銃率表を使用し、手牌を1ティア弱く評価します。</li></ul></li></ul>',
         'about.sources': '参考文献・算出方法',
-        'about.p4': '形のティア表およびボーダー放銃率表は、主にうに丸氏の著書『うに丸式 セオリーで勝つ麻雀』を参考にしています。同書で参考にされている『統計学のマージャン戦術』および『新・科学する麻雀』のデータも基になっています。ピンフのボーダー放銃率は、隣接する2つのティアの平均値で計算しています。放銃率の推定値は、みーにん氏の『統計学のマージャン戦術』を参考にしています。<b>あくまで判断の参考としてご利用ください。</b>',
+        'about.p4': '手牌の形ティアおよびボーダー放銃率は、うに丸氏の押し引き理論を基にしています。この理論は、著書『うに丸式 セオリーで勝つ麻雀』の第22～24章と、このテーマに関するYouTube動画で詳しく解説されています。また、『新・科学する麻雀』のシミュレーションデータを基礎とし、『統計学のマージャン戦術』も参考にしています。アプリで使用している放銃率の推定値も、みーにん氏の著書『統計学のマージャン戦術』を参考にしています。<br><h4>出典に基づくルールと独自の推定</h4><ul><li><b>ピンフの補間：</b>ピンフが成立する手牌について、隣接するティア間のボーダー放銃率を用いて推定する方法は、うに丸氏自身の解説に基づいています。</li><li><b>一発巡：</b>子のリーチに対する補正は、うに丸氏の解説に基づいています。親のリーチに対する補正、および自分が親の場合の補正は、独自に推定したものです。</li><li><b>両面＋カンチャン：</b>この形は、『新・科学する麻雀』の元データに該当するデータがなかったため、うに丸氏の表には含まれていません。そのため、このアプリでの分類は独自の推定です。</li></ul><b>結果はあくまで判断の参考としてご利用ください。絶対的な正解を示すものではありません。</b>このモデルは主に平場での押し引き判断を想定しており、実戦で考慮すべきすべての要素を扱っているわけではありません。',
         'about.credits': 'クレジット',
-        'about.p3': '制作：kakino_tea<br>X：<a style="color:#738ad0" href="https://x.com/mican8saku" target="_blank" rel="noopener noreferrer">@mican8saku</a>'
+        'about.p3': 'アプリの企画・開発：kakino_tea (カキノ)<br>X：<a style="color:#738ad0" href="https://x.com/mican8saku" target="_blank" rel="noopener noreferrer">@mican8saku</a>',
+
       }
     };
 
@@ -3504,8 +3642,8 @@
       { labelKey: 'panel.thresh.fuuroAsD', table: OPEN_THRESHOLDS['As Dealer'], maxTier: 11 }
     ];
     const SHAPE_TIER_BTN_CONFIG = [
-      { labelKey: 'btn.shape.menzenND', state: 1 }, { labelKey: 'btn.shape.fuuroNDC', state: 3 },
-      { labelKey: 'btn.shape.menzenD', state: 2 }, { labelKey: 'btn.shape.fuuroND', state: 4 },
+      { labelKey: 'btn.shape.menzenND', state: 1 }, { labelKey: 'btn.shape.menzenD', state: 2 },
+      { labelKey: 'btn.shape.fuuroNDC', state: 3 }, { labelKey: 'btn.shape.fuuroND', state: 4 },
       { labelKey: 'btn.shape.fuuroDC', state: 5 }, { labelKey: 'btn.shape.fuuroD', state: 6 }
     ];
     const THRESHOLD_BTN_CONFIG = [
@@ -3582,11 +3720,15 @@
       const lines = [];
       lines.push(APP_URL);
       lines.push('🪬 ' + (lang === 'ja' ? 'イーシャンテン オラクル' : '1-shanten Oracle') + ' · ' + t('mode.' + r.mode));
-      if (r.isHighScore) lines.push('🏅 ' + t('results.highScoreRegular'));
       lines.push('');
-      if (r.mode === 'regular' && r.grade) lines.push('🏆 ' + r.grade + ' · ' + r.score.toLocaleString() + ' ' + t('home.hs.ptsSuffix'));
-      else if (r.mode === 'timeattack') lines.push('🏆 ' + r.score.toLocaleString() + ' ' + t('home.hs.ptsSuffix'));
-      else lines.push('🎯 ' + t('results.practiceComplete'));
+      if (r.mode === 'regular' && r.grade) {
+        lines.push('🏆 ' + r.grade + ' · ' + r.score.toLocaleString() + ' ' + t('home.hs.ptsSuffix'));
+      } else if (r.mode === 'timeattack') {
+        lines.push('🏆 ' + r.score.toLocaleString() + ' ' + t('home.hs.ptsSuffix')
+          + ' · ' + r.questionsAnswered + ' ' + t('results.qs'));
+      } else {
+        lines.push('🎯 ' + t('results.practiceComplete'));
+      }
       lines.push('');
       lines.push('🎯 ' + t('results.suji').padEnd(11) + ' ' + buildBar(r.s1Pct) + ' ' + r.s1Pct + '%');
       lines.push('🛡️ ' + t('results.dealin').padEnd(11) + ' ' + buildBar(r.s2Pct) + ' ' + r.s2Pct + '%');
@@ -3613,7 +3755,8 @@
     }
 
     function recordResult(mode, total, grade, s1Pct, s2Pct, s3Pct, isHighScore) {
-      State.lastResult = { mode, score: total, grade, s1Pct, s2Pct, s3Pct, maxCombo: State.maxCombo, isHighScore };
+      const questionsAnswered = (mode === 'timeattack') ? TimeAttackState.questionsAnswered : null;
+      State.lastResult = { mode, score: total, grade, s1Pct, s2Pct, s3Pct, maxCombo: State.maxCombo, isHighScore, questionsAnswered };
       const sb = $('shareBtn');
       if (sb) { sb.innerHTML = t('results.share'); sb.classList.remove('copied'); }
     }
@@ -3890,7 +4033,7 @@
         ippatsuApplied = true;
         if (playerIsDealer && !declarerIsDealer) { ippatsuCase = 'asDealerND'; tierAdjust = 1; }
         else if (!declarerIsDealer) { ippatsuCase = 'ndND'; roleKey = 'VS Dealer'; }
-        else { ippatsuCase = 'ndD'; roleKey = 'VS Dealer'; tierAdjust = 2; }
+        else { ippatsuCase = 'ndD'; roleKey = 'VS Dealer'; tierAdjust = 1; }
       }
       tier = Math.max(1, Math.min(maxTier, tier + tierAdjust));
       if (tier2 !== null) tier2 = Math.max(1, Math.min(maxTier, tier2 + tierAdjust));
@@ -3915,7 +4058,7 @@
       const seatWinds = seatAssign.seatWinds;
       const playerIsDealer = seatAssign.playerIsDealer;
       const declarerIsDealer = seatAssign.declarerIsDealer;
-      const roundLabel = pickOne(ROUND_LABELS);
+      const roundLabel = 'East 1-0';
       const { ponds, riichiIndex, postStart } = generatePonds(declarer, turn, ippatsu, seatWinds);
       const sujiResult = countPassedSuji(declarer, ponds, postStart);
       const passedSuji = sujiResult.total;
@@ -3986,28 +4129,48 @@
     window.addEventListener('resize', () => { clearTimeout(fitBoard._t); fitBoard._t = setTimeout(fitBoard, 80); });
     window.addEventListener('orientationchange', () => { setTimeout(fitBoard, 180); });
 
+    function seatLabelId(seat) {
+      return seat === 'player' ? 'seatLabelYou'
+        : seat === 'toimen' ? 'seatLabelToimen'
+          : seat === 'kamicha' ? 'seatLabelKamicha'
+            : 'seatLabelShimocha';
+    }
+
+    function setSeatScore(seat, scoreStr) {
+      const el = document.getElementById(seatLabelId(seat));
+      if (!el) return;
+      const wind = el.querySelector('.wind');
+      const windHtml = wind ? wind.outerHTML : '';
+      el.innerHTML = windHtml + scoreStr;
+    }
+
     function renderBoard(q) {
       return new Promise(resolve => {
         const token = ++State.boardToken;
         const board = $('board');
         board.innerHTML = '';
         const windChar = w => WIND_CHARS[w] || '';
+
+        // ── Opponent seat labels (top / left / right) ────────────
         const lblT = document.createElement('div');
         lblT.className = 'seat-label'; lblT.id = 'seatLabelToimen';
         lblT.style.left = '560px'; lblT.style.top = '335px'; lblT.style.transform = 'translate(-50%, -50%) rotate(180deg)';
-        lblT.innerHTML = `<span class="wind">${windChar(q.seatWinds.toimen)}</span>${t('board.toimen')}`;
+        lblT.innerHTML = `<span class="wind">${windChar(q.seatWinds.toimen)}</span>25,000`;
         board.appendChild(lblT);
+
         const lblK = document.createElement('div');
         lblK.className = 'seat-label'; lblK.id = 'seatLabelKamicha';
         lblK.style.left = '395px'; lblK.style.top = '460px'; lblK.style.transform = 'translate(-50%, -50%) rotate(90deg)';
-        lblK.innerHTML = `<span class="wind">${windChar(q.seatWinds.kamicha)}</span>${t('board.kamicha')}`;
+        lblK.innerHTML = `<span class="wind">${windChar(q.seatWinds.kamicha)}</span>25,000`;
         board.appendChild(lblK);
+
         const lblS = document.createElement('div');
         lblS.className = 'seat-label'; lblS.id = 'seatLabelShimocha';
         lblS.style.left = '725px'; lblS.style.top = '460px'; lblS.style.transform = 'translate(-50%, -50%) rotate(-90deg)';
-        lblS.innerHTML = `<span class="wind">${windChar(q.seatWinds.shimocha)}</span>${t('board.shimocha')}`;
+        lblS.innerHTML = `<span class="wind">${windChar(q.seatWinds.shimocha)}</span>25,000`;
         board.appendChild(lblS);
 
+        // ── Ponds (all four) ─────────────────────────────────────
         const keys = ['toimen', 'kamicha', 'shimocha', 'player'];
         const pondEls = {};
         for (const key of keys) {
@@ -4028,17 +4191,21 @@
           pondEls[key] = el;
         }
 
+        // ── Center panel ─────────────────────────────────────────
         const cp = document.createElement('div');
         cp.className = 'center-panel'; cp.id = 'centerPanel';
         cp.innerHTML = `<div class="cp-round" id="centerPanelRound">${roundLabel(q.roundLabel)}</div><div class="cp-turn" id="centerPanelTurn">${t('board.turn')}</div><div class="cp-num">${q.turn}</div>`;
         board.appendChild(cp);
+
+        // ── Player seat label (bottom) ───────────────────────────
         const ps = document.createElement('div');
         ps.className = 'seat-label'; ps.id = 'seatLabelYou';
         ps.style.left = '560px'; ps.style.top = PLAYER_LABEL_Y + 'px'; ps.style.transform = 'translate(-50%, -50%)';
         ps.style.fontSize = '23px';
-        ps.innerHTML = `<span class="wind">${windChar(q.seatWinds.player)}</span>${t('board.you')}`;
+        ps.innerHTML = `<span class="wind">${windChar(q.seatWinds.player)}</span>25,000`;
         board.appendChild(ps);
 
+        // ── Positioning + animation phases ───────────────────────
         requestAnimationFrame(() => {
           if (token !== State.boardToken) return;
           for (const key of keys) {
@@ -4074,7 +4241,7 @@
               return;
             }
 
-            // Fast-forward through same turn for players BEFORE declarer (chronologically before riichi)
+            // Same turn, players BEFORE declarer (chronologically before riichi)
             for (let p = 0; p < declarerPos; p++) {
               const player = turnOrder[p];
               const tile = pondEls[player].children[riichiIndex];
@@ -4084,7 +4251,7 @@
             setTimeout(doRiichiTile, 250);
           };
 
-          // ---------- Phase 2: riichi tile + stick ----------
+          // ---------- Phase 2: riichi tile + stick + declarer pays 1000 ──
           const doRiichiTile = () => {
             if (token !== State.boardToken) return;
             const riichiTile = pondEls[q.declarer].children[riichiIndex];
@@ -4092,12 +4259,15 @@
             setTimeout(() => {
               if (token !== State.boardToken) return;
               addRiichiStick(q, pondEls, board);
+              setTimeout(() => {
+                if (token !== State.boardToken) return;
+                setSeatScore(q.declarer, '24,000');
+              }, 250);
               setTimeout(doSlowPhase, 400);
             }, 300);
           };
 
           // ---------- Phase 3: one-by-one slow discards in turn order ----------
-                    // ---------- Phase 3: one-by-one slow discards in turn order ----------
           const doSlowPhase = () => {
             if (token !== State.boardToken) return;
 
@@ -4115,10 +4285,7 @@
               }
             }
 
-            // Final snap: lock pond heights and re-apply the anchor-based
-            // position. This corrects any sub-pixel drift caused by the
-            // drop-animation transforms, so the board doesn't "settle"
-            // visibly once the last 14th tile has landed.
+            // Final snap: lock pond heights + re-anchor so nothing drifts.
             const finish = () => {
               if (token !== State.boardToken) return;
               for (const key of keys) {
@@ -4129,7 +4296,7 @@
                 const posX = a.x - w / 2;
                 const posY = key === 'player' ? PLAYER_POND_TOP : (a.y - h / 2);
                 el.style.left = posX + 'px';
-                el.style.top  = posY + 'px';
+                el.style.top = posY + 'px';
               }
               resolve();
             };
@@ -4169,29 +4336,29 @@
     }
 
     function renderScenario(q) {
-  $('scRole').textContent = q.playerIsDealer ? t('settings.role.dealer') : t('settings.role.nondealer');
+      $('scRole').textContent = q.playerIsDealer ? t('settings.role.dealer') : t('settings.role.nondealer');
 
-  const parts = [];
-  q.yaku.forEach(y => parts.push(t('yaku.' + y.name, y.name)));
-  let yakuText = parts.length ? parts.join(' + ') : '—';
-  if (q.doraCount > 0) {
-    const doraLabel = `${t('yaku.Dora')} (${q.doraCount})`;
-    yakuText = yakuText === '—' ? doraLabel : `${yakuText} + ${doraLabel}`;
-  }
-  $('scYaku').textContent = yakuText;
+      const parts = [];
+      q.yaku.forEach(y => parts.push(t('yaku.' + y.name, y.name)));
+      let yakuText = parts.length ? parts.join(' + ') : '—';
+      if (q.doraCount > 0) {
+        const doraLabel = `${t('yaku.Dora')} (${q.doraCount})`;
+        yakuText = yakuText === '—' ? doraLabel : `${yakuText} + ${doraLabel}`;
+      }
+      $('scYaku').textContent = yakuText;
 
-  const handLabel = q.isOpen ? t('settings.hand.fuuro') : t('settings.hand.menzen');
-  const callableHtml = (q.effectiveOpen && !q.isOpen)
-    ? ` · <span class="callable-tag">${t('sc.callable')}</span>`
-    : '';
-  $('scShape').innerHTML = `${shapeLabel(q.shape)} · ${handLabel}${callableHtml}`;
-  $('scShape').className = 'svalue ' + (q.isOpen ? 'open-hand' : 'closed-hand');
+      const handLabel = q.isOpen ? t('settings.hand.fuuro') : t('settings.hand.menzen');
+      const callableHtml = (q.effectiveOpen && !q.isOpen)
+        ? ` · <span class="callable-tag">${t('sc.callable')}</span>`
+        : '';
+      $('scShape').innerHTML = `${shapeLabel(q.shape)} · ${handLabel}${callableHtml}`;
+      $('scShape').className = 'svalue ' + (q.isOpen ? 'open-hand' : 'closed-hand');
 
-  const declRole = q.declarerIsDealer ? t('settings.role.dealer') : t('settings.role.nondealer');
-  $('scDecl').textContent = q.ippatsu ? `${declRole} · ${t('sc.ippatsu')}` : declRole;
-  $('discardCat').textContent = catLabel(q.category);
-  $('discardDesc').textContent = catDesc(q.category);
-}
+      const declRole = q.declarerIsDealer ? t('settings.role.dealer') : t('settings.role.nondealer');
+      $('scDecl').textContent = q.ippatsu ? `${declRole} · ${t('sc.ippatsu')}` : declRole;
+      $('discardCat').textContent = catLabel(q.category);
+      $('discardDesc').textContent = catDesc(q.category);
+    }
 
     function buildQuiz(q) {
       const card = $('quizCard');
@@ -4245,7 +4412,7 @@
       if (isCorrect) State.stats.s1Correct++;
       let basePts = 0, baseSecs = 0, fbClass = '', resultLabel = '';
       if (diff === 0) { basePts = 300; baseSecs = 5; fbClass = 'ok'; resultLabel = t('fb.correct'); }
-      else if (diff === 1) { basePts = 100; baseSecs = 2; fbClass = 'part'; resultLabel = t('fb.close'); }
+      else if (diff === 1) { basePts = 100; baseSecs = 3; fbClass = 'part'; resultLabel = t('fb.close'); }
       else { basePts = 0; baseSecs = 0; fbClass = 'bad'; resultLabel = t('fb.bad'); }
       const mult = getComboMultiplier(State.combo);
       const actualPts = Math.round(basePts * mult);
@@ -4279,13 +4446,13 @@
       State.step = 2;
       State.kbdIdx = 0;
       paintKbd('#rateOpts');
-        // Bring Step 2 into view when it becomes active
-  setTimeout(() => {
-    const s2 = $('step2');
-    if (s2 && !s2.classList.contains('locked')) {
-      s2.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }
-  }, 60);
+      // Bring Step 2 into view when it becomes active
+      setTimeout(() => {
+        const s2 = $('step2');
+        if (s2 && !s2.classList.contains('locked')) {
+          s2.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }, 60);
       updateLogStep(q, 's1', actualPts, isCorrect);
     }
 
@@ -4320,13 +4487,13 @@
       State.step = 3;
       State.kbdIdx = 0;
       paintKbd('#decisionOpts');
-        // Bring Step 3 into view when it becomes active
-  setTimeout(() => {
-    const s3 = $('step3');
-    if (s3 && !s3.classList.contains('locked')) {
-      s3.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }
-  }, 60);
+      // Bring Step 3 into view when it becomes active
+      setTimeout(() => {
+        const s3 = $('step3');
+        if (s3 && !s3.classList.contains('locked')) {
+          s3.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }, 60);
       updateLogStep(q, 's2', actualPts, ok);
     }
 
@@ -4544,20 +4711,23 @@
       }
       if ($('results').classList.contains('active')) { if (e.key === 'Enter') { e.preventDefault(); startGame(); } return; }
       if (!$('game').classList.contains('active')) return;
-            // ── Navbar & panel shortcuts ──────────────────────────────
+      // ── Navbar & panel shortcuts ──────────────────────────────
       // Skip when any modifier is held so we don't eat Cmd/Ctrl combos.
       if (!e.ctrlKey && !e.metaKey && !e.altKey && !e.shiftKey) {
         const k = e.key.toLowerCase();
 
         // Navbar: Help / Deal-in / Shapes  (Language is intentionally skipped)
-        if (k === 'h') { e.preventDefault(); openHelpModal();   return; }
+        if (k === 'h') { e.preventDefault(); openHelpModal(); return; }
         if (k === 'd') { e.preventDefault(); openDealInModal(); return; }
         if (k === 's') { e.preventDefault(); openShapesModal(); return; }
+        if (k === 'a') { e.preventDefault(); openAboutModal(); return; }
+        if (k === '7') { e.preventDefault(); $('shapeTierIndicator').click(); return; }
+        if (k === 'u') { e.preventDefault(); $('threshIndicator').click(); return; }
 
         // Shape Tier tables: 1–6  (indices 1–6; hidden is index 0)
         if (k >= '1' && k <= '6' && k.length === 1) {
           e.preventDefault();
-          State.shapeTierAuto  = false;
+          State.shapeTierAuto = false;
           State.shapeTierIndex = parseInt(k, 10);
           renderShapeTierPanel();
           return;
@@ -4567,7 +4737,7 @@
         const THRESH_KEYS = { q: 1, w: 2, e: 3, r: 4, t: 5, y: 6 };
         if (THRESH_KEYS[k] !== undefined) {
           e.preventDefault();
-          State.thresholdAuto  = false;
+          State.thresholdAuto = false;
           State.thresholdIndex = THRESH_KEYS[k];
           renderThresholdPanel();
           return;
@@ -4701,6 +4871,7 @@
     $('closeHelp').addEventListener('click', closeHelpModal);
     $('helpModal').addEventListener('click', e => { if (e.target.id === 'helpModal') closeHelpModal(); });
     $('aboutBtn').addEventListener('click', openAboutModal);
+    $('aboutBtnGame').addEventListener('click', openAboutModal);
     $('closeAbout').addEventListener('click', closeAboutModal);
     $('aboutModal').addEventListener('click', e => { if (e.target.id === 'aboutModal') closeAboutModal(); });
     $('dealInBtn').addEventListener('click', openDealInModal);
