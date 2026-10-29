@@ -1355,6 +1355,7 @@
       text-align: center;
       box-shadow: 0 24px 60px rgba(0, 0, 0, .55);
       position: relative;
+      margin-top: 20px;
     }
 
     .results-app-title {
@@ -2969,11 +2970,11 @@
         'help.step3.body': 'Decide whether pushing is worth the risk in the current situation. Weigh the danger of the tile against the value and shape of your hand, the current turn, whether you are the dealer, whether the opponent is the dealer or non-dealer, and whether it is the ippatsu turn. In a real game, the score situation and other circumstances may also affect your decision. All quiz scenarios assume East 1, 0 honba, with every player starting at 25,000 points.<br><br>If you want a consistent, table-based approach, use the <b>Shape Tier</b> panel to find your hand\'s tier, then use the <b>Threshold</b> panel to look up the threshold deal-in rate (<b>T</b>) for your role, hand state, tier, and turn. Compare T with the estimated deal-in rate (<b>R</b>). You do not need to consult these tables manually to play the quiz, but the trainer scores your decision against its reference threshold.',
         'help.step3.list': '<li>If the deal-in rate (<b>R</b>) is <b>≤ T</b>, the reference recommendation is <b>PUSH</b>.</li><li>If <b>R &gt; T</b>, the reference recommendation is <b>FOLD</b>.</li><li><b>BORDERLINE:</b> If the threshold falls within the deal-in-rate range you selected in Step 2, either answer earns 200 points. The question is marked as ambiguous, and the relevant buttons glow yellow.</li>',
         'help.scoring.title': 'Scoring',
-        'help.scoring.list': '<li>Step 1: <b>300</b> for an exact answer, <b>100</b> if off by one, otherwise 0.</li><li>Step 2: <b>300</b> for the correct range, otherwise 0.</li><li>Step 3: <b>400</b> for the correct decision, <b>200</b> for a borderline question, otherwise 0.</li><li>Time bonus: <b>max(0, 200 − seconds × 10)</b>.</li>',
+        'help.scoring.list': '<li>Step 1: <b>300</b> for an exact answer, <b>100</b> if off by one, otherwise 0.</li><li>Step 2: <b>300</b> for the correct range, otherwise 0.</li><li>Step 3: <b>400</b> for the correct decision, <b>200</b> for a borderline question, otherwise 0.</li><li>Time bonus: <b>200</b> at ≤ 7s, tapering linearly to <b>0</b> at 28s (nothing after)</li>',
         'help.tables.title': 'Reference Tables',
         'help.tables.list': '<li><b>Deal-in Rates</b> — reference rates by tile category and suji information to help estimate the risk of a discard.</li><li><b>Shapes</b> — examples of different 1-shanten hand shapes.</li><li><b>Shape Tier panel</b> — compare hand shapes and tiers. Toggle <b>Auto</b> to select the relevant table automatically for each question.</li><li><b>Threshold panel</b> — look up the threshold deal-in rate for a given tier and turn. Toggle <b>Auto</b> to select the relevant table automatically.</li>',
         'help.combo.title': 'Combo',
-        'help.combo.body': 'Consecutive correct push/fold answers build a combo multiplier. The multiplier is ×1.0 at combo 0–1, then increases by ×0.1 per combo, reaching the ×10 cap at combo 91. An incorrect push/fold answer resets the streak.',
+        'help.combo.body': 'Every correct answer on any step extends the streak. The multiplier grows by +0.28 per combo past 1 with no practical cap — a streak of 10 gives ×3.5, 20 gives ×6.3, 50 gives ×14.7. A wrong answer on any step (including an off-by-1 on step 1) resets the streak to zero.',
         'help.ta.title': 'Time Attack',
         'help.ta.list': '<li>Correctly counting the passed sujis adds <b>5 seconds</b>. An answer that is off by one adds <b>3 seconds</b>. An incorrect answer adds 0 seconds.</li><li>A correct Step 2 deal-in rate estimate adds <b>5 seconds</b>; an incorrect answer adds 0 seconds.</li><li>A correct push/fold answer adds <b>10 seconds</b>. On borderline questions, matching PUSH awards twice the normal time bonus, while matching FOLD awards 1.5 times the normal time bonus.</li><li>Wrong push: <b>−15 seconds</b>. Wrong fold: <b>−10 seconds</b>.</li>',
         'help.grades.title': 'Grades',
@@ -3113,11 +3114,11 @@
         'help.step3.body': '現在の状況で押す価値があるかどうかを判断してください。打牌の危険度と、自分の手牌の価値や形、巡目、自分が親か子か、相手が親か子か、一発巡かどうかを考慮します。実戦では、点棒状況など、ほかの要素も判断に影響します。このトレーナーの問題はすべて東1局・0本場を想定し、全員の持ち点は25,000点でスタートします。<br><br>表に基づいた一貫性のある判断方法を使いたい場合は、まず<b>形ティア</b>パネルで手牌のティアを確認し、次に<b>ボーダー放銃率</b>パネルで、自分の立場・手牌の状態・ティア・巡目に対応するボーダー放銃率（<b>T</b>）を調べてください。Tと、見積もった放銃率（<b>R</b>）を比較します。クイズに答える際、これらの表を自分で参照する必要はありませんが、トレーナーは基準となるボーダー放銃率に基づいて押し引きの回答を採点します。',
         'help.step3.list': '<li>放銃率（<b>R</b>）がボーダー放銃率（<b>T</b>）以下の場合、基準上の判断は<b>押し</b>です。</li><li><b>R &gt; T</b>の場合、基準上の判断は<b>降り</b>です。</li><li><b>ボーダーライン（微差）</b>：Tがステップ2で選択した放銃率の範囲内にある場合、どちらを選んでも200点を獲得できます。この問題は曖昧な判断として扱われ、該当するボタンが黄色に光ります。</li>',
         'help.scoring.title': '得点システム',
-        'help.scoring.list': '<li>ステップ1：正解で<b>300点</b>、1本のズレで<b>100点</b>、それ以外は0点。</li><li>ステップ2：正解で<b>300点</b>、不正解は0点。</li><li>ステップ3：正解で<b>400点</b>、ボーダーラインの問題では<b>200点</b>、それ以外は0点。</li><li>タイムボーナス：<b>max(0, 200 − 秒数 × 10)</b>。</li>',
+        'help.scoring.list': '<li>ステップ1：正解で<b>300点</b>、1本のズレで<b>100点</b>、それ以外は0点。</li><li>ステップ2：正解で<b>300点</b>、不正解は0点。</li><li>ステップ3：正解で<b>400点</b>、ボーダーラインの問題では<b>200点</b>、それ以外は0点。</li><li>タイムボーナス：<b>7秒以内で200点</b>、<b>28秒で0点</b>まで直線的に減少（以降なし）</li>',
         'help.tables.title': '参考テーブル',
         'help.tables.list': '<li><b>放銃率の目安</b> — 牌カテゴリと通ったスジの情報に基づき、打牌の危険度を見積もるための参考表。</li><li><b>一向聴形</b> — さまざまな1シャンテン形の例。</li><li><b>形ティアパネル</b> — 手牌の形とティアを確認できます。<b>Auto</b>を有効にすると、問題に対応する表が自動的に選択されます。</li><li><b>ボーダー放銃率パネル</b> — ティアと巡目に対応するボーダー放銃率を確認できます。こちらも<b>Auto</b>を有効にすると、対応する表が自動的に選択されます。</li>',
         'help.combo.title': 'コンボ',
-        'help.combo.body': '押し引きの正解が連続すると、コンボ倍率が上がります。コンボ0～1では倍率は×1.0で、2以降は1コンボごとに×0.1ずつ上昇し、コンボ91で最大の×10に達します。押し引きを間違えると連続正解数はリセットされます。',
+        'help.combo.body': '3つのステップすべてで正解するとコンボが伸びます。倍率は1コンボ以降+0.28ずつ増加（実質上限なし）— コンボ10で×3.5、20で×6.3、50で×14.7。どこかのステップで間違えると（ステップ1の±1も含めて）コンボはリセット。',
         'help.ta.title': 'タイムアタック',
         'help.ta.list': '<li>通ったスジの本数を正解すると<b>5秒</b>追加されます。1本ズレている場合は<b>3秒</b>、不正解の場合は0秒です。</li><li>ステップ2の放銃率の見積もりは、正解すると<b>5秒</b>追加され、不正解の場合は0秒です。</li><li>押し引きを正解すると<b>10秒</b>追加されます。ボーダーラインの問題では、押しを選んで正解すると通常の2倍、降りを選んで正解すると通常の1.5倍の時間が追加されます。</li><li>押しの不正解：<b>−15秒</b>。降りの不正解：<b>−10秒</b>。</li>',
         'help.grades.title': 'ランク',
@@ -3186,12 +3187,30 @@
 
     const $ = id => document.getElementById(id);
     const pickOne = a => a[Math.floor(Math.random() * a.length)];
+    const TURN_WEIGHTS = { 5: 2, 9: 6, 14: 2 };
+
+    function pickWeightedTurn(availableTurns) {
+      const entries = availableTurns.map(t => ({ turn: t, weight: TURN_WEIGHTS[t] ?? 1 }));
+      const total = entries.reduce((s, e) => s + e.weight, 0);
+      if (total <= 0) return availableTurns[0];
+      let r = Math.random() * total;
+      for (const e of entries) {
+        r -= e.weight;
+        if (r <= 0) return e.turn;
+      }
+      return entries[entries.length - 1].turn;
+    }
     function shuffle(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[a[i], a[j]] = [a[j], a[i]]; } return a; }
     const pct = v => Math.round(v * 100) + '%';
     const isHonor = t => t.endsWith('z');
     const baseTile = t => (t && t[0] === '0') ? '5' + t[1] : t;
     function tileNumber(t) { if (!t) return 0; if (t[0] === '0') return 5; return parseInt(t[0], 10); }
-    function getComboMultiplier(combo) { if (combo < 2) return 1; return Math.min(10, 1 + (combo - 1) * 0.1); }
+    function getComboMultiplier(combo) {
+      if (combo < 2) return 1;
+      // +0.28 per combo past 1 → combo 10 = ×3.52, combo 30 = ×9.12, combo 50 = ×14.72
+      // ×100 safety cap (~combo 355) so zen-mode marathons can't overflow the score display
+      return Math.min(100, 1 + (combo - 1) * 0.28);
+    }
     function isRegular() { return State.mode === 'regular'; }
     function isZen() { return State.mode === 'zen'; }
     function isTimeAttack() { return State.mode === 'timeattack'; }
@@ -3210,6 +3229,19 @@
       const roleMap = { 'VS Non-Dealer': 1, 'VS Dealer': 2, 'As Dealer': 3 };
       const base = roleMap[q.roleKey] || 1;
       return q.effectiveOpen ? base + 3 : base;
+    }
+
+    function theoreticalMaxScore(nQuestions) {
+      const stepBases = [300, 300, 400];
+      let sum = 0;
+      let combo = 0;
+      for (let q = 0; q < nQuestions; q++) {
+        for (const base of stepBases) {
+          combo++;
+          sum += base * getComboMultiplier(combo);
+        }
+      }
+      return sum + 200 * nQuestions; // + perfect time bonus
     }
     function computeGrade(ratio) {
       if (ratio > 0.95) return 'S+';
@@ -3665,9 +3697,8 @@
 
     function updateComboDisplay() {
       const pill = $('comboPill'); if (!pill) return;
-      const displayCombo = Math.min(100, State.combo);
       const mult = getComboMultiplier(State.combo);
-      pill.textContent = t('game.combo') + ' ' + displayCombo + (mult > 1 ? ' · ×' + mult.toFixed(1) : '');
+      pill.textContent = t('game.combo') + ' ' + State.combo + (mult > 1 ? ' · ×' + mult.toFixed(1) : '');
       pill.classList.toggle('active', mult > 1);
     }
     function updateScorePill() { const pill = $('scorePill'); if (pill) pill.textContent = t('game.score') + ' ' + State.score; }
@@ -3760,10 +3791,10 @@
       if (sb) { sb.innerHTML = t('results.share'); sb.classList.remove('copied'); }
     }
     function getTimeAttackTier(score) {
-      if (score >= 100000) return 5;
-      if (score >= 75000) return 4;
-      if (score >= 50000) return 3;
-      if (score >= 25000) return 2;
+      if (score >= 300000) return 5;
+      if (score >= 200000) return 4;
+      if (score >= 100000) return 3;
+      if (score >= 50000) return 2;
       return 1;
     }
     function showTimeAttackResults() {
@@ -3792,7 +3823,7 @@
     function showRegularResults() {
       const totals = State.log.reduce((a, l) => { a.pts += l.pts; a.correct += l.correct; a.steps += l.steps; a.timeBonus += l.timeBonus; return a; }, { pts: 0, correct: 0, steps: 0, timeBonus: 0 });
       const total = totals.pts + totals.timeBonus;
-      const ratio = total / (State.total * 1200);
+      const ratio = total / theoreticalMaxScore(State.total);
       const grade = computeGrade(ratio);
       const hs = loadHighScores();
       const isHighScore = total > hs.regular;
@@ -4048,7 +4079,7 @@
     function makeQuestion() {
       const opts = getQuestionOptions();
       const declarer = pickOne(opts.declarers);
-      const turn = pickOne(opts.turns);
+      const turn = pickWeightedTurn(opts.turns);
       const category = pickOne(opts.categories);
       const ippatsu = opts.ippatsuOptions.includes('ippatsu') && opts.ippatsuOptions.includes('nonIppatsu')
         ? Math.random() < 0.4
@@ -4413,6 +4444,17 @@
       if (diff === 0) { basePts = 300; baseSecs = 5; fbClass = 'ok'; resultLabel = t('fb.correct'); }
       else if (diff === 1) { basePts = 100; baseSecs = 3; fbClass = 'part'; resultLabel = t('fb.close'); }
       else { basePts = 0; baseSecs = 0; fbClass = 'bad'; resultLabel = t('fb.bad'); }
+      // Combo: correct answer extends the streak, anything else resets it.
+      // (doScoring gates it so Zen/custom don't accumulate invisible combos.)
+      if (doScoring) {
+        if (isCorrect) {
+          State.combo++;
+          State.maxCombo = Math.max(State.maxCombo, State.combo);
+        } else {
+          State.combo = 0;
+        }
+        updateComboDisplay();
+      }
       const mult = getComboMultiplier(State.combo);
       const actualPts = Math.round(basePts * mult);
       if (doScoring) { State.score += actualPts; updateScorePill(); }
@@ -4466,6 +4508,15 @@
       if (ok) State.stats.s2Correct++;
       const basePts = ok ? 300 : 0;
       const baseSecs = ok ? 5 : 0;
+      if (doScoring) {
+        if (ok) {
+          State.combo++;
+          State.maxCombo = Math.max(State.maxCombo, State.combo);
+        } else {
+          State.combo = 0;
+        }
+        updateComboDisplay();
+      }
       const mult = getComboMultiplier(State.combo);
       const actualPts = Math.round(basePts * mult);
       if (doScoring) { State.score += actualPts; updateScorePill(); }
@@ -4562,7 +4613,7 @@
       if (q.canCall) notes.push(t('fb.callableApplied'));
       if (notes.length) msg += `<span class="special-notes">${notes.join(' · ')}</span>`;
       if (inRegular) {
-        const bonus = Math.max(0, Math.round(200 - q.elapsed * 10));
+        const bonus = computeTimeBonus(q.elapsed);
         q.timeBonus = bonus;
         State.score += bonus;
         $('timerPill').textContent = q.elapsed.toFixed(1) + 's';
@@ -4583,6 +4634,16 @@
       q._log.pts += pts;
       if (bonus) q._log.timeBonus += bonus;
     }
+
+    function computeTimeBonus(elapsed) {
+      const MAX = 200;      // ceiling
+      const FREE = 7;       // full bonus up to this many seconds
+      const CUTOFF = 28;    // zero bonus from this many seconds onward
+      if (elapsed >= CUTOFF) return 0;
+      if (elapsed <= FREE) return MAX;
+      return Math.round(MAX * (CUTOFF - elapsed) / (CUTOFF - FREE));
+    }
+
     function startTimer() {
       State.timerStart = performance.now();
       State.timerStopped = false;
