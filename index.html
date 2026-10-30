@@ -2743,6 +2743,13 @@
       { label: '> 25%', min: 0.25, max: 1.00, test: r => r >= 0.25 }
     ];
     function rateToBucket(rate) { for (const b of RATE_BUCKETS) if (b.test(rate)) return b.label; return RATE_BUCKETS[RATE_BUCKETS.length - 1].label; }
+    function rateBucketsForCorrectness(rate) {
+      const buckets = [];
+      for (const b of RATE_BUCKETS) {
+        if (rate >= b.min - 1e-9 && rate <= b.max + 1e-9) buckets.push(b.label);
+      }
+      return buckets;
+    }
     function formatRate(rate) { const pct = rate * 100; if (pct < 1 && pct > 0) return pct.toFixed(1) + '%'; return Math.round(pct) + '%'; }
     function getVerdictLevel(rate, threshold) {
       if (threshold >= 1.0) return 'ironPush';
@@ -3006,7 +3013,7 @@
         'fb.ippatsuAsDealer': 'Ippatsu: As Dealer chart, hand treated 1 tier weaker',
         'fb.ippatsuNdD': 'Ippatsu: VS Dealer chart, hand treated 1 tier weaker',
         'fb.pinfuApplied': 'Pinfu threshold: interpolated between the two adjacent tiers',
-        'fb.callableApplied': 'Callable: evaluated on open chart with surviving yaku, one tier better',
+        'fb.callableApplied': 'Callable: evaluated on open chart with surviving yaku, 1 tier better',
         'results.runComplete': 'Run Complete', 'results.practiceComplete': 'Practice Complete', 'results.timesUp': "Time's Up!",
         'results.totalScore': 'Total Score', 'results.timeBonus': 'Time Bonus', 'results.suji': 'Suji Counting Accuracy', 'results.dealin': 'Deal-in Estimate Accuracy', 'results.pushfold': 'Push/Fold Accuracy', 'results.maxCombo': 'Max Combo',
         'results.playAgain': 'Play Again', 'results.menu': 'Back to Menu',
@@ -3207,9 +3214,10 @@
     function tileNumber(t) { if (!t) return 0; if (t[0] === '0') return 5; return parseInt(t[0], 10); }
     function getComboMultiplier(combo) {
       if (combo < 2) return 1;
-      // +0.28 per combo past 1 → combo 10 = ×3.52, combo 30 = ×9.12, combo 50 = ×14.72
-      // ×100 safety cap (~combo 355) so zen-mode marathons can't overflow the score display
-      return Math.min(100, 1 + (combo - 1) * 0.28);
+      // +2% per combo past 1, capped at 1.5×.
+      // (Cap reached at combo 26 — a 10-question perfect run gets the full bonus,
+      //  and a mid-run reset only costs a few % instead of gutting the score.)
+      return Math.min(1.5, 1 + (combo - 1) * 0.02);
     }
     function isRegular() { return State.mode === 'regular'; }
     function isZen() { return State.mode === 'zen'; }
@@ -3439,11 +3447,17 @@
         return yaku;
       }
       if (shape === 'Chiitoi') { yaku.push({ name: 'Chiitoi', han: 2 }); return yaku; }
+
+      let hasYakuhai = false;
       if (Math.random() < 0.25) {
-        if (Math.random() < 0.5) yaku.push(pickYakuhaiWithFeasibility(playerSeatWind, ponds));
-        else yaku.push({ name: 'Tanyao', han: 1 });
+        const picked = pickYakuhaiWithFeasibility(playerSeatWind, ponds);
+        yaku.push(picked);
+        if (picked.name === 'Yakuhai') hasYakuhai = true;
       }
-      if ((shape === 'Perfect' || shape === 'Good*2') && Math.random() < 0.5) yaku.push({ name: 'Pinfu', han: 1 });
+      // Pinfu needs all sequences — can't coexist with a yakuhai ankou
+      if (!hasYakuhai && (shape === 'Perfect' || shape === 'Good*2') && Math.random() < 0.5) {
+        yaku.push({ name: 'Pinfu', han: 1 });
+      }
       if (Math.random() < 0.30) yaku.push({ name: 'Iipeikou', han: 1 });
       return yaku;
     }
@@ -4031,6 +4045,34 @@
       return { categories: ALL_CATEGORIES, turns: ALL_TURNS, ippatsuOptions: ALL_IPPATSU_OPTIONS, shapes: ALL_SHAPES, hands: ALL_HANDS, declarers: ALL_DECLARERS, playerRoles: ALL_PLAYER_ROLES, oppRoles: ALL_OPP_ROLES };
     }
 
+    function computeTierForShape(tierMap, shape, han, offset, maxTier) {
+      const hKeys = Object.keys(tierMap)
+        .filter(k => k.startsWith(shape + '|'))
+        .map(k => parseInt(k.split('|')[1], 10))
+        .filter(Number.isFinite);
+      if (!hKeys.length) return maxTier;
+      const maxH = Math.max(...hKeys);
+      const minH = Math.min(...hKeys);
+      let rawTier;
+      if (han >= minH && han <= maxH) {
+        rawTier = tierMap[`${shape}|${han}`];
+        if (rawTier === undefined) {
+          // Shape has keys but this particular han is missing (sparse map);
+          // walk up toward maxH to find the nearest defined entry.
+          let probe = han;
+          while (probe < maxH && tierMap[`${shape}|${probe}`] === undefined) probe++;
+          rawTier = tierMap[`${shape}|${probe}`] ?? tierMap[`${shape}|${maxH}`];
+        }
+      } else if (han > maxH) {
+        // Each extra han beyond the table's max improves tier by 1 (capped at 1).
+        rawTier = tierMap[`${shape}|${maxH}`] - (han - maxH);
+      } else {
+        // Each han below the table's min worsens tier by 1 (capped at maxTier).
+        rawTier = tierMap[`${shape}|${minH}`] + (minH - han);
+      }
+      return Math.max(1, Math.min(maxTier, rawTier + offset));
+    }
+
     function computeTierInfo(q) {
       const { isOpen, yaku, doraCount, shape, playerIsDealer, declarerIsDealer, declarer, turn, ippatsu } = q;
       const hasPinfu = yaku.some(y => y.name === 'Pinfu');
@@ -4048,14 +4090,13 @@
       if (useOpenChart) { tierMap = playerIsDealer ? (cFlag === 'C' ? OPEN_TIER_MAP_D_C : OPEN_TIER_MAP_D_NC) : (cFlag === 'C' ? OPEN_TIER_MAP_ND_C : OPEN_TIER_MAP_ND_NC); }
       else tierMap = CLOSED_TIER_MAP;
       const maxTier = useOpenChart ? 11 : 8;
-      const rawTier = tierMap[`${baseShape}|${baseHan}`];
-      let tier, tier2 = null;
-      if (rawTier === undefined) tier = maxTier;
-      else tier = Math.max(1, rawTier + shapeOffset + callableOffset);
+      const totalOffset = shapeOffset + callableOffset;
+      let tier = computeTierForShape(tierMap, baseShape, baseHan, totalOffset, maxTier);
+      let tier2 = null;
       if (hasPinfu && !canCall && !isOpen) {
         const adjHan = baseHan - 1;
-        const adjRawTier = tierMap[`${baseShape}|${adjHan}`];
-        if (adjRawTier !== undefined && adjRawTier !== rawTier) tier2 = Math.max(1, Math.min(maxTier, adjRawTier + shapeOffset));
+        const tierAtAdj = computeTierForShape(tierMap, baseShape, adjHan, shapeOffset, maxTier);
+        if (tierAtAdj !== tier) tier2 = tierAtAdj;
       }
       let roleKey = playerIsDealer ? 'As Dealer' : (declarerIsDealer ? 'VS Dealer' : 'VS Non-Dealer');
       let ippatsuApplied = false, ippatsuCase = null, tierAdjust = 0;
@@ -4502,8 +4543,8 @@
       q.answered.s2 = true;
       const isTA = isTimeAttack();
       const doScoring = scoringEnabled();
-      const correctBucket = q.rateBucket;
-      const ok = bucketLabel === correctBucket;
+      const correctBuckets = rateBucketsForCorrectness(q.rate);
+      const ok = correctBuckets.includes(bucketLabel);
       State.stats.s2Total++;
       if (ok) State.stats.s2Correct++;
       const basePts = ok ? 300 : 0;
@@ -4524,13 +4565,14 @@
       if (isTA) updateTimeAttackDisplay();
       document.querySelectorAll('#rateOpts .opt').forEach(b => {
         b.disabled = true;
-        if (b.dataset.bucket === correctBucket) b.classList.add('correct');
+        if (correctBuckets.includes(b.dataset.bucket)) b.classList.add('correct');
         else if (b === btn && !ok) b.classList.add('wrong');
       });
       const fb = $('fb2');
       fb.classList.add('show', ok ? 'ok' : 'bad');
       const exactRate = formatRate(q.rate);
-      let msg = ok ? tf('fb.step2.ok', { b: correctBucket, exact: exactRate }) : tf('fb.step2.bad', { b: correctBucket, exact: exactRate });
+      const bucketDisplay = correctBuckets.join(' / ');
+      let msg = ok ? tf('fb.step2.ok', { b: bucketDisplay, exact: exactRate }) : tf('fb.step2.bad', { b: bucketDisplay, exact: exactRate });
       if (isTA) msg += taSuffix(actualPts, mult, baseSecs);
       fb.innerHTML = msg;
       $('step3').classList.remove('locked');
