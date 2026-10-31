@@ -1057,17 +1057,17 @@
         padding: 84px 20px 40px;
       }
 
-      .app-grid {
+            .app-grid {
         display: grid;
         grid-template-columns: minmax(0, 1fr) minmax(380px, 440px);
         grid-template-areas:
-          "conds    results"
-          "hand     results"
-          "turn     results"
-          "dealin   results"
-          "newtile  results"
-          "reset    results"
-          "appendix results";
+          "conds    rightcol"
+          "hand     rightcol"
+          "turn     rightcol"
+          "dealin   rightcol"
+          "newtile  rightcol"
+          "reset    rightcol"
+          "appendix rightcol";
         gap: 12px;
         align-items: start;
       }
@@ -1104,13 +1104,32 @@
         grid-area: appendix;
       }
 
-      #resultSection {
-        grid-area: results;
+            .hamsa-section {
+        grid-area: hamsa;
+      }
+
+            .results-column {
+        grid-area: rightcol;
         align-self: start;
         position: sticky;
         top: 84px;
         max-height: calc(100vh - 100px);
         overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .results-column > * {
+        margin: 0;
+      }
+
+      /* The wrapper handles stickiness now; the section flows normally inside */
+      #resultSection {
+        position: static;
+        max-height: none;
+        overflow-y: visible;
+        align-self: auto;
       }
     }
 
@@ -1255,6 +1274,134 @@
     .btn.shape-disabled {
       opacity: .35;
       cursor: not-allowed;
+    }
+
+         /* =========================================================
+       hamsa — levitating hamsa
+       ========================================================= */
+    .hamsa-section {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: transparent;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .hamsa-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 15px 26px;
+      cursor: pointer;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .hamsa {
+      color: #f8f8f8fe;
+      font-size: 90px;
+      line-height: 1;
+      display: inline-block;
+      transform-origin: center center;
+      will-change: transform;
+      margin-top: 10px;
+    }
+
+    .hamsa i {
+      display: block;
+      pointer-events: none;
+      -webkit-user-drag: none;
+      user-select: none;
+      transform-origin: center bottom;
+    }
+
+    .hamsa-shadow {
+      width: 90px;
+      height: 14px;
+      margin-top: 16px;
+      background: radial-gradient(ellipse at center,
+        rgba(0, 0, 0, 0.744) 0%,
+        rgba(0, 0, 0, 0.281) 45%,
+        rgba(0, 0, 0, 0) 75%);
+      border-radius: 50%;
+      pointer-events: none;
+      will-change: transform, opacity;
+    }
+
+    .hamsa-container.bounce .hamsa {
+      animation: hamsaLevitate 6s ease-in-out 1;
+    }
+
+    .hamsa-container.bounce .hamsa i {
+      animation: hamsaSquish 0.4s ease-out;
+    }
+
+    .hamsa-container.bounce .hamsa-shadow {
+      animation: hamsaShadow 6s ease-in-out 1;
+    }
+
+    @keyframes hamsaLevitate {
+      0%    { transform: translateY(0); }        /* start */
+      12.5% { transform: translateY(-24px); }    /* bounce 1 — full height */
+      25%   { transform: translateY(0); }        /* land */
+      37.5% { transform: translateY(-12px); }    /* bounce 2 — half */
+      50%   { transform: translateY(0); }        /* land */
+      62.5% { transform: translateY(-6px); }     /* bounce 3 — half again */
+      75%   { transform: translateY(0); }        /* land */
+      87.5% { transform: translateY(-3px); }     /* bounce 4 — half again */
+      100%  { transform: translateY(0); }        /* settle */
+    }
+
+    @keyframes hamsaSquish {
+      0%   { transform: scaleY(1)    scaleX(1); }
+      20%  { transform: scaleY(0.78) scaleX(1.16); }
+      50%  { transform: scaleY(1.12) scaleX(0.90); }
+      75%  { transform: scaleY(0.96) scaleX(1.03); }
+      100% { transform: scaleY(1)    scaleX(1); }
+    }
+
+        @keyframes hamsaShadow {
+      0%    { transform: scale(1);     opacity: 0.65; }   /* grounded */
+      12.5% { transform: scale(0.70);  opacity: 0.30; }   /* icon at -24px */
+      25%   { transform: scale(1);     opacity: 0.65; }   /* grounded */
+      37.5% { transform: scale(0.85);  opacity: 0.48; }   /* icon at -12px */
+      50%   { transform: scale(1);     opacity: 0.65; }   /* grounded */
+      62.5% { transform: scale(0.925); opacity: 0.56; }   /* icon at -6px */
+      75%   { transform: scale(1);     opacity: 0.65; }   /* grounded */
+      87.5% { transform: scale(0.96);  opacity: 0.62; }   /* icon at -3px */
+      100%  { transform: scale(1);     opacity: 0.65; }   /* grounded */
+    }
+
+    @media (max-width: 700px) {
+      .hamsa {
+        font-size: 90px;
+      }
+      .hamsa-shadow {
+        width: 90px;
+        margin-top: 6px;
+      }
+    }
+
+     /* Mobile / tablet: hamsa moves to the bottom of the stack */
+    @media (max-width: 1023px) {
+      .app-grid {
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* Wrapper is transparent to layout — its children act as direct
+         flex items of .app-grid, so we can reorder them independently */
+      .results-column {
+        display: contents;
+      }
+
+      .hamsa-section {
+        order: 100;   /* lands after appendix */
+      }
     }
   </style>
 </head>
@@ -1409,31 +1556,32 @@
           </div>
         </div>
       </details>
-
+    <div class="results-column">
       <section class="section result-section" id="resultSection"></section>
+      
+    </div>
+    <button class="btn-next-tile hidden" id="nextTileBtn">↻ <span data-i18n="action.newTile">New Tile</span></button>
 
-      <button class="btn-next-tile hidden" id="nextTileBtn">↻ <span data-i18n="action.newTile">New Tile</span></button>
+    <button class="btn-reset" id="resetBtn" data-i18n="action.reset">Reset</button>
 
-      <button class="btn-reset" id="resetBtn" data-i18n="action.reset">Reset</button>
-
-      <div class="appendix">
-        <details>
-          <summary data-i18n="ref.dealin">Deal-in Rate Reference</summary>
-          <div class="ref-body" id="dealinRef"></div>
-        </details>
-        <details>
-          <summary data-i18n="ref.shapes">Shape Reference</summary>
-          <div class="ref-body" id="shapeRef"></div>
-        </details>
-        <details>
-          <summary data-i18n="ref.shapeTier">Shape Tier Tables</summary>
-          <div class="ref-body" id="shapeTierRef"></div>
-        </details>
-        <details>
-          <summary data-i18n="ref.threshold">Threshold Tables</summary>
-          <div class="ref-body" id="threshRef"></div>
-        </details>
-      </div>
+    <div class="appendix">
+      <details>
+        <summary data-i18n="ref.dealin">Deal-in Rate Reference</summary>
+        <div class="ref-body" id="dealinRef"></div>
+      </details>
+      <details>
+        <summary data-i18n="ref.shapes">Shape Reference</summary>
+        <div class="ref-body" id="shapeRef"></div>
+      </details>
+      <details>
+        <summary data-i18n="ref.shapeTier">Shape Tier Tables</summary>
+        <div class="ref-body" id="shapeTierRef"></div>
+      </details>
+      <details>
+        <summary data-i18n="ref.threshold">Threshold Tables</summary>
+        <div class="ref-body" id="threshRef"></div>
+      </details>
+    </div>
 
     </main>
 
@@ -1454,7 +1602,15 @@
           <h3 data-i18n="about.credits">Credits</h3>
           <p data-i18n="about.p3">…</p>
         </div>
-        <img src="birb.png" alt="birb" style="max-width: 75px; margin-top: 12px;">
+        <div class="hamsa-section" id="hamsaSection">
+        <div class="hamsa-container" id="hamsaContainer">
+          <div class="hamsa">
+            <i class="fa-solid fa-hamsa"></i>
+          </div>
+          <div class="hamsa-shadow"></div>
+        </div>
+      </div>
+        <!-- <img src="birb.png" alt="birb" style="max-width: 75px; margin-top: 12px;"> -->
       </div>
     </div>
   </div>
@@ -1738,7 +1894,7 @@
         'result.ippatsuAsDealerNote': 'Ippatsu: non-dealer riichi (as dealer) — hand treated 1 tier weaker',
         'result.pinfuNote': 'Pinfu value or Tenpane (50 fu) — threshold is averaged between the two adjacent tiers',
         'result.tenpaneNote': 'Assumed tenpane (40 fu) — threshold weighted slightly toward the higher tier',
-        'result.callableNote': 'Closed hand with yaku when opened — evaluated on the open-hand chart, one tier better',
+        'result.callableNote': 'Closed hand with yaku when opened — evaluated on the open-hand chart, 1.5 tiers better (average of 1 and 2 tiers up)',
         'label.hand': 'Your Hand', 'label.shape': 'Shape',
         'label.score': 'Ron value',
         'shapeA': '[A] Perfect', 'shapeB': '[B] Ryanmen×2', 'shapeC': '[C] Ryanmen+Ryankan',
@@ -1803,7 +1959,7 @@
         'about.overview': 'Overview',
         'about.p1': 'A portable reference tool for push/pull decisions with 1-shanten hands. Set your conditions, hand shape, ron value, and turn to look up the <b>threshold deal-in rate</b> for your hand. This threshold represents the maximum estimated deal-in rate at which pushing is considered worthwhile. You can also expand <b>Estimate Deal-in Rate</b> to select a tile category, apply deal-in modifiers, and enter the number of passed suji to get a PUSH/PULL recommendation. The tool is primarily intended for push/pull decisions in flat point standings.',
         'about.howToUse': 'How the System Works',
-        'about.p2': 'The reference system uses two tables to establish a baseline for push/pull decisions.<h4>1. Determine the hand tier</h4>The <b>Shape Tier Table</b> assigns a tier according to the hand\'s shape and ron value. The appropriate table depends on whether you are the dealer or non-dealer and whether your hand is closed or open. For open hands, the table also depends on whether the player to your left (kamicha) has declared riichi, since this creates more opportunities to call chii and makes pushing slightly more favorable.<br><br>The tier reflects the hand\'s inherent value, including relevant yaku and dora.<h4>2. Find the threshold deal-in rate</h4>The <b>Threshold Table</b> maps the hand tier and the current turn to a threshold deal-in rate (<b>T</b>). This is the reference point for deciding whether pushing is worthwhile. Compare T with the estimated deal-in rate (<b>R</b>) of the tile you are considering discarding: pushing is favored when R is at or below T, while folding is favored when R is above T.<h4>Estimating Intermediate Turns</h4>The Threshold Table provides values for turns 5, 9, and 14. To estimate a threshold for an intermediate turn, you can interpolate between the values for the two nearest listed turns. For example, turn 7 is halfway between turns 5 and 9, so you can use the average of their threshold values. For turns that fall elsewhere between the listed turns, adjust the estimate proportionally to the turn\'s position between them.<h4>Special cases</h4>Some situations require additional adjustments to the hand tier or threshold. These include hands that can be opened while retaining a valid yaku, non-standard 1-shanten shapes, intermediate hand values caused by pinfu or additional fu, and the ippatsu turn. <h4>Additional Details</h4>The following rules explain adjustments applied in less straightforward cases and may also be useful when consulting the tables manually:<ul><li><b>Open hands against a Kamicha riichi:</b> A separate Shape Tier Table is used when Kamicha has declared riichi, accounting for the increased opportunity to call chii from their discards.</li><li><b>Closed hands with a valid yaku when opened:</b> If a closed hand has a valid yaku when opened, it is evaluated using the open-hand table. Its value is classified according to its open-hand ron value, then moved up one tier to reflect the more favorable push conditions.</li><li><b>Non-standard 1-shanten shapes:</b> The Kuttsuki and Headless shapes classified as [S] tier use [A] Perfect as their base tier, adjusted upward by one tier.</li><li><b>Intermediate hand values (pinfu and 50-fu closed hands):</b> Hands capable of scoring pinfu are displayed with a range of possible point values (e.g., 1300–2000). Closed hands at 50 fu are handled in the same way. In both cases, the threshold is calculated as the average of the thresholds for the two adjacent tiers.</li><li><b>Intermediate hand values (40-fu open hands):</b> Open hands at 40 fu are displayed with their corresponding point values (e.g., 1300, 2600, or 5200). Their thresholds are interpolated between the base tier and the next better tier, with just 30% weight toward the higher tier.</li><li><b>Ippatsu turn:</b> When the ippatsu option is enabled, the threshold is adjusted according to your role and the riichi opponent\'s role:<ul><li><b>Non-dealer riichi vs. non-dealer player:</b> The <b>VS Dealer</b> threshold chart is used at the same tier, reflecting the increased scoring threat.</li><li><b>Non-dealer riichi vs. dealer player:</b> The <b>VS Dealer</b> threshold chart is used, with the hand treated as one tier weaker.</li><li><b>Dealer riichi vs. non-dealer player:</b> The <b>As Dealer</b> threshold chart is used, with the hand treated as one tier weaker.</li></ul></li></ul>',
+        'about.p2': 'The reference system uses two tables to establish a baseline for push/pull decisions.<h4>1. Determine the hand tier</h4>The <b>Shape Tier Table</b> assigns a tier according to the hand\'s shape and ron value. The appropriate table depends on whether you are the dealer or non-dealer and whether your hand is closed or open. For open hands, the table also depends on whether the player to your left (kamicha) has declared riichi, since this creates more opportunities to call chii and makes pushing slightly more favorable.<br><br>The tier reflects the hand\'s inherent value, including relevant yaku and dora.<h4>2. Find the threshold deal-in rate</h4>The <b>Threshold Table</b> maps the hand tier and the current turn to a threshold deal-in rate (<b>T</b>). This is the reference point for deciding whether pushing is worthwhile. Compare T with the estimated deal-in rate (<b>R</b>) of the tile you are considering discarding: pushing is favored when R is at or below T, while folding is favored when R is above T.<h4>Estimating Intermediate Turns</h4>The Threshold Table provides values for turns 5, 9, and 14. To estimate a threshold for an intermediate turn, you can interpolate between the values for the two nearest listed turns. For example, turn 7 is halfway between turns 5 and 9, so you can use the average of their threshold values. For turns that fall elsewhere between the listed turns, adjust the estimate proportionally to the turn\'s position between them.<h4>Special cases</h4>Some situations require additional adjustments to the hand tier or threshold. These include hands that can be opened while retaining a valid yaku, non-standard 1-shanten shapes, intermediate hand values caused by pinfu or additional fu, and the ippatsu turn. <h4>Additional Details</h4>The following rules explain adjustments applied in less straightforward cases and may also be useful when consulting the tables manually:<ul><li><b>Open hands against a Kamicha riichi:</b> A separate Shape Tier Table is used when Kamicha has declared riichi, accounting for the increased opportunity to call chii from their discards.</li><li><b>Closed hands with a valid yaku when opened:</b> If a closed hand has a valid yaku when opened, it is evaluated using the open-hand table. Its value is classified according to its open-hand ron value, then moved up 1.5 tiers (averaged between one and two tiers up) to reflect the more favorable push conditions.</li><li><b>Non-standard 1-shanten shapes:</b> The Kuttsuki and Headless shapes classified as [S] tier use [A] Perfect as their base tier, adjusted upward by one tier.</li><li><b>Intermediate hand values (pinfu and 50-fu closed hands):</b> Hands capable of scoring pinfu are displayed with a range of possible point values (e.g., 1300–2000). Closed hands at 50 fu are handled in the same way. In both cases, the threshold is calculated as the average of the thresholds for the two adjacent tiers.</li><li><b>Intermediate hand values (40-fu open hands):</b> Open hands at 40 fu are displayed with their corresponding point values (e.g., 1300, 2600, or 5200). Their thresholds are interpolated between the base tier and the next better tier, with just 30% weight toward the higher tier.</li><li><b>Ippatsu turn:</b> When the ippatsu option is enabled, the threshold is adjusted according to your role and the riichi opponent\'s role:<ul><li><b>Non-dealer riichi vs. non-dealer player:</b> The <b>VS Dealer</b> threshold chart is used at the same tier, reflecting the increased scoring threat.</li><li><b>Non-dealer riichi vs. dealer player:</b> The <b>VS Dealer</b> threshold chart is used, with the hand treated as one tier weaker.</li><li><b>Dealer riichi vs. non-dealer player:</b> The <b>As Dealer</b> threshold chart is used, with the hand treated as one tier weaker.</li></ul></li></ul>',
         'about.sources': 'Sources and Methodology',
         'about.p4': 'The hand-shape tiers and threshold values are adapted from Unimaru\'s push/fold framework for 1-shanten hands, detailed in Chapters 22–24 of his book "<i>Unimaru-shiki Winning Mahjong with Theory</i>" 『うに丸式 セオリーで勝つ麻雀』 along with his YouTube videos on this subject. The framework draws on simulation data from "<i>New: Scientific Mahjong</i>"『新・科学する麻雀』  and references "<i>Statistical Mahjong Strategy</i>"『統計学のマージャン戦術』. The app\'s deal-in rate estimates are also adapted from Miinin\'s SMS book.<br><h4>Source-Based Rules and My Own Estimates</h4><ul><li><b>Pinfu interpolation:</b> The method of estimating thresholds between adjacent tiers for pinfu hands follows Unimaru\'s own explanation.</li><li><b>Ippatsu:</b> The adjustment against a non-dealer riichi follows Unimaru\'s explanation. The adjustments against a dealer riichi and in situations where you are the dealer are my own estimates.</li><li><b>Ryanmen + Kanchan:</b> This shape was not included in Unimaru\'s tables because the original dataset from "New: Scientific Mahjong" had no data regarding this shape. Its classification in this app is therefore an estimate.</li><li><b>Tenpane adjustments (40-fu open hands and 50-fu closed hands):</b> For 40-fu open hands, thresholds are interpolated between adjacent tiers, with 70% weight given to the base tier and 30% to the next-better tier. For 50-fu closed hands, the threshold is averaged between adjacent tiers, as with pinfu. Both methods are my own estimates, not derived from the original data.</li></ul><b>Please treat the results as reference guidance, not definitive advice.</b> The model is intended primarily for push/fold decisions in flat point standings and does not account for every factor that may matter in a real game.',
         'about.credits': 'Credits',
@@ -1850,7 +2006,7 @@
         'result.ippatsuDealerNote': '一発巡：親リーチ — 手牌を1段階弱く評価',
         'result.ippatsuAsDealerNote': '一発巡：子リーチ（親として）— 手牌を1段階弱く評価',
         'result.pinfuNote': 'ピンフ または テンパネ（50符）— 隣接する2ティアの中間値で計算',
-        'result.callableNote': '門前・鳴き役あり — 副露表の1段階上で評価',
+        'result.callableNote': '門前・鳴き役あり — 副露表の1.5段階上で評価（1段階上と2段階上の平均）',
         'result.tenpaneNote': 'テンパネ想定（40符）— 上位ティア寄りに若干重み付け',
         'yaku.noyaku': '役なし',
         'yaku.callable': '役あり',
@@ -1925,7 +2081,7 @@
         'about.overview': '概要',
         'about.p1': '1シャンテン時の押し引き判断に使う早見表です。自分の状況・手牌の形・ロン打点・巡目を設定すると、手牌に対応する<b>ボーダー放銃率</b>を確認できます。これは、押す価値があると判断される放銃率の目安となる上限値です。また、「<b>放銃率を推定</b>」を開き、牌のカテゴリ・放銃率の補正要素・通ったスジの本数を入力すると、「押し」 / 「引き」の判定を確認できます。主に平場での押し引き判断を想定しています。',
         'about.howToUse': 'システムの仕組み',
-        'about.p2': 'この参照システムでは、押し引き判断の基準を求めるために2つの表を使用します。<h4>1. 手牌のティアを決める</h4><b>形ティア表</b>では、手牌の形と出上がり打点に応じてティアを決定します。使用する表は、自分が親か子か、また門前か副露かによって異なります。副露手の場合は、上家がリーチしているかどうかによっても使用する表が異なります。上家の捨て牌からチーできる機会が増えるため、押しやすさが少し増すことを考慮しています。<br><br>ティアは、手牌の形・役・ドラなどを含めた手牌本来の価値を表します。<h4>2. ボーダー放銃率を確認する</h4><b>ボーダー放銃率表</b>では、手牌のティアと巡目に応じてボーダー放銃率（<b>T</b>）を求めます。これは、押す価値があるかどうかを判断するための基準値です。打牌候補の推定放銃率（<b>R</b>）と比較し、RがT以下なら押し、RがTを上回るなら降りが有利と判断します。両者の値が近い場合は、「微差」と判定されることがあります。<h4>中間の巡目の推定</h4>ボーダー放銃率表には、5巡目・9巡目・14巡目の値が掲載されています。これら以外の巡目のボーダー放銃率を推定する場合は、前後の巡目の値を使って補間できます。例えば、7巡目は5巡目と9巡目のちょうど中間にあたるため、両者のボーダー放銃率の平均値を使用します。それ以外の巡目については、前後の巡目との間隔に応じて比例配分することで、おおよその値を求められます。<h4>特殊なケース</h4>状況によっては、手牌のティアやボーダー放銃率に追加の補正が必要になります。これには、鳴いても有効な役が残る手牌、特殊な1シャンテン形、ピンフや符の増加による中間的な打点、一発巡などが含まれます。<h4>補足事項</h4>以下は、通常とは異なるケースで適用される補正ルールです。手作業で表を参照する場合にも参考になります。<ul><li><b>上家がリーチしている場合の副露手：</b>上家がリーチしている場合は、専用の形ティア表を使用します。上家の捨て牌からチーできる機会が増えることを考慮しています。</li><li><b>鳴いても役が成立する門前手：</b>門前手を鳴いた場合にも有効な役が残るときは、副露手用の表で評価します。副露時の出上がり打点に基づいて分類したうえで、押しやすさを考慮してティアを1段階上げます。</li><li><b>特殊な1シャンテン形：</b>[S]ティアに分類されるくっつき形・ヘッドレス形は、[A] 完全形を基準のティアとし、そこからティアを1段階上げて評価します。</li><li><b>中間的な打点（ピンフ・門前50符）：</b>ピンフが成立する手牌は、1300～2000点のように打点を範囲で表示します。門前の50符の手牌も同様に扱います。どちらの場合も、隣接する2つのティアのボーダー放銃率の平均値を使用します。</li><li><b>中間的な打点（副露40符）：</b>副露手の40符は、1300点・2600点・5200点など、対応する40符の打点で表示します。ボーダー放銃率は、基準となるティアと1段階上のティアの間で補間し、上位ティア側の比重を30%とします。</li><li><b>一発巡：</b>一発巡のオプションを有効にすると、自分とリーチ者の立場に応じてボーダー放銃率を補正します。<ul><li><b>子のリーチ vs. 自分も子の場合：</b>打点上昇の脅威を考慮し、同じティアのまま<b>親相手</b>のボーダー放銃率表を使用します。</li><li><b>子のリーチ vs. 自分が親の場合：</b><b>親相手</b>のボーダー放銃率表を使用し、手牌を1ティア弱く評価します。</li><li><b>親のリーチ vs. 自分が子の場合：</b><b>親として</b>のボーダー放銃率表を使用し、手牌を1ティア弱く評価します。</li></ul></li></ul>',
+        'about.p2': 'この参照システムでは、押し引き判断の基準を求めるために2つの表を使用します。<h4>1. 手牌のティアを決める</h4><b>形ティア表</b>では、手牌の形と出上がり打点に応じてティアを決定します。使用する表は、自分が親か子か、また門前か副露かによって異なります。副露手の場合は、上家がリーチしているかどうかによっても使用する表が異なります。上家の捨て牌からチーできる機会が増えるため、押しやすさが少し増すことを考慮しています。<br><br>ティアは、手牌の形・役・ドラなどを含めた手牌本来の価値を表します。<h4>2. ボーダー放銃率を確認する</h4><b>ボーダー放銃率表</b>では、手牌のティアと巡目に応じてボーダー放銃率（<b>T</b>）を求めます。これは、押す価値があるかどうかを判断するための基準値です。打牌候補の推定放銃率（<b>R</b>）と比較し、RがT以下なら押し、RがTを上回るなら降りが有利と判断します。両者の値が近い場合は、「微差」と判定されることがあります。<h4>中間の巡目の推定</h4>ボーダー放銃率表には、5巡目・9巡目・14巡目の値が掲載されています。これら以外の巡目のボーダー放銃率を推定する場合は、前後の巡目の値を使って補間できます。例えば、7巡目は5巡目と9巡目のちょうど中間にあたるため、両者のボーダー放銃率の平均値を使用します。それ以外の巡目については、前後の巡目との間隔に応じて比例配分することで、おおよその値を求められます。<h4>特殊なケース</h4>状況によっては、手牌のティアやボーダー放銃率に追加の補正が必要になります。これには、鳴いても有効な役が残る手牌、特殊な1シャンテン形、ピンフや符の増加による中間的な打点、一発巡などが含まれます。<h4>補足事項</h4>以下は、通常とは異なるケースで適用される補正ルールです。手作業で表を参照する場合にも参考になります。<ul><li><b>上家がリーチしている場合の副露手：</b>上家がリーチしている場合は、専用の形ティア表を使用します。上家の捨て牌からチーできる機会が増えることを考慮しています。</li><li><b>鳴いても役が成立する門前手：</b>門前手を鳴いた場合にも有効な役が残るときは、副露手用の表で評価します。副露時の出上がり打点に基づいて分類したうえで、押しやすさを考慮してティアを1.5段階上げます（1段階上と2段階上の中間値）。</li><li><b>特殊な1シャンテン形：</b>[S]ティアに分類されるくっつき形・ヘッドレス形は、[A] 完全形を基準のティアとし、そこからティアを1段階上げて評価します。</li><li><b>中間的な打点（ピンフ・門前50符）：</b>ピンフが成立する手牌は、1300～2000点のように打点を範囲で表示します。門前の50符の手牌も同様に扱います。どちらの場合も、隣接する2つのティアのボーダー放銃率の平均値を使用します。</li><li><b>中間的な打点（副露40符）：</b>副露手の40符は、1300点・2600点・5200点など、対応する40符の打点で表示します。ボーダー放銃率は、基準となるティアと1段階上のティアの間で補間し、上位ティア側の比重を30%とします。</li><li><b>一発巡：</b>一発巡のオプションを有効にすると、自分とリーチ者の立場に応じてボーダー放銃率を補正します。<ul><li><b>子のリーチ vs. 自分も子の場合：</b>打点上昇の脅威を考慮し、同じティアのまま<b>親相手</b>のボーダー放銃率表を使用します。</li><li><b>子のリーチ vs. 自分が親の場合：</b><b>親相手</b>のボーダー放銃率表を使用し、手牌を1ティア弱く評価します。</li><li><b>親のリーチ vs. 自分が子の場合：</b><b>親として</b>のボーダー放銃率表を使用し、手牌を1ティア弱く評価します。</li></ul></li></ul>',
         'about.sources': '参考文献・算出方法',
         'about.p4': '手牌の形ティアとボーダー放銃率は、主にうに丸氏の1シャンテン時の押し引き理論を基にしています。この理論は、著書『うに丸式 セオリーで勝つ麻雀』の第22～24章と、このテーマに関するYouTube動画で詳しく解説されています。うに丸氏の理論は、『新・科学する麻雀』のシミュレーションデータを基礎とし、『統計学のマージャン戦術』も参考にしています。アプリで使用している放銃率の推定値も、みーにん氏の『統計学のマージャン戦術』を参考にしています。<br><h4>出典に基づくルールと独自の推定</h4><ul><li><b>ピンフの補間：</b>ピンフが成立する手牌について、隣接するティア間のボーダー放銃率を用いて推定する方法は、うに丸氏自身の解説に基づいています。</li><li><b>一発巡：</b>子のリーチに対する補正は、うに丸氏の解説に基づいています。親のリーチに対する補正、および自分が親の場合の補正は、独自に推定したものです。</li><li><b>両面＋カンチャン：</b>この形は『新・科学する麻雀』の元データに該当するデータがなかったため、うに丸氏の表には含まれていません。そのため、このアプリでは独自に補間して分類しています。</li><li><b>テンパネの補正（副露40符・門前50符）：</b>副露手の40符では、基準となるティアと1段階上のティアの間でボーダー放銃率を補間し、基準となるティアに70%、上位ティアに30%の比重を与えています。門前の50符では、ピンフと同様に隣接する2つのティアのボーダー放銃率の平均値を使用しています。どちらの補正方法も独自の推定であり、元データに裏付けられたものではありません。</li></ul><b>結果はあくまで判断の参考としてご利用ください。絶対的な正解を示すものではありません。</b>このモデルは主に平場での押し引き判断を想定しており、実戦で考慮すべきすべての要素を扱っているわけではありません。',
         'about.credits': 'クレジット',
@@ -2100,29 +2256,42 @@
         const tier = getShapeTier(cfg.tierMap, cfg.baseShape, han, cfg.shapeOffset) || maxTier;
         cells = [{ tier, visualOpacity: 1, calcWeight: 1 }];
       } else if (cfg.isFuuroHand || cfg.callable) {
-        // Both fuuro and callable share the open-hand chart, open-hand score list,
-        // and fu-based interpolation. Callable gets an extra −1 tier offset.
-        const offset = cfg.callable ? -1 : 0;
-        const rawBaseTier = getShapeTier(cfg.tierMap, cfg.baseShape, han, cfg.shapeOffset);
-        if (rawBaseTier === null) {
-          cells = [{ tier: maxTier, visualOpacity: 1, calcWeight: 1 }];
-        } else {
-          const baseTier = Math.max(1, rawBaseTier + offset);
-          if (fu === 30) {
-            cells = [{ tier: baseTier, visualOpacity: 1, calcWeight: 1 }];
-          } else {
-            const betterTier = Math.max(1, baseTier - 1);
-            if (betterTier === baseTier) {
-              cells = [{ tier: baseTier, visualOpacity: 1, calcWeight: 1 }];
-            } else {
-              cells = [
-                { tier: baseTier, visualOpacity: 0.85, calcWeight: 0.7 },
-                { tier: betterTier, visualOpacity: 0.35, calcWeight: 0.3 }
-              ];
-            }
-          }
-        }
+  // Fuuro hands: open chart with fu-based interpolation (unchanged).
+  // Callable closed hands: open chart with a 1.5-tier shift, i.e. the
+  //   average of "one tier up" and "two tiers up". Fu interpolation does
+  //   not apply to callable, matching index.html's point-value model.
+  const rawBaseTier = getShapeTier(cfg.tierMap, cfg.baseShape, han, cfg.shapeOffset);
+  if (rawBaseTier === null) {
+    cells = [{ tier: maxTier, visualOpacity: 1, calcWeight: 1 }];
+  } else if (cfg.callable) {
+    const upOne = Math.max(1, rawBaseTier - 1);
+    const upTwo = Math.max(1, rawBaseTier - 2);
+    if (upTwo === upOne) {
+      // Clamped — both shifts land on the same tier, so no averaging needed.
+      cells = [{ tier: upOne, visualOpacity: 1, calcWeight: 1 }];
+    } else {
+      cells = [
+        { tier: upOne, visualOpacity: 0.7, calcWeight: 0.5 },
+        { tier: upTwo, visualOpacity: 0.7, calcWeight: 0.5 }
+      ];
+    }
+  } else {
+    // Non-callable fuuro — unchanged behaviour
+    if (fu === 30) {
+      cells = [{ tier: rawBaseTier, visualOpacity: 1, calcWeight: 1 }];
+    } else {
+      const betterTier = Math.max(1, rawBaseTier - 1);
+      if (betterTier === rawBaseTier) {
+        cells = [{ tier: rawBaseTier, visualOpacity: 1, calcWeight: 1 }];
       } else {
+        cells = [
+          { tier: rawBaseTier, visualOpacity: 0.85, calcWeight: 0.7 },
+          { tier: betterTier, visualOpacity: 0.35, calcWeight: 0.3 }
+        ];
+      }
+    }
+  }
+} else {
         const baseTier = getShapeTier(cfg.tierMap, cfg.baseShape, han, cfg.shapeOffset);
         if (baseTier === null) {
           cells = [{ tier: maxTier, visualOpacity: 1, calcWeight: 1 }];
@@ -2201,25 +2370,27 @@
     }
 
     function getVerdictLevel(rate, threshold) {
-      if (threshold >= 1.0) return 'ironPush';
-      if (threshold <= 0.001) return 'ironPull';
+  // Threshold 100% → always push. Threshold 0% → always fold.
+  // These short-circuits must stay: without them, a 0% threshold with a
+  // tiny deal-in rate would fall through to borderlineFavorsPull, whose
+  // q.decision default is PUSH — the wrong answer.
+  if (threshold >= 1.0) return 'push';
+  if (threshold <= 0.001) return 'pull';
 
-      if (rate > threshold) {
-        const gap = rate - threshold;
-        return gap >= 0.10 ? 'ironPull' : 'pull';
-      }
+  const gap = rate - threshold;   // > 0 → rate above threshold → pull side
+  const absGap = Math.abs(gap);
 
-      if (rate === threshold) return 'borderlineFavorsPull';
+  // 0–1 %: either answer is acceptable
+  if (absGap <= 0.00 + 1e-9) return 'borderlineEither';
 
-      const gap = threshold - rate;
+  // 1–3 %: borderline, leaning toward one side
+  if (absGap <= 0.02 + 1e-9) {
+    return gap > 0 ? 'borderlineFavorsPull' : 'borderlineFavorsPush';
+  }
 
-      if (gap < 0.005) return 'borderlineFavorsPull';
-      if (gap < 0.015) return 'borderlineEither';
-      if (gap < 0.04) return 'borderlineFavorsPush';
-      if (gap < 0.10) return 'push';
-
-      return 'ironPush';
-    }
+  // 3 %+: regular correct/incorrect
+  return gap > 0 ? 'pull' : 'push';
+}
 
     function thresholdColor(val) {
       if (val >= 0.25) return '#86bffa';
@@ -3328,6 +3499,27 @@
       applyLanguage(saved);
       initOracleKeyboardNav();      // ← added in Part 2
     }
+
+        /* =========================================================
+       hamsa — click → squish + levitate for 5 seconds
+       ========================================================= */
+    (function inithamsa() {
+      const container = document.getElementById('hamsaContainer');
+      if (!container) return;
+      let bounceTimer = null;
+      container.addEventListener('click', () => {
+        // Restart animation from frame 0 every click
+        container.classList.remove('bounce');
+        void container.offsetWidth;     // force reflow
+        container.classList.add('bounce');
+        // Clear any pending removal and schedule a fresh one
+        if (bounceTimer) clearTimeout(bounceTimer);
+        bounceTimer = setTimeout(() => {
+          container.classList.remove('bounce');
+          bounceTimer = null;
+        }, 6300);
+      });
+    })();
 
     init();
   </script>

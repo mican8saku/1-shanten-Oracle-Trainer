@@ -81,6 +81,8 @@
       overflow: hidden;
     }
 
+
+
     .home-topbar {
       position: absolute;
       top: 16px;
@@ -915,7 +917,8 @@
     }
 
     .suji-loading.hidden {
-      display: none;
+      visibility: hidden;
+      animation: none;
     }
 
     @keyframes pulse {
@@ -1382,57 +1385,107 @@
       color: #f8fafc;
     }
 
-    .grade.g-S\+ {
-      background: linear-gradient(180deg, #fde047, #eab308);
+    .grade.g-S\+,
+    .grade.g-S,
+    .grade.g-S- {
+      /* S family — legendary gold */
+      background: linear-gradient(180deg, #fde047, #eab308, #b45309);
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
-      filter: drop-shadow(0 0 20px rgba(234, 179, 8, .45));
+      filter: drop-shadow(0 0 22px rgba(234, 179, 8, 0.5));
+    }
+
+    .grade.g-A\+,
+    .grade.g-A,
+    .grade.g-A- {
+      /* A family — ice platinum blue */
+      background: linear-gradient(180deg, #f8fafc, #93c5fd, #3b82f6);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      filter: drop-shadow(0 0 20px rgba(59, 130, 246, 0.45));
+    }
+
+    .grade.g-B\+,
+    .grade.g-B,
+    .grade.g-B- {
+      /* B family — warm bronze */
+      background: linear-gradient(180deg, #fed7aa, #d97706, #92400e);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      filter: drop-shadow(0 0 16px rgba(217, 119, 6, 0.4));
+    }
+
+    .grade.g-C,
+    .grade.g-D {
+      /* mid — muted silver */
+      background: linear-gradient(180deg, #e2e8f0, #64748b);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      filter: drop-shadow(0 0 12px rgba(148, 163, 184, 0.3));
+    }
+
+    .grade.g-E {
+      /* low — dull slate */
+      background: linear-gradient(180deg, #94a3b8, #475569);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      filter: drop-shadow(0 0 10px rgba(71, 85, 105, 0.25));
+      opacity: 0.88;
     }
 
     .grade.g-score {
+      /* tier 1 — slate (matches grade E) */
       font-size: 64px;
       letter-spacing: -2px;
       font-variant-numeric: tabular-nums;
-      background: linear-gradient(180deg, #f8fafc, #cbd5e1);
+      background: linear-gradient(180deg, #94a3b8, #475569);
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
-      filter: drop-shadow(0 0 20px rgba(203, 213, 225, .4));
+      filter: drop-shadow(0 0 10px rgba(71, 85, 105, 0.28));
     }
 
     .grade.g-score.tier-2 {
-      background: linear-gradient(180deg, #fed7aa, #b45309);
+      /* silver (matches grade C / D) */
+      background: linear-gradient(180deg, #e2e8f0, #64748b);
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
-      filter: drop-shadow(0 0 20px rgba(180, 83, 9, .5));
+      filter: drop-shadow(0 0 12px rgba(148, 163, 184, 0.32));
     }
 
     .grade.g-score.tier-3 {
-      background: linear-gradient(180deg, #f1f5f9, #64748b);
+      /* bronze (matches grade B) */
+      background: linear-gradient(180deg, #fed7aa, #d97706, #92400e);
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
-      filter: drop-shadow(0 0 22px rgba(148, 163, 184, .55));
+      filter: drop-shadow(0 0 16px rgba(217, 119, 6, 0.42));
     }
 
     .grade.g-score.tier-4 {
-      background: linear-gradient(180deg, #fef9c3, #f59e0b);
+      /* platinum blue (matches grade A) */
+      background: linear-gradient(180deg, #f8fafc, #93c5fd, #3b82f6);
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
-      filter: drop-shadow(0 0 24px rgba(245, 158, 11, .55));
+      filter: drop-shadow(0 0 20px rgba(59, 130, 246, 0.45));
     }
 
     .grade.g-score.tier-5 {
-      background: linear-gradient(135deg, #a5f3fc, #a78bfa, #f472b6, #fcd34d, #a5f3fc);
+      /* gold shimmer (matches grade S+) */
+      background: linear-gradient(135deg, #fde047, #fef08a, #fde047, #eab308, #fde047);
       background-size: 200% 200%;
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
       animation: platShimmer 3s linear infinite;
-      filter: drop-shadow(0 0 28px rgba(167, 139, 250, .6));
+      filter: drop-shadow(0 0 22px rgba(234, 179, 8, 0.5));
     }
 
     @keyframes platShimmer {
@@ -1443,6 +1496,34 @@
       100% {
         background-position: 200% 50%;
       }
+    }
+
+    @keyframes stampIn {
+      0% {
+        opacity: 0;
+        transform: translateY(-40px) scale(1.35);
+        filter: blur(6px);
+      }
+
+      55% {
+        opacity: 1;
+        transform: translateY(5px) scale(0.97);
+        filter: blur(0);
+      }
+
+      75% {
+        transform: translateY(-3px) scale(1.02);
+      }
+
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .grade.stamp-animate {
+      opacity: 0;
+      animation: stampIn 0.8s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
     }
 
     .results-grid {
@@ -2164,7 +2245,6 @@
       .results-card {
         padding: 24px 18px;
         border-radius: 16px;
-        height: 565px;
       }
 
       .results-card h1 {
@@ -2269,6 +2349,18 @@
       max-height: 85vh;
     }
 
+    /* Sound toggle — consistent width, green outline while enabled */
+    .sound-toggle-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 38px;
+    }
+
+    .sound-toggle-btn.sound-on {
+      border-color: rgba(34, 197, 94, 0.4);
+    }
+
     #results .home-content {
       position: relative;
       z-index: 1;
@@ -2290,8 +2382,8 @@
     }
 
     .results-title i {
-      color: #7dd3fc;
-      -webkit-text-fill-color: #7dd3fc;
+      color: #ffffff;
+      -webkit-text-fill-color: #ffffff;
     }
 
     /* keep the home-page icon visible too — cheap safety fix */
@@ -2358,6 +2450,206 @@
       background: rgba(34, 197, 94, .12);
       color: #86efac;
     }
+
+       .zen-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      max-height: 200px;
+      overflow: hidden;
+      transition: max-height 0.22s ease, opacity 0.18s ease, margin-top 0.18s ease;
+    }
+
+        /* Collapsible header */
+    #zenStatsCard > h3 {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      user-select: none;
+      transition: margin-bottom 0.15s;
+    }
+
+    #zenStatsCard > h3::after {
+      content: '▾';
+      font-size: 14px;
+      color: var(--muted);
+      transition: transform 0.2s;
+      margin-left: 6px;
+    }
+
+    #zenStatsCard.collapsed > h3 {
+      margin-bottom: 0;
+    }
+
+    #zenStatsCard.collapsed > h3::after {
+      transform: rotate(-90deg);
+    }
+
+    #zenStatsCard.collapsed .zen-stats {
+      max-height: 0;
+      opacity: 0;
+      margin-top: 0;
+    }
+
+    .zen-stat {
+      background: var(--panel2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 8px;
+      text-align: center;
+    }
+
+    .zen-stat span {
+      display: block;
+      font-size: 10px;
+      letter-spacing: 1.3px;
+      text-transform: uppercase;
+      color: #64748b;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+
+    .zen-stat b {
+      font-size: 19px;
+      font-weight: 900;
+      color: #f8fafc;
+      font-variant-numeric: tabular-nums;
+      line-height: 1.1;
+      transition: color 0.2s;
+    }
+
+    .zen-stat b {
+      font-size: 17px;
+    }
+
+        /* =========================================================
+       hamsa — levitating hamsa
+       ========================================================= */
+    .hamsa-section {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: transparent;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .hamsa-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 15px 26px;
+      cursor: pointer;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .hamsa {
+      color: #f8f8f8fe;
+      font-size: 90px;
+      line-height: 1;
+      display: inline-block;
+      transform-origin: center center;
+      will-change: transform;
+      margin-top: 10px;
+    }
+
+    .hamsa i {
+      display: block;
+      pointer-events: none;
+      -webkit-user-drag: none;
+      user-select: none;
+      transform-origin: center bottom;
+    }
+
+    .hamsa-shadow {
+      width: 90px;
+      height: 14px;
+      margin-top: 16px;
+      background: radial-gradient(ellipse at center,
+        rgba(0, 0, 0, 0.744) 0%,
+        rgba(0, 0, 0, 0.281) 45%,
+        rgba(0, 0, 0, 0) 75%);
+      border-radius: 50%;
+      pointer-events: none;
+      will-change: transform, opacity;
+    }
+
+    .hamsa-container.bounce .hamsa {
+      animation: hamsaLevitate 6s ease-in-out 1;
+    }
+
+    .hamsa-container.bounce .hamsa i {
+      animation: hamsaSquish 0.4s ease-out;
+    }
+
+    .hamsa-container.bounce .hamsa-shadow {
+      animation: hamsaShadow 6s ease-in-out 1;
+    }
+
+    @keyframes hamsaLevitate {
+      0%    { transform: translateY(0); }        /* start */
+      12.5% { transform: translateY(-24px); }    /* bounce 1 — full height */
+      25%   { transform: translateY(0); }        /* land */
+      37.5% { transform: translateY(-12px); }    /* bounce 2 — half */
+      50%   { transform: translateY(0); }        /* land */
+      62.5% { transform: translateY(-6px); }     /* bounce 3 — half again */
+      75%   { transform: translateY(0); }        /* land */
+      87.5% { transform: translateY(-3px); }     /* bounce 4 — half again */
+      100%  { transform: translateY(0); }        /* settle */
+    }
+
+    @keyframes hamsaSquish {
+      0%   { transform: scaleY(1)    scaleX(1); }
+      20%  { transform: scaleY(0.78) scaleX(1.16); }
+      50%  { transform: scaleY(1.12) scaleX(0.90); }
+      75%  { transform: scaleY(0.96) scaleX(1.03); }
+      100% { transform: scaleY(1)    scaleX(1); }
+    }
+
+        @keyframes hamsaShadow {
+      0%    { transform: scale(1);     opacity: 0.65; }   /* grounded */
+      12.5% { transform: scale(0.70);  opacity: 0.30; }   /* icon at -24px */
+      25%   { transform: scale(1);     opacity: 0.65; }   /* grounded */
+      37.5% { transform: scale(0.85);  opacity: 0.48; }   /* icon at -12px */
+      50%   { transform: scale(1);     opacity: 0.65; }   /* grounded */
+      62.5% { transform: scale(0.925); opacity: 0.56; }   /* icon at -6px */
+      75%   { transform: scale(1);     opacity: 0.65; }   /* grounded */
+      87.5% { transform: scale(0.96);  opacity: 0.62; }   /* icon at -3px */
+      100%  { transform: scale(1);     opacity: 0.65; }   /* grounded */
+    }
+
+    @media (max-width: 700px) {
+      .hamsa {
+        font-size: 90px;
+      }
+      .hamsa-shadow {
+        width: 90px;
+        margin-top: 6px;
+      }
+    }
+
+     /* Mobile / tablet: hamsa moves to the bottom of the stack */
+    @media (max-width: 1023px) {
+      .app-grid {
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* Wrapper is transparent to layout — its children act as direct
+         flex items of .app-grid, so we can reorder them independently */
+      .results-column {
+        display: contents;
+      }
+
+      .hamsa-section {
+        order: 100;   /* lands after appendix */
+      }
+    }
   </style>
 </head>
 
@@ -2368,6 +2660,9 @@
       <img src="long.png" alt="" class="cover-image">
       <img src="long.png" alt="" class="cover-image-flipped">
       <div class="home-topbar">
+        <button class="btn sound-toggle-btn" title="Sound: Low">
+          <i class="fa-solid fa-volume-low"></i>
+        </button>
         <button class="btn" id="langBtn">English</button>
         <button class="btn" id="aboutBtn" data-i18n="home.about"><span><i
               class="fa-solid fa-circle-info"></i></span></button>
@@ -2581,6 +2876,9 @@
               class="fa-solid fa-book"></i> Deal-in</button>
           <button class="btn" id="shapesBtn" style="padding:6px 14px;font-size:12px;" data-i18n="game.shapes"><i
               class="fa-solid fa-scroll"></i> Shapes</button>
+          <button class="btn sound-toggle-btn" style="padding:6px 12px;font-size:12px;" title="Sound: Low">
+            <i class="fa-solid fa-volume-low"></i>
+          </button>
           <button class="btn" id="exitBtn" style="padding:6px 14px;font-size:12px;" data-i18n="game.exit">Exit</button>
         </div>
       </header>
@@ -2721,7 +3019,15 @@
           <h3 data-i18n="about.credits">Credits</h3>
           <p data-i18n="about.p3">…</p>
         </div>
-        <img src="birb.png" alt="birb" style="max-width: 75px; margin-top: 12px;">
+        <!-- <img src="birb.png" alt="birb" style="max-width: 75px; margin-top: 12px;"> -->
+          <div class="hamsa-section" id="hamsaSection">
+        <div class="hamsa-container" id="hamsaContainer">
+          <div class="hamsa">
+            <i class="fa-solid fa-hamsa"></i>
+          </div>
+          <div class="hamsa-shadow"></div>
+        </div>
+      </div>
       </div>
     </div>
 
@@ -2739,29 +3045,52 @@
       { label: '5% – 10%', min: 0.05, max: 0.10, test: r => r >= 0.05 && r < 0.10 },
       { label: '10% – 15%', min: 0.10, max: 0.15, test: r => r >= 0.10 && r < 0.15 },
       { label: '15% – 20%', min: 0.15, max: 0.20, test: r => r >= 0.15 && r < 0.20 },
-      { label: '20% – 25%', min: 0.20, max: 0.25, test: r => r >= 0.20 && r < 0.25 },
-      { label: '> 25%', min: 0.25, max: 1.00, test: r => r >= 0.25 }
+      { label: '20% – 25%', min: 0.20, max: 0.25, test: r => r >= 0.20 && r <= 0.25 },  // was <
+      { label: '> 25%', min: 0.25, max: 1.00, test: r => r > 0.25 }                // was >=
     ];
     function rateToBucket(rate) { for (const b of RATE_BUCKETS) if (b.test(rate)) return b.label; return RATE_BUCKETS[RATE_BUCKETS.length - 1].label; }
     function rateBucketsForCorrectness(rate) {
+      // Snap to 2 decimal places so 0.05, 0.10, 0.25 etc. stay exact
+      // even after modifier arithmetic (0.10 + (-0.05) can float-drift).
+      const snapped = Math.round(rate * 100) / 100;
       const buckets = [];
       for (const b of RATE_BUCKETS) {
-        if (rate >= b.min - 1e-9 && rate <= b.max + 1e-9) buckets.push(b.label);
+        if (b.label.startsWith('<')) {
+          // "< 5%" is [0, 5) — excludes 5%
+          if (snapped < b.max) buckets.push(b.label);
+        } else if (b.label.startsWith('>')) {
+          // "> 25%" is (25%, ∞) — excludes 25%
+          if (snapped > b.min) buckets.push(b.label);
+        } else {
+          // Interior buckets accept the boundary on both sides
+          // (5–10 accepts both 5 and 10, 10–15 accepts both 10 and 15, …)
+          if (snapped >= b.min && snapped <= b.max) buckets.push(b.label);
+        }
       }
       return buckets;
     }
     function formatRate(rate) { const pct = rate * 100; if (pct < 1 && pct > 0) return pct.toFixed(1) + '%'; return Math.round(pct) + '%'; }
     function getVerdictLevel(rate, threshold) {
-      if (threshold >= 1.0) return 'ironPush';
-      if (threshold <= 0.001) return 'ironPull';
-      if (rate > threshold) { const gap = rate - threshold; return gap >= 0.10 ? 'ironPull' : 'pull'; }
-      if (rate === threshold) return 'borderlineFavorsPull';
-      const gap = threshold - rate;
-      if (gap < 0.005) return 'borderlineFavorsPull';
-      if (gap < 0.015) return 'borderlineEither';
-      if (gap < 0.04) return 'borderlineFavorsPush';
-      if (gap < 0.10) return 'push';
-      return 'ironPush';
+      // Threshold 100% → always push. Threshold 0% → always fold.
+      // These short-circuits must stay: without them, a 0% threshold with a
+      // tiny deal-in rate would fall through to borderlineFavorsPull, whose
+      // q.decision default is PUSH — the wrong answer.
+      if (threshold >= 1.0) return 'push';
+      if (threshold <= 0.001) return 'pull';
+
+      const gap = rate - threshold;   // > 0 → rate above threshold → pull side
+      const absGap = Math.abs(gap);
+
+      // 0 %: either answer is acceptable
+      if (absGap <= 0.00 + 1e-9) return 'borderlineEither';
+
+      // 1–2 %: borderline, leaning toward one side
+      if (absGap <= 0.02 + 1e-9) {
+        return gap > 0 ? 'borderlineFavorsPull' : 'borderlineFavorsPush';
+      }
+
+      // 3 %+: regular correct/incorrect
+      return gap > 0 ? 'pull' : 'push';
     }
     function isBorderlineVerdict(level) { return level.startsWith('borderline'); }
     const CLOSED_THRESHOLDS = {
@@ -2900,6 +3229,9 @@
         'home.mode.custom.desc': 'Endless practice with hand-picked categories, turns, shapes, seatings, roles and length.',
         'home.hs.regular': 'Regular Best', 'home.hs.timeattack': 'Time Attack Best', 'home.hs.points': 'points', 'home.hs.ptsSuffix': 'pts',
         'mode.regular': 'Regular', 'mode.zen': 'Zen Mode', 'mode.timeattack': 'Time Attack', 'mode.custom': 'Custom Practice',
+        'zen.stats.title': 'Session Stats',
+        'zen.stat.pushfold': 'Push/Fold Accuracy',
+        'zen.stat.questions': 'Questions',
         'settings.title': 'Custom Practice Setup',
         'settings.desc': 'Choose exactly what appears in Custom Practice. At least one option per section must remain enabled.',
         'settings.cat.title': 'Tile Categories', 'settings.turn.title': 'Turns', 'settings.ippatsu.title': 'Ippatsu Turn',
@@ -2999,21 +3331,21 @@
         'fb.step3.ok': '<b>Correct!</b>', 'fb.step3.bad': '<b>Incorrect.</b>',
         'fb.step3.answerIs': 'The answer is <b>{d}</b>.',
         'fb.step3.borderline': '<b>Borderline!</b> You chose {d}. {lean}',
-        'fb.step3.borderlineDetail': 'Passed Sujis: <b>{n}</b> · Deal-in Rate: <b>{b}</b> (exact: <b>{exact}</b>) · Hand Threshold (Tier {tier}, {role}): <b>{t}</b>',
-        'fb.step3.detail': 'Passed Sujis: <b>{n}</b> · Deal-in Rate: <b>{b}</b> (exact: <b>{exact}</b>) · Hand Threshold (Tier {tier}, {role}): <b>{t}</b>',
+        'fb.step3.borderlineDetail': 'Passed Sujis: <b>{n}</b> · Deal-in Rate: <b>{exact}</b> · Hand Threshold (Tier {tier}, {role}): <b>{t}</b>',
+        'fb.step3.detail': 'Passed Sujis: <b>{n}</b> · Deal-in Rate: <b>{exact}</b> · Hand Threshold (Tier {tier}, {role}): <b>{t}</b>',
         'fb.step3.comparePush': 'Deal-in ≤ Threshold Value → PUSH',
         'fb.step3.compareFold': 'Deal-in > Threshold Value → FOLD',
         'fb.step3.all': 'ALL (always push)',
-        'fb.lean.fold': 'The threshold sits near the low end of the range — <b>FOLD</b> is slightly favored.',
-        'fb.lean.push': 'The threshold sits near the high end of the range — <b>PUSH</b> is slightly favored.',
-        'fb.lean.both': 'The threshold sits near the middle of the range — neither answer is clearly better.',
+        'fb.lean.fold': '<b>FOLD</b> is slightly favored. Can consider mawashi too.',
+        'fb.lean.push': '<b>PUSH</b> is slightly favored. Can consider mawashi too.',
+        'fb.lean.both': 'Neither answer is clearly better. Can consider mawashi too.',
         'fb.ta.pts': '+{pts} pts', 'fb.ta.mult': ' (×{mult})', 'fb.ta.plusSec': ' · +{s}s', 'fb.ta.minusSec': ' · -{s}s',
         'fb.borderlineLabel': 'Borderline!', 'fb.verdict.ironPush': 'Iron push', 'fb.verdict.ironPull': 'Iron pull',
         'fb.ippatsuNd': 'Ippatsu: switch to VS Dealer chart (same tier)',
         'fb.ippatsuAsDealer': 'Ippatsu: As Dealer chart, hand treated 1 tier weaker',
         'fb.ippatsuNdD': 'Ippatsu: VS Dealer chart, hand treated 1 tier weaker',
         'fb.pinfuApplied': 'Pinfu threshold: interpolated between the two adjacent tiers',
-        'fb.callableApplied': 'Callable: evaluated on open chart with surviving yaku, 1 tier better',
+        'fb.callableApplied': 'Callable: evaluated on open chart with surviving yaku, 1.5 tier better',
         'results.runComplete': 'Run Complete', 'results.practiceComplete': 'Practice Complete', 'results.timesUp': "Time's Up!",
         'results.totalScore': 'Total Score', 'results.timeBonus': 'Time Bonus', 'results.suji': 'Suji Counting Accuracy', 'results.dealin': 'Deal-in Estimate Accuracy', 'results.pushfold': 'Push/Fold Accuracy', 'results.maxCombo': 'Max Combo',
         'results.playAgain': 'Play Again', 'results.menu': 'Back to Menu',
@@ -3044,6 +3376,9 @@
         'home.mode.timeattack.title': 'タイムアタック', 'home.mode.timeattack.desc': '45秒からのカウントダウン。押し引きを当てると時間が増えます。0秒で終了。',
         'home.mode.custom.title': 'カスタム練習', 'home.mode.custom.desc': 'カテゴリ・巡目・形・座席・役割・問題数を自由に選んで練習できます。',
         'home.hs.regular': 'レギュラー ベスト', 'home.hs.timeattack': 'タイムアタック ベスト', 'home.hs.points': '点', 'home.hs.ptsSuffix': '点',
+        'zen.stats.title': 'セッション成績',
+        'zen.stat.pushfold': '押し引き精度',
+        'zen.stat.questions': '問題数',
         'mode.regular': 'レギュラー', 'mode.zen': '禅モード', 'mode.timeattack': 'タイムアタック', 'mode.custom': 'カスタム練習',
         'settings.title': 'カスタム練習の設定', 'settings.desc': 'カスタム練習に登場する条件を選べます。各セクションで最低1つは選択してください。',
         'settings.cat.title': '牌カテゴリ', 'settings.turn.title': '巡目', 'settings.ippatsu.title': '一発巡',
@@ -3143,21 +3478,21 @@
         'fb.step3.ok': '<b>正解！</b>', 'fb.step3.bad': '<b>不正解。</b>',
         'fb.step3.answerIs': '正解は <b>{d}</b> です。',
         'fb.step3.borderline': '<b>微差！</b> {d} を選択。{lean}',
-        'fb.step3.borderlineDetail': '通ったスジ: <b>{n}本</b> ・ 放銃率: <b>{b}</b>（実測: <b>{exact}</b>） ・ 手牌ボーダー放銃率（ティア {tier}, {role}）: <b>{t}</b>',
-        'fb.step3.detail': '通ったスジ: <b>{n}本</b> ・ 放銃率: <b>{b}</b>（実測: <b>{exact}</b>） ・ 手牌ボーダー放銃率（ティア {tier}, {role}）: <b>{t}</b>',
+        'fb.step3.borderlineDetail': '通ったスジ: <b>{n}本</b> ・ 放銃率: <b>{exact}</b> ・ 手牌ボーダー放銃率（ティア {tier}, {role}）: <b>{t}</b>',
+        'fb.step3.detail': '通ったスジ: <b>{n}本</b> ・ 放銃率: <b>{exact}</b> ・ 手牌ボーダー放銃率（ティア {tier}, {role}）: <b>{t}</b>',
         'fb.step3.comparePush': '放銃率 ≤ ボーダー放銃率 → 押し',
         'fb.step3.compareFold': '放銃率 > ボーダー放銃率 → 降り',
         'fb.step3.all': '全て（常に押し）',
-        'fb.lean.fold': 'ボーダー放銃率は範囲の下端寄り — <b>降り</b>がやや有利。',
-        'fb.lean.push': 'ボーダー放銃率は範囲の上端寄り — <b>押し</b>がやや有利。',
-        'fb.lean.both': 'ボーダー放銃率は範囲の中ほど — どちらとも言えない。微差な選択。',
+        'fb.lean.fold': '<b>降り</b>がやや有利。回し打ちも検討。',
+        'fb.lean.push': '<b>押し</b>がやや有利。回し打ちも検討。',
+        'fb.lean.both': 'どちらとも言えない。微差な選択。回し打ちも検討。',
         'fb.ta.pts': '+{pts}点', 'fb.ta.mult': ' (×{mult})', 'fb.ta.plusSec': ' ・+{s}秒', 'fb.ta.minusSec': ' ・-{s}秒',
-        'fb.borderlineLabel': '微差！', 'fb.verdict.ironPush': '鉄押し', 'fb.verdict.ironPull': '鉄引き',
-        'fb.ippatsuNd': '一発巡：子リーチ→親相手（VS Dealer）の表を適用（同ティア）',
-        'fb.ippatsuAsDealer': '一発巡：親として（As Dealer）の表、手牌を1段階弱く評価',
-        'fb.ippatsuNdD': '一発巡：親リーチ→親相手（VS Dealer）の表、手牌を2段階弱く評価',
+        'fb.borderlineLabel': '微差！',
+        'fb.ippatsuNd': '一発巡：子リーチ→親相手の表を適用（同ティア）',
+        'fb.ippatsuAsDealer': '一発巡：親としての表、手牌を1段階低く評価',
+        'fb.ippatsuNdD': '一発巡：親リーチ→親相手の表、手牌を2段階低く評価',
         'fb.pinfuApplied': 'ピンフ：隣接する2つのティアの中間値でボーダー放銃率を計算',
-        'fb.callableApplied': '鳴き対応：副露表で生き残る役のみで評価、1ティア上',
+        'fb.callableApplied': '鳴き対応：副露表で生き残る役のみで評価、1.5ティア高く評価',
         'results.runComplete': '完了', 'results.practiceComplete': '練習完了', 'results.timesUp': 'タイムアップ！',
         'results.totalScore': '合計スコア', 'results.timeBonus': 'タイムボーナス', 'results.suji': 'スジカウント精度', 'results.dealin': '放銃率見積精度', 'results.pushfold': '押し引き精度', 'results.maxCombo': '最大コンボ',
         'results.playAgain': 'もう一度', 'results.menu': 'メニューへ',
@@ -3168,7 +3503,7 @@
         'about.overview': '概要',
         'about.p1': 'このトレーナーは、相手のリーチに対するイーシャンテン時の押し引き判断を練習するためのツールです。押す際に切ろうとしている牌の危険度を、ボーダー放銃率に基づいて評価する参照システムを採用しています。まず打牌候補の放銃率を見積もり、それをボーダー放銃率と比較することで、押す価値があるかどうかを判断します。参照表を自分で確認せず、自分の判断だけでクイズに取り組むこともできますが、トレーナーは基準となるボーダー放銃率に基づいて回答を評価します。',
         'about.howToUse': 'システムの仕組み',
-        'about.p2': 'この参照システムでは、2つの表を使って押し引き判断の基準を求めます。<h4>1. 手牌のティアを決める</h4><b>形ティア表</b>では、手牌の形と出上がり打点に応じてティアを決定します。使用する表は、自分が親か子か、また門前か副露かによって異なります。副露手の場合は、上家がリーチしているかどうかによっても使用する表が異なります。これは、上家の捨て牌からチーできる機会が増え、押しやすくなるためです。<br><br>ティアは、手牌の形・役・ドラなどを含めた手牌本来の価値を表します。<h4>2. ボーダー放銃率を確認する</h4><b>ボーダー放銃率表</b>では、手牌のティアと巡目に応じてボーダー放銃率（<b>T</b>）を求めます。これは、押す価値があるかどうかを判断するための基準値です。打牌候補の推定放銃率（<b>R</b>）と比較し、RがT以下なら押し、RがTを上回るなら降りが有利と判断します。2つの値が近い場合は、「微差」と判定されることがあります。<h4>特殊なケース</h4>トレーナーでは、手牌の実質的な価値に影響する状況も考慮しています。これには、門前手に付く追加の役、鳴いても有効な役が残る手牌、ピンフ、特殊な1シャンテン形などが含まれます。補正の一部はうに丸氏の解説に基づいていますが、このアプリ独自の推定によるものもあります。<h4>補足事項</h4>以下は、通常とは異なるケースで適用される補正ルールです。手作業で表を参照する場合にも参考になります。<ul><li><b>上家がリーチしている場合の副露手：</b>上家がリーチしている場合は、専用の形ティア表を使用します。上家の捨て牌からチーできる機会が増えることを考慮しています。</li><li><b>鳴いても役が成立する門前手：</b>鳴いた状態でも有効な役が残る門前手は、副露手用の表で評価します。副露時の出上がり打点に基づいて分類したうえで、押しやすさを考慮してティアを1段階上げます。</li><li><b>特殊な1シャンテン形：</b>[S]ティアに分類されるくっつき形・ヘッドレス形は、[A] 完全形を基準のティアとし、そこからティアを1段階上げて評価します。</li><li><b>中間的な打点（ピンフ）：</b>ピンフが成立する手牌は、隣接する2つのティアのボーダー放銃率の平均値を使用します。</li><li><b>一発巡：</b>一発巡では自分とリーチ者の立場に応じてボーダー放銃率を補正します。<ul><li><b>子のリーチ vs. 子のプレイヤー：</b>打点上昇の脅威を考慮し、同じティアのまま<b>親相手</b>のボーダー放銃率表を使用します。</li><li><b>子のリーチ vs. 親のプレイヤー：</b><b>親相手</b>のボーダー放銃率表を使用し、手牌を1ティア弱く評価します。</li><li><b>親のリーチ vs. 子のプレイヤー：</b><b>親として</b>のボーダー放銃率表を使用し、手牌を1ティア弱く評価します。</li></ul></li></ul>',
+        'about.p2': 'この参照システムでは、2つの表を使って押し引き判断の基準を求めます。<h4>1. 手牌のティアを決める</h4><b>形ティア表</b>では、手牌の形と出上がり打点に応じてティアを決定します。使用する表は、自分が親か子か、また門前か副露かによって異なります。副露手の場合は、上家がリーチしているかどうかによっても使用する表が異なります。これは、上家の捨て牌からチーできる機会が増え、押しやすくなるためです。<br><br>ティアは、手牌の形・役・ドラなどを含めた手牌本来の価値を表します。<h4>2. ボーダー放銃率を確認する</h4><b>ボーダー放銃率表</b>では、手牌のティアと巡目に応じてボーダー放銃率（<b>T</b>）を求めます。これは、押す価値があるかどうかを判断するための基準値です。打牌候補の推定放銃率（<b>R</b>）と比較し、RがT以下なら押し、RがTを上回るなら降りが有利と判断します。2つの値が近い場合は、「微差」と判定されることがあります。<h4>特殊なケース</h4>トレーナーでは、手牌の実質的な価値に影響する状況も考慮しています。これには、門前手に付く追加の役、鳴いても有効な役が残る手牌、ピンフ、特殊な1シャンテン形などが含まれます。補正の一部はうに丸氏の解説に基づいていますが、このアプリ独自の推定によるものもあります。<h4>補足事項</h4>以下は、通常とは異なるケースで適用される補正ルールです。手作業で表を参照する場合にも参考になります。<ul><li><b>上家がリーチしている場合の副露手：</b>上家がリーチしている場合は、専用の形ティア表を使用します。上家の捨て牌からチーできる機会が増えることを考慮しています。</li><li><b>鳴いても役が成立する門前手：</b>鳴いた状態でも有効な役が残る門前手は、副露手用の表で評価します。副露時の出上がり打点に基づいて分類したうえで、押しやすさを考慮してティアを1段階上げます。</li><li><b>特殊な1シャンテン形：</b>[S]ティアに分類されるくっつき形・ヘッドレス形は、[A] 完全形を基準のティアとし、そこからティアを1段階上げて評価します。</li><li><b>中間的な打点（ピンフ）：</b>ピンフが成立する手牌は、隣接する2つのティアのボーダー放銃率の平均値を使用します。</li><li><b>一発巡：</b>一発巡では自分とリーチ者の立場に応じてボーダー放銃率を補正します。<ul><li><b>子のリーチ vs. 子のプレイヤー：</b>打点上昇の脅威を考慮し、同じティアのまま<b>親相手</b>のボーダー放銃率表を使用します。</li><li><b>子のリーチ vs. 親のプレイヤー：</b><b>親相手</b>のボーダー放銃率表を使用し、手牌を1ティア低く評価します。</li><li><b>親のリーチ vs. 子のプレイヤー：</b><b>親として</b>のボーダー放銃率表を使用し、手牌を1ティア低く評価します。</li></ul></li></ul>',
         'about.sources': '参考文献・算出方法',
         'about.p4': '手牌の形ティアおよびボーダー放銃率は、うに丸氏の押し引き理論を基にしています。この理論は、著書『うに丸式 セオリーで勝つ麻雀』の第22～24章と、このテーマに関するYouTube動画で詳しく解説されています。また、『新・科学する麻雀』のシミュレーションデータを基礎とし、『統計学のマージャン戦術』も参考にしています。アプリで使用している放銃率の推定値も、みーにん氏の著書『統計学のマージャン戦術』を参考にしています。<br><h4>出典に基づくルールと独自の推定</h4><ul><li><b>ピンフの補間：</b>ピンフが成立する手牌について、隣接するティア間のボーダー放銃率を用いて推定する方法は、うに丸氏自身の解説に基づいています。</li><li><b>一発巡：</b>子のリーチに対する補正は、うに丸氏の解説に基づいています。親のリーチに対する補正、および自分が親の場合の補正は、独自に推定したものです。</li><li><b>両面＋カンチャン：</b>この形は、『新・科学する麻雀』の元データに該当するデータがなかったため、うに丸氏の表には含まれていません。そのため、このアプリでの分類は独自の推定です。</li></ul><b>結果はあくまで判断の参考としてご利用ください。絶対的な正解を示すものではありません。</b>このモデルは主に平場での押し引き判断を想定しており、実戦で考慮すべきすべての要素を扱っているわけではありません。',
         'about.credits': 'クレジット',
@@ -3213,17 +3548,16 @@
     const baseTile = t => (t && t[0] === '0') ? '5' + t[1] : t;
     function tileNumber(t) { if (!t) return 0; if (t[0] === '0') return 5; return parseInt(t[0], 10); }
     function getComboMultiplier(combo) {
-      if (combo < 2) return 1;
-      // +2% per combo past 1, capped at 1.5×.
-      // (Cap reached at combo 26 — a 10-question perfect run gets the full bonus,
-      //  and a mid-run reset only costs a few % instead of gutting the score.)
-      return Math.min(1.5, 1 + (combo - 1) * 0.02);
+      if (combo < 1) return 1;
+      // +2% per combo step, starting from combo 1 (first correct answer = ×1.02).
+      // Cap reached at combo 25.
+      return Math.min(1.5, 1 + combo * 0.02);
     }
     function isRegular() { return State.mode === 'regular'; }
     function isZen() { return State.mode === 'zen'; }
     function isTimeAttack() { return State.mode === 'timeattack'; }
     function isCustom() { return State.mode === 'custom'; }
-    function scoringEnabled() { return isRegular() || isTimeAttack(); }
+    function scoringEnabled() { return isRegular() || isTimeAttack() || isZen(); }
     function getCorrectShapeTierIndex(q) {
       if (!q) return 0;
       const isEffOpen = q.effectiveOpen;
@@ -3709,10 +4043,391 @@
     let TimeAttackState = { active: false, timeLeft: 45, lastTick: 0, rafId: null, questionsAnswered: 0, paused: true };
     State.customConfig = loadCustomConfig();
 
+    /* =========================================================
+   SOUND ENGINE  (Web Audio — no assets required)
+   ========================================================= */
+    const SOUND_KEY = 'shanten_sound';
+
+    const Sound = {
+      ctx: null,
+      state: 1,                                   // 0 = mute, 1 = low, 2 = high
+      get enabled() { return this.state > 0; },
+      get gain() { return this.state === 2 ? 0.18 : 0.06; },
+
+      init() {
+        if (this.ctx) {
+          if (this.ctx.state === 'suspended') this.ctx.resume().catch(() => { });
+          return;
+        }
+        try {
+          this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+        } catch (e) { this.ctx = null; }
+      },
+
+      play(type) {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        if (this.ctx.state === 'suspended') {
+          this.ctx.resume().then(() => this._play(type)).catch(() => { });
+        } else {
+          this._play(type);
+        }
+      },
+
+      playResult(tier) {
+        const t = Math.max(1, Math.min(5, tier | 0));
+        this.play('result' + t);
+      },
+
+      _play(type) {
+        const ctx = this.ctx;
+        const t = ctx.currentTime;
+        const v = this.gain;
+        const tone = (freq, start, dur, vol, wave) => {
+          const osc = ctx.createOscillator();
+          const g = ctx.createGain();
+          osc.type = wave || 'sine';
+          osc.frequency.value = freq;
+          g.gain.setValueAtTime(0, start);
+          g.gain.linearRampToValueAtTime(vol, start + 0.008);
+          g.gain.exponentialRampToValueAtTime(0.0001, start + dur);
+          osc.connect(g);
+          g.connect(ctx.destination);
+          osc.start(start);
+          osc.stop(start + dur + 0.03);
+        };
+
+
+
+        switch (type) {
+          case 'correct': {
+            // Two-note ascending pluck: root then fifth, with tuned harmonics
+            // (ratios 1 / 4 / 10 approximate a marimba's partials)
+            const root = 587;   // D5
+            const fifth = 880;  // A5
+            const strikes = [
+              { freq: root, at: 0, amp: 1.00, dur: 0.36 },
+              { freq: fifth, at: 0.085, amp: 0.82, dur: 0.30 }
+            ];
+            for (const s of strikes) {
+              [1, 4, 10].forEach((ratio, i) => {
+                const osc = ctx.createOscillator();
+                const g = ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.value = s.freq * ratio;
+                const amp = s.amp * v * [1.0, 0.32, 0.12][i];
+                const dur = s.dur * [1.0, 0.45, 0.25][i];
+                g.gain.setValueAtTime(0, t + s.at);
+                g.gain.linearRampToValueAtTime(amp, t + s.at + 0.004);
+                g.gain.exponentialRampToValueAtTime(0.0001, t + s.at + dur);
+                osc.connect(g);
+                g.connect(ctx.destination);
+                osc.start(t + s.at);
+                osc.stop(t + s.at + dur + 0.02);
+              });
+            }
+            break;
+          }
+          case 'close': {
+            const freq = 494;   // B4 — sits between root and fifth
+            [1, 4].forEach((ratio, i) => {
+              const osc = ctx.createOscillator();
+              const g = ctx.createGain();
+              osc.type = 'sine';
+              osc.frequency.value = freq * ratio;
+              const amp = v * [0.72, 0.22][i];
+              const dur = [0.30, 0.14][i];
+              g.gain.setValueAtTime(0, t);
+              g.gain.linearRampToValueAtTime(amp, t + 0.004);
+              g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+              osc.connect(g);
+              g.connect(ctx.destination);
+              osc.start(t);
+              osc.stop(t + dur + 0.02);
+            });
+            break;
+          }
+          case 'wrong': {
+            // Filtered noise drop + sub-bass thud — feels like a "no" without beeping
+            const noise = ctx.createBufferSource();
+            const buf = ctx.createBuffer(1, Math.floor(ctx.sampleRate * 0.18), ctx.sampleRate);
+            const d = buf.getChannelData(0);
+            for (let i = 0; i < d.length; i++) {
+              d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / d.length, 2.2);
+            }
+            noise.buffer = buf;
+            const lp = ctx.createBiquadFilter();
+            lp.type = 'lowpass';
+            lp.frequency.setValueAtTime(600, t);
+            lp.frequency.exponentialRampToValueAtTime(180, t + 0.15);
+            const ng = ctx.createGain();
+            ng.gain.value = v * 0.9;
+            noise.connect(lp);
+            lp.connect(ng);
+            ng.connect(ctx.destination);
+            noise.start(t);
+            noise.stop(t + 0.20);
+
+            const sub = ctx.createOscillator();
+            const sg = ctx.createGain();
+            sub.type = 'sine';
+            sub.frequency.setValueAtTime(150, t);
+            sub.frequency.exponentialRampToValueAtTime(58, t + 0.16);
+            sg.gain.setValueAtTime(v * 1.3, t);
+            sg.gain.exponentialRampToValueAtTime(0.0001, t + 0.22);
+            sub.connect(sg);
+            sg.connect(ctx.destination);
+            sub.start(t);
+            sub.stop(t + 0.24);
+            break;
+          }
+          case 'tile': {
+            // High-passed noise burst — removes low rumble, keeps the click
+            const noise = ctx.createBufferSource();
+            const buf = ctx.createBuffer(1, Math.floor(ctx.sampleRate * 0.045), ctx.sampleRate);
+            const d = buf.getChannelData(0);
+            for (let i = 0; i < d.length; i++) {
+              d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / d.length, 4.0);
+            }
+            noise.buffer = buf;
+
+            const hp = ctx.createBiquadFilter();
+            hp.type = 'highpass';
+            hp.frequency.value = 1400;
+
+            const band = ctx.createBiquadFilter();
+            band.type = 'bandpass';
+            band.frequency.value = 2600 + Math.random() * 700;
+            band.Q.value = 2.2;
+
+            const ng = ctx.createGain();
+            ng.gain.value = v * 1.7;
+
+            noise.connect(hp);
+            hp.connect(band);
+            band.connect(ng);
+            ng.connect(ctx.destination);
+            noise.start(t);
+            noise.stop(t + 0.05);
+
+            // High "tack" body — quick pitch drop from high to mid
+            const body = ctx.createOscillator();
+            const bg = ctx.createGain();
+            body.type = 'triangle';
+            body.frequency.setValueAtTime(1800 + Math.random() * 300, t);
+            body.frequency.exponentialRampToValueAtTime(700, t + 0.04);
+            bg.gain.setValueAtTime(v * 0.9, t);
+            bg.gain.exponentialRampToValueAtTime(0.0001, t + 0.06);
+            body.connect(bg);
+            bg.connect(ctx.destination);
+            body.start(t);
+            body.stop(t + 0.07);
+            break;
+          }
+
+          case 'esc': {
+            // Short percussive "dut" — plosive attack + fast-dropping low body.
+            // Too short to register as a musical pitch; reads as a muted tick.
+            const noise = ctx.createBufferSource();
+            const buf = ctx.createBuffer(1, Math.floor(ctx.sampleRate * 0.018), ctx.sampleRate);
+            const d = buf.getChannelData(0);
+            for (let i = 0; i < d.length; i++) {
+              d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / d.length, 4.5);
+            }
+            noise.buffer = buf;
+
+            // "d" attack — lowpass noise burst, short and dull
+            const nlp = ctx.createBiquadFilter();
+            nlp.type = 'lowpass';
+            nlp.frequency.value = 1200;
+            const ng = ctx.createGain();
+            ng.gain.value = v * 0.45;
+            noise.connect(nlp);
+            nlp.connect(ng);
+            ng.connect(ctx.destination);
+            noise.start(t);
+            noise.stop(t + 0.02);
+
+            // "ut" body — triangle drops from 220 → 90 Hz in 40 ms, gone by 60 ms
+            const body = ctx.createOscillator();
+            const bg = ctx.createGain();
+            body.type = 'triangle';
+            body.frequency.setValueAtTime(220, t);
+            body.frequency.exponentialRampToValueAtTime(90, t + 0.04);
+            bg.gain.setValueAtTime(v * 0.65, t);
+            bg.gain.exponentialRampToValueAtTime(0.0001, t + 0.06);
+            body.connect(bg);
+            bg.connect(ctx.destination);
+            body.start(t);
+            body.stop(t + 0.08);
+            break;
+          }
+          // case 'riichi':    // rising chime for the riichi stick
+          //   tone(230, t, 0.08, v * 0.60);
+          //   tone(180, t + 0.09, 0.14, v * 0.55);
+          //   break;
+          case 'click':     // UI click feedback
+            tone(2200, t, 0.02, v * 0.50, 'triangle');
+            break;
+          case 'next':      // question advance
+            tone(520, t, 0.06, v * 0.50);
+            tone(780, t + 0.06, 0.08, v * 0.50);
+            break;
+          case 'start': {
+            // Soft percussive tap — filtered noise transient, barely-there body.
+            // Sits well under the music without feeling like a "hit".
+            const noise = ctx.createBufferSource();
+            const buf = ctx.createBuffer(1, Math.floor(ctx.sampleRate * 0.05), ctx.sampleRate);
+            const d = buf.getChannelData(0);
+            for (let i = 0; i < d.length; i++) {
+              d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / d.length, 3.0);
+            }
+            noise.buffer = buf;
+
+            const band = ctx.createBiquadFilter();
+            band.type = 'bandpass';
+            band.frequency.value = 900;
+            band.Q.value = 1.4;
+
+            const ng = ctx.createGain();
+            ng.gain.value = v * 0.75;
+
+            noise.connect(band);
+            band.connect(ng);
+            ng.connect(ctx.destination);
+            noise.start(t);
+            noise.stop(t + 0.06);
+
+            // Quiet low body — barely felt, just enough to give it weight
+            const body = ctx.createOscillator();
+            const bg = ctx.createGain();
+            body.type = 'sine';
+            body.frequency.setValueAtTime(180, t);
+            body.frequency.exponentialRampToValueAtTime(90, t + 0.08);
+            bg.gain.setValueAtTime(v * 0.4, t);
+            bg.gain.exponentialRampToValueAtTime(0.0001, t + 0.14);
+            body.connect(bg);
+            bg.connect(ctx.destination);
+            body.start(t);
+            body.stop(t + 0.16);
+            break;
+          }
+          case 'warning':   // time-attack low-time beep
+            tone(880, t, 0.09, v * 0.55, 'square');
+            break;
+          case 'result5': {
+            // Triumphant — C major arpeggio → sustained chord → high shimmer
+            tone(523, t, 0.30, v * 0.55);   // C5
+            tone(659, t + 0.10, 0.30, v * 0.55);   // E5
+            tone(784, t + 0.20, 0.30, v * 0.55);   // G5
+            tone(1047, t + 0.30, 0.70, v * 0.60);   // C6 (top)
+            tone(523, t + 0.30, 0.70, v * 0.35);   // C5 sustain
+            tone(659, t + 0.30, 0.70, v * 0.35);   // E5 sustain
+            tone(784, t + 0.30, 0.70, v * 0.35);   // G5 sustain
+            tone(1568, t + 0.95, 0.25, v * 0.30);   // G6 shimmer tail
+            break;
+          }
+          case 'result4': {
+            // Bright major — C major ascending triad → sustain
+            tone(523, t, 0.25, v * 0.55);
+            tone(659, t + 0.09, 0.25, v * 0.55);
+            tone(784, t + 0.18, 0.60, v * 0.60);
+            tone(523, t + 0.18, 0.60, v * 0.35);
+            tone(659, t + 0.18, 0.60, v * 0.35);
+            break;
+          }
+          case 'result3': {
+            // Warm — C major block chord (all notes together)
+            tone(523, t, 0.55, v * 0.60);
+            tone(659, t, 0.55, v * 0.50);
+            tone(784, t, 0.55, v * 0.50);
+            break;
+          }
+          case 'result2': {
+            // Neutral — A minor (non-celebratory but not sad)
+            tone(440, t, 0.50, v * 0.55);
+            tone(523, t, 0.50, v * 0.45);
+            tone(659, t, 0.50, v * 0.45);
+            break;
+          }
+          case 'result1': {
+            // Subdued — descending A minor fragment
+            tone(440, t, 0.28, v * 0.55);
+            tone(392, t + 0.14, 0.28, v * 0.50);
+            tone(330, t + 0.28, 0.55, v * 0.45);
+            break;
+          }
+        }
+      }
+    };
+
+    /* Gong — loads ./gong.mp3 and plays a fresh clone each time so rapid plays
+   don't cut off the previous ring. Honors the Sound mute/low/high state. */
+    const Gong = {
+      audio: null,
+      init() {
+        if (this.audio) return;
+        try {
+          this.audio = new Audio('./gong.mp3');
+          this.audio.preload = 'auto';
+          this.audio.load();
+        } catch (e) { this.audio = null; }
+      },
+      play() {
+        if (!Sound.enabled) return;
+        this.init();
+        if (!this.audio) return;
+        try {
+          const a = this.audio.cloneNode();
+          a.volume = Sound.state === 2 ? 0.55 : 0.28;
+          const p = a.play();
+          if (p && p.catch) p.catch(() => { });
+        } catch (e) { }
+      }
+    };
+
+    function updateSoundToggleUI() {
+      const icons = ['fa-volume-xmark', 'fa-volume-low', 'fa-volume-high'];
+      const titles = ['Sound: Off', 'Sound: Low', 'Sound: High'];
+      document.querySelectorAll('.sound-toggle-btn').forEach(b => {
+        b.innerHTML = `<i class="fa-solid ${icons[Sound.state]}"></i>`;
+        b.title = titles[Sound.state];
+        b.classList.toggle('sound-on', Sound.state > 0);
+      });
+    }
+
+    function cycleSound() {
+      Sound.state = (Sound.state + 1) % 3;              // 1 → 2 → 0 → 1 …
+      try { localStorage.setItem(SOUND_KEY, String(Sound.state)); } catch (e) { }
+      updateSoundToggleUI();
+      if (Sound.state > 0) Sound.play('click');         // confirm only when sound is now on
+    }
+
+    function initSound() {
+      let saved = 1;
+      try {
+        const raw = localStorage.getItem(SOUND_KEY);
+        if (raw !== null) saved = parseInt(raw, 10);
+      } catch (e) { }
+      if (!(saved >= 0 && saved <= 2)) saved = 1;       // default: low
+      Sound.state = saved;
+      updateSoundToggleUI();
+      document.querySelectorAll('.sound-toggle-btn').forEach(b => {
+        b.addEventListener('click', cycleSound);
+      });
+      // Browsers require a user gesture before the AudioContext can start.
+      const unlock = () => Sound.init();
+      document.addEventListener('pointerdown', unlock, { once: true, passive: true });
+      document.addEventListener('keydown', unlock, { once: true });
+
+      Gong.init();
+    }
+
     function updateComboDisplay() {
       const pill = $('comboPill'); if (!pill) return;
       const mult = getComboMultiplier(State.combo);
-      pill.textContent = t('game.combo') + ' ' + State.combo + (mult > 1 ? ' · ×' + mult.toFixed(1) : '');
+      pill.textContent = t('game.combo') + ' ' + State.combo + (mult > 1 ? ' · ×' + mult.toFixed(2) : '');
       pill.classList.toggle('active', mult > 1);
     }
     function updateScorePill() { const pill = $('scorePill'); if (pill) pill.textContent = t('game.score') + ' ' + State.score; }
@@ -3822,8 +4537,13 @@
       $('resultsTitle').textContent = t('results.timesUp');
       $('gradeLetter').style.display = '';
       const tier = getTimeAttackTier(State.score);
-      $('gradeLetter').className = 'grade g-score tier-' + tier;
-      $('gradeLetter').textContent = State.score.toLocaleString();
+      const gradeEl = $('gradeLetter');
+      gradeEl.className = 'grade g-score tier-' + tier;
+      gradeEl.textContent = State.score.toLocaleString();
+      // Restart the stamp animation every time results open
+      gradeEl.classList.remove('stamp-animate');
+      void gradeEl.offsetWidth;
+      gradeEl.classList.add('stamp-animate');
       $('resultsGrid').innerHTML = `
     <div><span>${t('results.suji')}</span><b>${s1Pct}% <span style="font-size:12px;color:#94a3b8;font-weight:700;">(${State.stats.s1Correct}/${State.stats.s1Total})</span></b></div>
     <div><span>${t('results.dealin')}</span><b>${s2Pct}% <span style="font-size:12px;color:#94a3b8;font-weight:700;">(${State.stats.s2Correct}/${State.stats.s2Total})</span></b></div>
@@ -3833,6 +4553,11 @@
       recordResult('timeattack', State.score, null, s1Pct, s2Pct, s3Pct, isHighScore);
       $('game').classList.remove('active');
       $('results').classList.add('active');
+      if (State.score >= 100000) {
+        Gong.play();
+      } else {
+        Sound.playResult(tier);     // ← `tier` is defined in this function scope
+      }
     }
     function showRegularResults() {
       const totals = State.log.reduce((a, l) => { a.pts += l.pts; a.correct += l.correct; a.steps += l.steps; a.timeBonus += l.timeBonus; return a; }, { pts: 0, correct: 0, steps: 0, timeBonus: 0 });
@@ -3861,6 +4586,16 @@
       recordResult('regular', total, grade, s1Pct, s2Pct, s3Pct, isHighScore);
       $('game').classList.remove('active');
       $('results').classList.add('active');
+      if (grade === 'S+') {
+        Gong.play();
+      } else {
+        const tierNum = grade.startsWith('S') ? 5
+          : grade.startsWith('A') ? 4
+            : grade.startsWith('B') ? 3
+              : (grade === 'C' || grade === 'D') ? 2
+                : 1;
+        Sound.playResult(tierNum);
+      }
     }
     function showCustomResults() {
       const s1Pct = Math.round((State.stats.s1Correct / Math.max(1, State.stats.s1Total)) * 100);
@@ -3877,6 +4612,7 @@
       recordResult('custom', 0, null, s1Pct, s2Pct, s3Pct, false);
       $('game').classList.remove('active');
       $('results').classList.add('active');
+      Sound.playResult(3);
     }
 
     function thresholdCellStyle(val) {
@@ -4078,26 +4814,43 @@
       const hasPinfu = yaku.some(y => y.name === 'Pinfu');
       const hasSurviving = yaku.some(y => y.name === 'Tanyao' || y.name === 'Yakuhai');
       const canCall = !isOpen && hasSurviving && shape !== 'Chiitoi';
-      let baseHan, useOpenChart = false, callableOffset = 0;
+      let baseHan, useOpenChart = false;
       if (isOpen) { baseHan = yaku.reduce((s, y) => s + y.han, 0) + doraCount; useOpenChart = true; }
-      else if (canCall) { baseHan = yaku.filter(y => y.name === 'Tanyao' || y.name === 'Yakuhai').reduce((s, y) => s + y.han, 0) + doraCount; useOpenChart = true; callableOffset = -1; }
+      else if (canCall) { baseHan = yaku.filter(y => y.name === 'Tanyao' || y.name === 'Yakuhai').reduce((s, y) => s + y.han, 0) + doraCount; useOpenChart = true; }
       else { baseHan = yaku.reduce((s, y) => s + y.han, 0) + doraCount + 1; }
       baseHan = Math.max(1, baseHan);
+
+      // ── Variables that were accidentally dropped ─────────────────
       const baseShape = getBaseShape(shape);
       const shapeOffset = getShapeOffset(shape);
       const cFlag = declarer === 'kamicha' ? 'C' : 'NC';
       let tierMap;
-      if (useOpenChart) { tierMap = playerIsDealer ? (cFlag === 'C' ? OPEN_TIER_MAP_D_C : OPEN_TIER_MAP_D_NC) : (cFlag === 'C' ? OPEN_TIER_MAP_ND_C : OPEN_TIER_MAP_ND_NC); }
-      else tierMap = CLOSED_TIER_MAP;
+      if (useOpenChart) {
+        tierMap = playerIsDealer
+          ? (cFlag === 'C' ? OPEN_TIER_MAP_D_C : OPEN_TIER_MAP_D_NC)
+          : (cFlag === 'C' ? OPEN_TIER_MAP_ND_C : OPEN_TIER_MAP_ND_NC);
+      } else {
+        tierMap = CLOSED_TIER_MAP;
+      }
       const maxTier = useOpenChart ? 11 : 8;
-      const totalOffset = shapeOffset + callableOffset;
-      let tier = computeTierForShape(tierMap, baseShape, baseHan, totalOffset, maxTier);
+      // ─────────────────────────────────────────────────────────────
+
+      const baseTier = computeTierForShape(tierMap, baseShape, baseHan, shapeOffset, maxTier);
+      let tier = baseTier;
       let tier2 = null;
-      if (hasPinfu && !canCall && !isOpen) {
+
+      if (canCall) {
+        // Callable shift = 1.5 tiers better → average of (baseTier − 1) and (baseTier − 2)
+        const upOne = Math.max(1, baseTier - 1);
+        const upTwo = Math.max(1, baseTier - 2);
+        tier = upOne;
+        if (upTwo !== upOne) tier2 = upTwo;
+      } else if (hasPinfu && !isOpen) {
         const adjHan = baseHan - 1;
         const tierAtAdj = computeTierForShape(tierMap, baseShape, adjHan, shapeOffset, maxTier);
         if (tierAtAdj !== tier) tier2 = tierAtAdj;
       }
+
       let roleKey = playerIsDealer ? 'As Dealer' : (declarerIsDealer ? 'VS Dealer' : 'VS Non-Dealer');
       let ippatsuApplied = false, ippatsuCase = null, tierAdjust = 0;
       if (ippatsu) {
@@ -4167,8 +4920,7 @@
       const verdictLevel = getVerdictLevel(rate, q.threshold);
       q.verdictLevel = verdictLevel;
       q.borderline = isBorderlineVerdict(verdictLevel);
-      q.decision = (verdictLevel === 'push' || verdictLevel === 'ironPush') ? 'PUSH'
-        : (verdictLevel === 'pull' || verdictLevel === 'ironPull') ? 'FOLD' : 'PUSH';
+      q.decision = (verdictLevel === 'pull') ? 'FOLD' : 'PUSH';
       return q;
     }
 
@@ -4327,6 +5079,8 @@
             if (token !== State.boardToken) return;
             const riichiTile = pondEls[q.declarer].children[riichiIndex];
             if (riichiTile) riichiTile.classList.add('riichi-drop');
+            Sound.play('tile');
+            setTimeout(() => Sound.play('riichi'), 110);
             setTimeout(() => {
               if (token !== State.boardToken) return;
               addRiichiStick(q, pondEls, board);
@@ -4378,7 +5132,7 @@
             }
 
             let idx = 0;
-            const SLOW_DELAY = 650;
+            const SLOW_DELAY = 640;
             const dropNext = () => {
               if (token !== State.boardToken) return;
               if (idx >= remaining.length) {
@@ -4386,6 +5140,7 @@
                 return;
               }
               remaining[idx].classList.add('riichi-drop');
+              Sound.play('tile');
               idx++;
               setTimeout(dropNext, SLOW_DELAY);
             };
@@ -4431,11 +5186,111 @@
       $('discardDesc').textContent = catDesc(q.category);
     }
 
+    const ZEN_STATS_MIN = 10;
+
+    function updateZenStats() {
+      const qsEl = $('zenQuestions');
+      const scoreEl = $('zenScore');
+      const accEl = $('zenAccuracy');
+      const comboEl = $('zenMaxCombo');
+
+      if (qsEl) qsEl.textContent = State.stats.s3Total;
+      if (scoreEl) scoreEl.textContent = State.score.toLocaleString();
+      if (accEl) {
+        if (State.stats.s3Total === 0) {
+          accEl.textContent = '—';
+          accEl.style.color = '';
+        } else {
+          const pct = Math.round((State.stats.s3Correct / State.stats.s3Total) * 100);
+          accEl.textContent = pct + '%';
+          accEl.style.color = pct >= 80 ? '#86efac'
+            : pct >= 60 ? '#fcd34d'
+              : '#fca5a5';
+        }
+      }
+      if (comboEl) comboEl.textContent = State.maxCombo;
+    }
+
     function buildQuiz(q) {
       const card = $('quizCard');
       card.innerHTML = '';
       State.step = 1;
       State.kbdIdx = 0;
+
+      // Clear any leftover Zen stats card when not in Zen mode
+      if (!isZen()) {
+        const leftover = document.getElementById('zenStatsCard');
+        if (leftover) leftover.remove();
+      }
+      // ── Zen mode: pure push/fold drill — skip Steps 1 & 2 ───────
+      if (isZen()) {
+        // Mark them "answered" so if they're ever re-enabled they can't fire.
+        q.answered.s1 = true;
+        q.answered.s2 = true;
+
+        let statsCard = document.getElementById('zenStatsCard');
+        if (!statsCard) {
+          statsCard = document.createElement('div');
+          statsCard.className = 'card';
+          statsCard.id = 'zenStatsCard';
+          statsCard.innerHTML = `
+        <h3>${t('zen.stats.title')}</h3>
+        <div class="zen-stats">
+          <div class="zen-stat">
+            <span>${t('zen.stat.questions')}</span>
+            <b id="zenQuestions">0</b>
+          </div>
+          <div class="zen-stat">
+            <span>${t('game.score')}</span>
+            <b id="zenScore">0</b>
+          </div>
+          <div class="zen-stat">
+            <span>${t('zen.stat.pushfold')}</span>
+            <b id="zenAccuracy">—</b>
+          </div>
+          <div class="zen-stat">
+            <span>${t('results.maxCombo')}</span>
+            <b id="zenMaxCombo">0</b>
+          </div>
+        </div>`;
+          const sidebar = $('sidebar');
+          sidebar.insertBefore(statsCard, sidebar.firstChild);
+        }
+              statsCard.querySelector('h3').addEventListener('click', () => {
+        statsCard.classList.toggle('collapsed');
+      });
+
+        const s3 = document.createElement('div');
+        s3.className = 'qstep'; s3.id = 'step3';
+        s3.innerHTML = `
+      <div class="qhead">${t('quiz.step3')}</div>
+      <div class="qtext">${t('quiz.step3.text')}</div>
+      <div class="suji-loading" id="zenLoading">${t('quiz.waiting')}</div>
+      <div class="optrow" id="decisionOpts">
+        <button class="opt" data-dec="PUSH" type="button">${t('quiz.push')}</button>
+        <button class="opt" data-dec="FOLD" type="button">${t('quiz.fold')}</button>
+      </div>
+      <div class="fb" id="fb3"></div>`;
+        card.appendChild(s3);
+
+        const nxt = document.createElement('div');
+        nxt.className = 'qstep locked'; nxt.id = 'nextWrap';
+        nxt.innerHTML = `<button class="btn primary" id="nextBtn" style="width:100%">${t('quiz.next')}</button>`;
+        card.appendChild(nxt);
+
+        document.querySelectorAll('#decisionOpts .opt').forEach(b => {
+          b.disabled = true;                                   // ← wait for board
+          b.onclick = () => answerStep3(q, b.dataset.dec, b);
+        });
+        $('nextBtn').onclick = nextQuestion;
+
+        State.step = 3;
+        State.kbdIdx = 0;
+        paintKbd('#decisionOpts');
+        updateZenStats();
+        return;
+      }
+      // ── End Zen branch ──────────────────────────────────────────
       const s1 = document.createElement('div');
       s1.className = 'qstep'; s1.id = 'step1';
       s1.innerHTML = `<div class="qhead"><span class="stepnum">1</span> ${t('quiz.step1')}</div><div class="qtext">${t('quiz.step1.text')}</div><div class="suji-loading" id="sujiLoading">${t('quiz.waiting')}</div><div class="sujigrid loading" id="sujiGrid"></div><div class="fb" id="fb1"></div>`;
@@ -4485,6 +5340,9 @@
       if (diff === 0) { basePts = 300; baseSecs = 5; fbClass = 'ok'; resultLabel = t('fb.correct'); }
       else if (diff === 1) { basePts = 100; baseSecs = 3; fbClass = 'part'; resultLabel = t('fb.close'); }
       else { basePts = 0; baseSecs = 0; fbClass = 'bad'; resultLabel = t('fb.bad'); }
+      if (diff === 0) Sound.play('correct');
+      else if (diff === 1) Sound.play('close');
+      else Sound.play('wrong');
       // Combo: correct answer extends the streak, anything else resets it.
       // (doScoring gates it so Zen/custom don't accumulate invisible combos.)
       if (doScoring) {
@@ -4501,6 +5359,7 @@
       if (doScoring) { State.score += actualPts; updateScorePill(); }
       if (isTA && baseSecs > 0) { addTimeAttackTime(baseSecs); showSecDelta(baseSecs); }
       if (isTA) updateTimeAttackDisplay();
+      if (isZen()) updateZenStats();
       const fb = $('fb1');
       fb.classList.add('show', fbClass);
       const parts = [];
@@ -4545,6 +5404,7 @@
       const doScoring = scoringEnabled();
       const correctBuckets = rateBucketsForCorrectness(q.rate);
       const ok = correctBuckets.includes(bucketLabel);
+      Sound.play(ok ? 'correct' : 'wrong');
       State.stats.s2Total++;
       if (ok) State.stats.s2Correct++;
       const basePts = ok ? 300 : 0;
@@ -4595,7 +5455,7 @@
       const isTA = isTimeAttack();
       const doScoring = scoringEnabled();
       const inRegular = isRegular();
-      if (!isTA) {
+      if (!isTA && !isZen()) {
         q.elapsed = (performance.now() - State.timerStart) / 1000;
         State.timerStopped = true;
         if (State.raf) cancelAnimationFrame(State.raf);
@@ -4605,6 +5465,9 @@
       const qBorderline = isBorderlineVerdict(qVerdict);
       const correctDec = q.decision;
       const ok = dec === correctDec;
+      if (qBorderline) Sound.play('close');
+      else if (ok) Sound.play('correct');
+      else Sound.play('wrong');
       let basePts = 0, baseSecs = 0, comboAction = 'none', fbClass = '';
       if (qBorderline) {
         basePts = 200; comboAction = 'inc'; fbClass = 'borderline';
@@ -4719,10 +5582,11 @@
         if (isRegular() || isCustom()) $('qCounter').textContent = `Q ${State.index + 1} / ${State.total}`;
         else if (isTimeAttack()) $('qCounter').textContent = `Q ${TimeAttackState.questionsAnswered}`;
         else $('qCounter').textContent = `Q ${State.index + 1}`;
-        const show = isRegular() || isTimeAttack();
-        $('scorePill').style.display = show ? '' : 'none';
-        $('comboPill').style.display = show ? '' : 'none';
-        $('timerPill').style.display = show ? '' : 'none';
+        const showScore = isRegular() || isTimeAttack() || isZen();
+        const showTimer = isRegular() || isTimeAttack();
+        $('scorePill').style.display = showScore ? '' : 'none';
+        $('comboPill').style.display = showScore ? '' : 'none';
+        $('timerPill').style.display = showTimer ? '' : 'none';
         if (isRegular()) $('timerPill').textContent = '0.0s';
         else if (isTimeAttack()) updateTimeAttackDisplay();
         renderScenario(q);
@@ -4733,6 +5597,12 @@
         if (isTimeAttack() && !TimeAttackState.active) return;
         fitBoard();
         setQuizStep1Loading(false);
+        // Zen: hide wait text + re-enable the push/fold buttons once the board animation finishes
+        if (isZen()) {
+          const zenLoad = $('zenLoading');
+          if (zenLoad) zenLoad.classList.add('hidden');
+          document.querySelectorAll('#decisionOpts .opt').forEach(b => { b.disabled = false; });
+        }
         showYourTurn(true);
         if (isRegular()) startTimer();
         if (isTimeAttack()) resumeTimeAttack();
@@ -4740,6 +5610,7 @@
     }
     function nextQuestion() {
       if (State.transitioning) return;
+      Sound.play('next');
       State.transitioning = true;
       $('quizCard').innerHTML = '';
       showYourTurn(false);
@@ -4758,6 +5629,9 @@
       loadQuestion();
     }
     function exitToMenu() {
+      Sound.play('esc');
+      const statsCard = document.getElementById('zenStatsCard');
+      if (statsCard) statsCard.remove();
       State.session++; State.boardToken++;
       State.timerStopped = true; State.transitioning = false;
       if (State.raf) cancelAnimationFrame(State.raf);
@@ -4874,6 +5748,7 @@
 
     function startGame() { if (isCustom()) { openCustomConfig(); return; } beginGame(); }
     function beginGame() {
+      Sound.play('start');
       State.session++; State.boardToken++;
       State.timerStopped = true; State.transitioning = false;
       State.stats = { s1Total: 0, s1Correct: 0, s2Total: 0, s2Correct: 0, s3Total: 0, s3Correct: 0 };
@@ -5025,6 +5900,27 @@
       }
     }
 
+        /* =========================================================
+       hamsa — click → squish + levitate for 5 seconds
+       ========================================================= */
+    (function inithamsa() {
+      const container = document.getElementById('hamsaContainer');
+      if (!container) return;
+      let bounceTimer = null;
+      container.addEventListener('click', () => {
+        // Restart animation from frame 0 every click
+        container.classList.remove('bounce');
+        void container.offsetWidth;     // force reflow
+        container.classList.add('bounce');
+        // Clear any pending removal and schedule a fresh one
+        if (bounceTimer) clearTimeout(bounceTimer);
+        bounceTimer = setTimeout(() => {
+          container.classList.remove('bounce');
+          bounceTimer = null;
+        }, 6300);
+      });
+    })();
+
     (function initLang() {
       let saved = 'en';
       try { saved = localStorage.getItem(LANG_KEY) || 'en'; } catch (e) { }
@@ -5033,6 +5929,7 @@
     })();
     syncConfigToUI(State.customConfig);
     applyLanguage(State.lang);
+    initSound();
     window.addEventListener('load', fitBoard);
   </script>
 </body>
