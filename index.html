@@ -2451,7 +2451,7 @@
       color: #86efac;
     }
 
-       .zen-stats {
+    .zen-stats {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 8px;
@@ -2460,8 +2460,8 @@
       transition: max-height 0.22s ease, opacity 0.18s ease, margin-top 0.18s ease;
     }
 
-        /* Collapsible header */
-    #zenStatsCard > h3 {
+    /* Collapsible header */
+    #zenStatsCard>h3 {
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -2470,7 +2470,7 @@
       transition: margin-bottom 0.15s;
     }
 
-    #zenStatsCard > h3::after {
+    #zenStatsCard>h3::after {
       content: '▾';
       font-size: 14px;
       color: var(--muted);
@@ -2478,11 +2478,11 @@
       margin-left: 6px;
     }
 
-    #zenStatsCard.collapsed > h3 {
+    #zenStatsCard.collapsed>h3 {
       margin-bottom: 0;
     }
 
-    #zenStatsCard.collapsed > h3::after {
+    #zenStatsCard.collapsed>h3::after {
       transform: rotate(-90deg);
     }
 
@@ -2523,7 +2523,7 @@
       font-size: 17px;
     }
 
-        /* =========================================================
+    /* =========================================================
        hamsa — levitating hamsa
        ========================================================= */
     .hamsa-section {
@@ -2571,9 +2571,9 @@
       height: 14px;
       margin-top: 16px;
       background: radial-gradient(ellipse at center,
-        rgba(0, 0, 0, 0.744) 0%,
-        rgba(0, 0, 0, 0.281) 45%,
-        rgba(0, 0, 0, 0) 75%);
+          rgba(0, 0, 0, 0.744) 0%,
+          rgba(0, 0, 0, 0.281) 45%,
+          rgba(0, 0, 0, 0) 75%);
       border-radius: 50%;
       pointer-events: none;
       will-change: transform, opacity;
@@ -2592,48 +2592,144 @@
     }
 
     @keyframes hamsaLevitate {
-      0%    { transform: translateY(0); }        /* start */
-      12.5% { transform: translateY(-24px); }    /* bounce 1 — full height */
-      25%   { transform: translateY(0); }        /* land */
-      37.5% { transform: translateY(-12px); }    /* bounce 2 — half */
-      50%   { transform: translateY(0); }        /* land */
-      62.5% { transform: translateY(-6px); }     /* bounce 3 — half again */
-      75%   { transform: translateY(0); }        /* land */
-      87.5% { transform: translateY(-3px); }     /* bounce 4 — half again */
-      100%  { transform: translateY(0); }        /* settle */
+      0% {
+        transform: translateY(0);
+      }
+
+      /* start */
+      12.5% {
+        transform: translateY(-24px);
+      }
+
+      /* bounce 1 — full height */
+      25% {
+        transform: translateY(0);
+      }
+
+      /* land */
+      37.5% {
+        transform: translateY(-12px);
+      }
+
+      /* bounce 2 — half */
+      50% {
+        transform: translateY(0);
+      }
+
+      /* land */
+      62.5% {
+        transform: translateY(-6px);
+      }
+
+      /* bounce 3 — half again */
+      75% {
+        transform: translateY(0);
+      }
+
+      /* land */
+      87.5% {
+        transform: translateY(-3px);
+      }
+
+      /* bounce 4 — half again */
+      100% {
+        transform: translateY(0);
+      }
+
+      /* settle */
     }
 
     @keyframes hamsaSquish {
-      0%   { transform: scaleY(1)    scaleX(1); }
-      20%  { transform: scaleY(0.78) scaleX(1.16); }
-      50%  { transform: scaleY(1.12) scaleX(0.90); }
-      75%  { transform: scaleY(0.96) scaleX(1.03); }
-      100% { transform: scaleY(1)    scaleX(1); }
+      0% {
+        transform: scaleY(1) scaleX(1);
+      }
+
+      20% {
+        transform: scaleY(0.78) scaleX(1.16);
+      }
+
+      50% {
+        transform: scaleY(1.12) scaleX(0.90);
+      }
+
+      75% {
+        transform: scaleY(0.96) scaleX(1.03);
+      }
+
+      100% {
+        transform: scaleY(1) scaleX(1);
+      }
     }
 
-        @keyframes hamsaShadow {
-      0%    { transform: scale(1);     opacity: 0.65; }   /* grounded */
-      12.5% { transform: scale(0.70);  opacity: 0.30; }   /* icon at -24px */
-      25%   { transform: scale(1);     opacity: 0.65; }   /* grounded */
-      37.5% { transform: scale(0.85);  opacity: 0.48; }   /* icon at -12px */
-      50%   { transform: scale(1);     opacity: 0.65; }   /* grounded */
-      62.5% { transform: scale(0.925); opacity: 0.56; }   /* icon at -6px */
-      75%   { transform: scale(1);     opacity: 0.65; }   /* grounded */
-      87.5% { transform: scale(0.96);  opacity: 0.62; }   /* icon at -3px */
-      100%  { transform: scale(1);     opacity: 0.65; }   /* grounded */
+    @keyframes hamsaShadow {
+      0% {
+        transform: scale(1);
+        opacity: 0.65;
+      }
+
+      /* grounded */
+      12.5% {
+        transform: scale(0.70);
+        opacity: 0.30;
+      }
+
+      /* icon at -24px */
+      25% {
+        transform: scale(1);
+        opacity: 0.65;
+      }
+
+      /* grounded */
+      37.5% {
+        transform: scale(0.85);
+        opacity: 0.48;
+      }
+
+      /* icon at -12px */
+      50% {
+        transform: scale(1);
+        opacity: 0.65;
+      }
+
+      /* grounded */
+      62.5% {
+        transform: scale(0.925);
+        opacity: 0.56;
+      }
+
+      /* icon at -6px */
+      75% {
+        transform: scale(1);
+        opacity: 0.65;
+      }
+
+      /* grounded */
+      87.5% {
+        transform: scale(0.96);
+        opacity: 0.62;
+      }
+
+      /* icon at -3px */
+      100% {
+        transform: scale(1);
+        opacity: 0.65;
+      }
+
+      /* grounded */
     }
 
     @media (max-width: 700px) {
       .hamsa {
         font-size: 90px;
       }
+
       .hamsa-shadow {
         width: 90px;
         margin-top: 6px;
       }
     }
 
-     /* Mobile / tablet: hamsa moves to the bottom of the stack */
+    /* Mobile / tablet: hamsa moves to the bottom of the stack */
     @media (max-width: 1023px) {
       .app-grid {
         display: flex;
@@ -2647,7 +2743,8 @@
       }
 
       .hamsa-section {
-        order: 100;   /* lands after appendix */
+        order: 100;
+        /* lands after appendix */
       }
     }
   </style>
@@ -3020,14 +3117,14 @@
           <p data-i18n="about.p3">…</p>
         </div>
         <!-- <img src="birb.png" alt="birb" style="max-width: 75px; margin-top: 12px;"> -->
-          <div class="hamsa-section" id="hamsaSection">
-        <div class="hamsa-container" id="hamsaContainer">
-          <div class="hamsa">
-            <i class="fa-solid fa-hamsa"></i>
+        <div class="hamsa-section" id="hamsaSection">
+          <div class="hamsa-container" id="hamsaContainer">
+            <div class="hamsa">
+              <i class="fa-solid fa-hamsa"></i>
+            </div>
+            <div class="hamsa-shadow"></div>
           </div>
-          <div class="hamsa-shadow"></div>
         </div>
-      </div>
       </div>
     </div>
 
@@ -3241,7 +3338,7 @@
         'settings.cat.doubleMusuji': 'Double Musuji 4/5/6', 'settings.cat.musuji37': 'Musuji 3/7', 'settings.cat.musuji28': 'Musuji 2/8', 'settings.cat.katamusuji': 'Katamusuji 4/5/6', 'settings.cat.musuji19': 'Musuji 1/9',
         'settings.turn.5': 'Turn 5', 'settings.turn.9': 'Turn 9', 'settings.turn.14': 'Turn 14',
         'settings.ippatsu.yes': 'Ippatsu', 'settings.ippatsu.no': 'No Ippatsu',
-        'settings.shape.perfect': '1-shanten [A] · Perfect', 'settings.shape.good2': '[B] Ryanmen ×2', 'settings.shape.goodRyankan': '[C] Ryanmen + Ryankan', 'settings.shape.goodKanchan': '[D] Ryanmen + Kanchan', 'settings.shape.badRyankan': '[E] Kanchan + Ryankan', 'settings.shape.pairs': '[F] Chiitoi',
+        'settings.shape.perfect': '1-shanten [A] · Perfect', 'settings.shape.good2': '[B] Ryanmen ×2', 'settings.shape.goodRyankan': '[C] Ryanmen + Ryankan', 'settings.shape.goodKanchan': '[D] Ryanmen + Kanchan', 'settings.shape.badRyankan': '[E] Kanchan + Ryankan', 'settings.shape.pairs': '[F] Seven Pairs',
         'settings.shape.badHeadless': '[C−] Bad Headless', 'settings.shape.mediocreHeadless': '[C+] Mediocre Headless', 'settings.shape.badKuttsuki': '[C] Bad Kuttsuki',
         'settings.shape.standardHeadless': '[A−] Standard Headless', 'settings.shape.standardKuttsuki': '[A] Standard Kuttsuki',
         'settings.shape.goodHeadless1': '[S] Good Conjoined Headless', 'settings.shape.goodHeadless2': '[S] Ankou Headless', 'settings.shape.goodKuttsuki': '[S+] Good Kuttsuki',
@@ -3280,8 +3377,14 @@
         'catdesc.Musuji 1/9': 'A terminal — A non-suji tile',
         'seat.kamicha': 'Kamicha (Left)', 'seat.toimen': 'Toimen (Across)', 'seat.shimocha': 'Shimocha (Right)',
         'role.vsND': 'VS Non-Dealer', 'role.vsD': 'VS Dealer', 'role.asD': 'As Dealer',
-        'yaku.hanUnit': 'han', 'yaku.Yakuhai': 'Yakuhai Ankou', 'yaku.Tanyao': 'Tanyao', 'yaku.Chiitoi': 'Chiitoi',
-        'yaku.Pinfu': 'Pinfu', 'yaku.Iipeikou': 'Iipeikou', 'yaku.Dora': 'Dora',
+        'yaku.hanUnit': 'han', 'yaku.Yakuhai': 'Yakuhai (Ankou)', 'yaku.Tanyao': 'All Simples', 'yaku.Chiitoi': 'Seven Pairs',
+        'yaku.Pinfu': 'Pinfu', 'yaku.Iipeikou': 'Pure Double Sequence', 'yaku.Dora': 'Dora',
+        'yaku.YakuhaiSeat': 'Seat Wind (Ankou)',
+        'yaku.YakuhaiRound': 'Round Wind (Ankou)',
+        'yaku.YakuhaiDoubleEast': 'Double East (Ankou)',
+        'yaku.YakuhaiHaku': 'White Dragon (Ankou)',
+        'yaku.YakuhaiHatsu': 'Green Dragon (Ankou)',
+        'yaku.YakuhaiChun': 'Red Dragon (Ankou)',
         'sc.callable': 'Callable', 'sc.ippatsu': 'Ippatsu Turn',
         'dealin.title': 'Deal-in Rate Reference', 'dealin.desc': 'Minimum passed sujis needed to reach each estimated deal-in rate range, by tile category.',
         'dealin.rateHeader': 'Deal-in Rate', 'dealin.modTitle': 'Common modifiers (not in table):',
@@ -3429,6 +3532,12 @@
         'role.vsND': '子から', 'role.vsD': '親から', 'role.asD': '親として',
         'yaku.hanUnit': '翻', 'yaku.Yakuhai': '役牌暗刻', 'yaku.Tanyao': 'タンヤオ', 'yaku.Chiitoi': '七対子',
         'yaku.Pinfu': 'ピンフ', 'yaku.Iipeikou': '一盃口', 'yaku.Dora': 'ドラ',
+        'yaku.YakuhaiSeat': '自風暗刻',
+        'yaku.YakuhaiRound': '場風暗刻',
+        'yaku.YakuhaiDoubleEast': '連風牌暗刻',
+        'yaku.YakuhaiHaku': '白暗刻',
+        'yaku.YakuhaiHatsu': '發暗刻',
+        'yaku.YakuhaiChun': '中暗刻',
         'sc.callable': '鳴ける', 'sc.ippatsu': '一発巡',
         'dealin.title': '放銃率の目安', 'dealin.desc': '牌カテゴリ別、各放銃率レンジに到達するのに必要な通しスジ数の最小値。',
         'dealin.rateHeader': '放銃率', 'dealin.modTitle': 'よくある補正（表外）:',
@@ -3745,56 +3854,96 @@
       return order;
     }
 
-    function isYakuhaiFeasible(playerSeatWind, rank, ponds) {
-      const tileCounts = {};
-      for (const p in ponds) for (const t of ponds[p]) { const base = baseTile(t); tileCounts[base] = (tileCounts[base] || 0) + 1; }
-      const seatWindTile = { 'East': '1z', 'South': '2z', 'West': '3z', 'North': '4z' }[playerSeatWind];
-      const isDealer = playerSeatWind === 'East';
-      const count = t => tileCounts[t] || 0;
-      const dragons = ['5z', '6z', '7z'];
-      if (rank === 1) {
-        if (isDealer) return dragons.some(t => count(t) < 2);
-        const yakuhai = [...new Set(['1z', seatWindTile, ...dragons])];
-        return yakuhai.some(t => count(t) < 2);
-      }
-      if (isDealer) { if (count('1z') < 2) return true; return dragons.filter(t => count(t) < 2).length >= 2; }
-      const yakuhai = [...new Set(['1z', seatWindTile, ...dragons])];
-      return yakuhai.filter(t => count(t) < 2).length >= 2;
-    }
-    function pickYakuhaiWithFeasibility(playerSeatWind, ponds) {
-      const isPlayerDealer = playerSeatWind === 'East';
-      const wantRank2 = Math.random() < (isPlayerDealer ? 0.33 : 0.10);
-      const rank2Feasible = isYakuhaiFeasible(playerSeatWind, 2, ponds);
-      const rank1Feasible = isYakuhaiFeasible(playerSeatWind, 1, ponds);
-      let yakuhaiRank = 0;
-      if (wantRank2 && rank2Feasible) yakuhaiRank = 2;
-      else if (rank1Feasible) yakuhaiRank = 1;
-      else if (rank2Feasible) yakuhaiRank = 2;
-      if (yakuhaiRank > 0) return { name: 'Yakuhai', han: yakuhaiRank };
-      return { name: 'Tanyao', han: 1 };
-    }
-    function pickYaku(shape, isOpen, playerSeatWind, ponds) {
-      const yaku = [];
-      if (isOpen) {
-        if (Math.random() < 0.5) yaku.push(pickYakuhaiWithFeasibility(playerSeatWind, ponds));
-        else yaku.push({ name: 'Tanyao', han: 1 });
-        return yaku;
-      }
-      if (shape === 'Chiitoi') { yaku.push({ name: 'Chiitoi', han: 2 }); return yaku; }
 
-      let hasYakuhai = false;
-      if (Math.random() < 0.25) {
-        const picked = pickYakuhaiWithFeasibility(playerSeatWind, ponds);
-        yaku.push(picked);
-        if (picked.name === 'Yakuhai') hasYakuhai = true;
+    function pickYakuhai(playerSeatWind, ponds, excludeTiles = []) {
+      const isDealer = playerSeatWind === 'East';
+      const seatTile = { 'East': '1z', 'South': '2z', 'West': '3z', 'North': '4z' }[playerSeatWind];
+      const dragons = ['5z', '6z', '7z'];
+
+      // Deduplicate: for the dealer, seat wind == round wind == 1z, so the
+      // candidate pool collapses to [1z, 5z, 6z, 7z].
+      const candidates = [...new Set(['1z', seatTile, ...dragons])]
+        .filter(t => !excludeTiles.includes(t));
+
+      const tileCounts = {};
+      for (const p in ponds) for (const t of ponds[p]) {
+        const base = baseTile(t);
+        tileCounts[base] = (tileCounts[base] || 0) + 1;
       }
-      // Pinfu needs all sequences — can't coexist with a yakuhai ankou
-      if (!hasYakuhai && (shape === 'Perfect' || shape === 'Good*2') && Math.random() < 0.5) {
-        yaku.push({ name: 'Pinfu', han: 1 });
+      // Triplet feasible iff at most 1 copy is visible in the ponds.
+      const available = candidates.filter(t => (tileCounts[t] || 0) < 2);
+
+      if (!available.length) return { name: 'Tanyao', han: 1 };
+
+      const picked = available[Math.floor(Math.random() * available.length)];
+
+      let han, labelKey;
+      if (picked === '1z' && isDealer) {
+        // Dealer's East is simultaneously round wind and seat wind → 2 han
+        han = 2;
+        labelKey = 'yaku.YakuhaiDoubleEast';
+      } else if (picked === '1z') {
+        han = 1;
+        labelKey = 'yaku.YakuhaiRound';
+      } else if (picked === seatTile) {
+        han = 1;
+        labelKey = 'yaku.YakuhaiSeat';
+      } else if (picked === '5z') {
+        han = 1;
+        labelKey = 'yaku.YakuhaiHaku';
+      } else if (picked === '6z') {
+        han = 1;
+        labelKey = 'yaku.YakuhaiHatsu';
+      } else {
+        han = 1;
+        labelKey = 'yaku.YakuhaiChun';
       }
-      if (Math.random() < 0.30) yaku.push({ name: 'Iipeikou', han: 1 });
-      return yaku;
+
+      return { name: 'Yakuhai', han, tile: picked, labelKey };
     }
+
+    function pickYaku(shape, isOpen, playerSeatWind, ponds) {
+  const yaku = [];
+
+  if (isOpen) {
+    // Open hand: 1 called meld + up to 2 closed yakuhai triplets.
+    // Structure: open meld + 2 yakuhai triplets + pair + 2 floaters = 13 tiles, 1-shanten.
+    if (Math.random() < 0.5) {
+      const picked1 = pickYakuhai(playerSeatWind, ponds);
+      yaku.push(picked1);
+      if (picked1.name === 'Yakuhai' && Math.random() < 0.30) {
+        const picked2 = pickYakuhai(playerSeatWind, ponds, [picked1.tile]);
+        if (picked2.name === 'Yakuhai') yaku.push(picked2);
+      }
+    } else {
+      yaku.push({ name: 'Tanyao', han: 1 });
+    }
+    return yaku;
+  }
+
+  if (shape === 'Chiitoi') { yaku.push({ name: 'Chiitoi', han: 2 }); return yaku; }
+
+  let hasYakuhai = false;
+  if (Math.random() < 0.25) {
+    const picked1 = pickYakuhai(playerSeatWind, ponds);
+    yaku.push(picked1);
+    if (picked1.name === 'Yakuhai') {
+      hasYakuhai = true;
+      if (Math.random() < 0.30) {
+        const picked2 = pickYakuhai(playerSeatWind, ponds, [picked1.tile]);
+        if (picked2.name === 'Yakuhai') yaku.push(picked2);
+      }
+    }
+  }
+  if (!hasYakuhai && (shape === 'Perfect' || shape === 'Good*2') && Math.random() < 0.5) {
+    yaku.push({ name: 'Pinfu', han: 1 });
+  }
+  // Iipeikou requires 2 complete sequences — impossible with 2 triplet melds
+  const yakuhaiCount = yaku.filter(y => y.name === 'Yakuhai').length;
+  if (yakuhaiCount < 2 && Math.random() < 0.30) yaku.push({ name: 'Iipeikou', han: 1 });
+
+  return yaku;
+}
 
     function countPassedSuji(declarer, ponds, postStart) {
       const fromDeclarer = new Set();
@@ -5165,7 +5314,10 @@
       $('scRole').textContent = q.playerIsDealer ? t('settings.role.dealer') : t('settings.role.nondealer');
 
       const parts = [];
-      q.yaku.forEach(y => parts.push(t('yaku.' + y.name, y.name)));
+      q.yaku.forEach(y => {
+        const key = y.labelKey || ('yaku.' + y.name);
+        parts.push(t(key, y.name));
+      });
       let yakuText = parts.length ? parts.join(' + ') : '—';
       if (q.doraCount > 0) {
         const doraLabel = `${t('yaku.Dora')} (${q.doraCount})`;
@@ -5256,9 +5408,9 @@
           const sidebar = $('sidebar');
           sidebar.insertBefore(statsCard, sidebar.firstChild);
         }
-              statsCard.querySelector('h3').addEventListener('click', () => {
-        statsCard.classList.toggle('collapsed');
-      });
+        statsCard.querySelector('h3').addEventListener('click', () => {
+          statsCard.classList.toggle('collapsed');
+        });
 
         const s3 = document.createElement('div');
         s3.className = 'qstep'; s3.id = 'step3';
@@ -5900,9 +6052,9 @@
       }
     }
 
-        /* =========================================================
-       hamsa — click → squish + levitate for 5 seconds
-       ========================================================= */
+    /* =========================================================
+   hamsa — click → squish + levitate for 5 seconds
+   ========================================================= */
     (function inithamsa() {
       const container = document.getElementById('hamsaContainer');
       if (!container) return;
