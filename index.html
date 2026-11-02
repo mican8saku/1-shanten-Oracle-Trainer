@@ -131,7 +131,6 @@
       color: var(--muted);
       font-size: 35px;
       letter-spacing: 2px;
-      text-transform: uppercase;
       text-align: center;
     }
 
@@ -3313,7 +3312,7 @@
         'home.link': '<i class="fa-solid fa-hamsa"></i> The Oracle',
         'home.about': '<i class="fa-solid fa-circle-info"></i> About',
         'home.heading': '<i class="fa-solid fa-hamsa"></i> 1-shanten Oracle',
-        'home.sub': 'Push-pull trainer',
+        'home.sub': 'PULL-PULL TRAINER [α] ',
         'home.start': 'Start',
         'home.hint': 'Click a mode to start · ↑ ↓ to choose + Enter',
         'home.mode.regular.title': 'Regular',
@@ -3338,7 +3337,7 @@
         'settings.cat.doubleMusuji': 'Double Musuji 4/5/6', 'settings.cat.musuji37': 'Musuji 3/7', 'settings.cat.musuji28': 'Musuji 2/8', 'settings.cat.katamusuji': 'Katamusuji 4/5/6', 'settings.cat.musuji19': 'Musuji 1/9',
         'settings.turn.5': 'Turn 5', 'settings.turn.9': 'Turn 9', 'settings.turn.14': 'Turn 14',
         'settings.ippatsu.yes': 'Ippatsu', 'settings.ippatsu.no': 'No Ippatsu',
-        'settings.shape.perfect': '1-shanten [A] · Perfect', 'settings.shape.good2': '[B] Ryanmen ×2', 'settings.shape.goodRyankan': '[C] Ryanmen + Ryankan', 'settings.shape.goodKanchan': '[D] Ryanmen + Kanchan', 'settings.shape.badRyankan': '[E] Kanchan + Ryankan', 'settings.shape.pairs': '[F] Seven Pairs',
+        'settings.shape.perfect': '1-shanten [A] · Perfect', 'settings.shape.good2': '[B] Ryanmen ×2', 'settings.shape.goodRyankan': '[C] Ryanmen + Ryankan', 'settings.shape.goodKanchan': '[D] Ryanmen + Kanchan', 'settings.shape.badRyankan': '[E] Kanchan + Ryankan', 'settings.shape.pairs': '[F] Chiitoi',
         'settings.shape.badHeadless': '[C−] Bad Headless', 'settings.shape.mediocreHeadless': '[C+] Mediocre Headless', 'settings.shape.badKuttsuki': '[C] Bad Kuttsuki',
         'settings.shape.standardHeadless': '[A−] Standard Headless', 'settings.shape.standardKuttsuki': '[A] Standard Kuttsuki',
         'settings.shape.goodHeadless1': '[S] Good Conjoined Headless', 'settings.shape.goodHeadless2': '[S] Ankou Headless', 'settings.shape.goodKuttsuki': '[S+] Good Kuttsuki',
@@ -3377,8 +3376,8 @@
         'catdesc.Musuji 1/9': 'A terminal — A non-suji tile',
         'seat.kamicha': 'Kamicha (Left)', 'seat.toimen': 'Toimen (Across)', 'seat.shimocha': 'Shimocha (Right)',
         'role.vsND': 'VS Non-Dealer', 'role.vsD': 'VS Dealer', 'role.asD': 'As Dealer',
-        'yaku.hanUnit': 'han', 'yaku.Yakuhai': 'Yakuhai (Ankou)', 'yaku.Tanyao': 'All Simples', 'yaku.Chiitoi': 'Seven Pairs',
-        'yaku.Pinfu': 'Pinfu', 'yaku.Iipeikou': 'Pure Double Sequence', 'yaku.Dora': 'Dora',
+        'yaku.hanUnit': 'han', 'yaku.Yakuhai': 'Yakuhai (Ankou)', 'yaku.Tanyao': 'Tanyao', 'yaku.Chiitoi': 'Chiitoi',
+        'yaku.Pinfu': 'Pinfu', 'yaku.Iipeikou': 'Iipeikou', 'yaku.Dora': 'Dora',
         'yaku.YakuhaiSeat': 'Seat Wind (Ankou)',
         'yaku.YakuhaiRound': 'Round Wind (Ankou)',
         'yaku.YakuhaiDoubleEast': 'Double East (Ankou)',
@@ -3471,7 +3470,7 @@
         'home.link': '<i class="fa-solid fa-hamsa"></i> オラクル',
         'home.about': '<i class="fa-solid fa-circle-info"></i> このアプリについて',
         'home.heading': '<i class="fa-solid fa-hamsa"></i> イーシャンテン オラクル',
-        'home.sub': '押し引きトレーナー',
+        'home.sub': '押し引きトレーナー [α]',
         'home.start': 'スタート',
         'home.hint': 'モードを選択してスタート ・ ↑ ↓ + Enter',
         'home.mode.regular.title': 'レギュラー', 'home.mode.regular.desc': '10問のスコア制。スコアとランクは最後に発表されます。',
@@ -3903,47 +3902,44 @@
     }
 
     function pickYaku(shape, isOpen, playerSeatWind, ponds) {
-  const yaku = [];
+      const yaku = [];
 
-  if (isOpen) {
-    // Open hand: 1 called meld + up to 2 closed yakuhai triplets.
-    // Structure: open meld + 2 yakuhai triplets + pair + 2 floaters = 13 tiles, 1-shanten.
-    if (Math.random() < 0.5) {
-      const picked1 = pickYakuhai(playerSeatWind, ponds);
-      yaku.push(picked1);
-      if (picked1.name === 'Yakuhai' && Math.random() < 0.30) {
-        const picked2 = pickYakuhai(playerSeatWind, ponds, [picked1.tile]);
-        if (picked2.name === 'Yakuhai') yaku.push(picked2);
+      if (isOpen) {
+        // Open hand = 2 open melds + 1 closed meld → only 1 slot for a yakuhai
+        // ankou. Single pick is the maximum physically possible.
+        if (Math.random() < 0.5) yaku.push(pickYakuhai(playerSeatWind, ponds));
+        else yaku.push({ name: 'Tanyao', han: 1 });
+        return yaku;
       }
-    } else {
-      yaku.push({ name: 'Tanyao', han: 1 });
-    }
-    return yaku;
-  }
 
-  if (shape === 'Chiitoi') { yaku.push({ name: 'Chiitoi', han: 2 }); return yaku; }
+      if (shape === 'Chiitoi') { yaku.push({ name: 'Chiitoi', han: 2 }); return yaku; }
 
-  let hasYakuhai = false;
-  if (Math.random() < 0.25) {
-    const picked1 = pickYakuhai(playerSeatWind, ponds);
-    yaku.push(picked1);
-    if (picked1.name === 'Yakuhai') {
-      hasYakuhai = true;
-      if (Math.random() < 0.30) {
-        const picked2 = pickYakuhai(playerSeatWind, ponds, [picked1.tile]);
-        if (picked2.name === 'Yakuhai') yaku.push(picked2);
+      // Closed hand = 2 closed melds + pair + 2 partials → 2 slots for yakuhai
+      // ankous. Both may be yakuhai, giving a legitimate double-yakuhai hand.
+      let hasYakuhai = false;
+      if (Math.random() < 0.25) {
+        const picked1 = pickYakuhai(playerSeatWind, ponds);
+        yaku.push(picked1);
+        if (picked1.name === 'Yakuhai') {
+          hasYakuhai = true;
+          if (Math.random() < 0.30) {
+            const picked2 = pickYakuhai(playerSeatWind, ponds, [picked1.tile]);
+            if (picked2.name === 'Yakuhai') yaku.push(picked2);
+          }
+        }
       }
-    }
-  }
-  if (!hasYakuhai && (shape === 'Perfect' || shape === 'Good*2') && Math.random() < 0.5) {
-    yaku.push({ name: 'Pinfu', han: 1 });
-  }
-  // Iipeikou requires 2 complete sequences — impossible with 2 triplet melds
-  const yakuhaiCount = yaku.filter(y => y.name === 'Yakuhai').length;
-  if (yakuhaiCount < 2 && Math.random() < 0.30) yaku.push({ name: 'Iipeikou', han: 1 });
 
-  return yaku;
-}
+      // Pinfu requires all sequences → can't coexist with a yakuhai ankou
+      if (!hasYakuhai && (shape === 'Perfect' || shape === 'Good*2') && Math.random() < 0.5) {
+        yaku.push({ name: 'Pinfu', han: 1 });
+      }
+      // Iipeikou requires 2 complete sequences. If we have 2 yakuhai ankous we
+      // have 0 complete sequences, so iipeikou is physically impossible.
+      const yakuhaiCount = yaku.filter(y => y.name === 'Yakuhai').length;
+      if (yakuhaiCount < 2 && Math.random() < 0.30) yaku.push({ name: 'Iipeikou', han: 1 });
+
+      return yaku;
+    }
 
     function countPassedSuji(declarer, ponds, postStart) {
       const fromDeclarer = new Set();
