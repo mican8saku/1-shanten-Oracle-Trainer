@@ -106,6 +106,7 @@ Deal-in rate estimates come from **Miinin's** statistical data (統計学のマ�
 3. That's it — no build step, no server required
 
 ### File structure
+```
 /
 ├── index.html # Trainer
 ├── oracle.html # Lookup tool
@@ -119,7 +120,7 @@ Deal-in rate estimates come from **Miinin's** statistical data (統計学のマ�
   ├── 1s.webp, ..., 9s.webp
   ├── 1z.webp, ..., 7z.webp # Honor tiles (東南西北白發中)
   └── 0m.webp, 0p.webp, 0s.webp # Red 5s
-
+```
 
 Tile images are optional at runtime — if a `.webp` file is missing, the app falls back to a text-rendered tile that shows the number and suit or honor character.
 
