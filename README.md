@@ -145,10 +145,6 @@ No environment variables, no build commands, no server-side code.
 - **localStorage** — persists high scores, language preference, custom practice config, sound state
 - **CSS Grid + Flexbox** — responsive layout with a mobile-first design
 
-### Browser support
-
-Modern browsers only (Chrome 90+, Firefox 88+, Safari 14+, Edge 90+). No IE support, no polyfills.
-
 ---
 
 ## Internationalization
@@ -176,26 +172,16 @@ Full English and Japanese translations. Language preference is persisted per bro
 
 **Framework data basis:** 『新・科学する麻雀』 simulation data
 
+**Tileback:** Originally comes from [mahgen by eric03742](http://wiki.lingshangkaihua.com/mediawiki/index.php/%E9%A6%96%E9%A1%B5) with the original credit going to "最完整的日本麻将中文维基百科".
+
 ---
 
 ## Disclaimer
 
-This tool is a **reference**, not a definitive authority. Push/fold in real mahjong depends on score situation, opponent tendencies, table dynamics, and many factors the framework does not model. The trainer's reference thresholds are the model's view — not the truth.
+This tool is a **reference**, not a definitive authority. The model is intended primarily for push/fold decisions in flat point standings and does not account for every factor that may matter in a real game.
 
 Treat the results as training guidance, not as commands.
 
----
-
-## Roadmap
-
-See `SPEC.md` for the full β-version specification (hand generation with real tiles, template-based yaku, dot ponds). The current version is **α** — abstract shape labels with concrete reference values.
-
-Future development areas:
-
-- Engine comparison against Mortal / Naga (validation study)
-- Spaced-repetition practice mode
-- 2-shanten and multi-riichi scenarios (separate framework required)
-- Portable e-ink reference device (lookup only)
 
 ---
 
